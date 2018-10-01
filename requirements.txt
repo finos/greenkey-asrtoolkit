@@ -1,0 +1,11 @@
+asr-evaluation==2.0.2
+atomicwrites==1.2.1
+attrs==18.2.0
+edit-distance==1.0.1
+more-itertools==4.3.0
+pluggy==0.7.1
+py==1.6.0
+pytest==3.8.1
+six==1.11.0
+termcolor==1.1.0
+tqdm==4.26.0
