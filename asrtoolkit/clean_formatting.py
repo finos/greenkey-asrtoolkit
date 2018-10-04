@@ -61,6 +61,8 @@ def dollars_to_string(input_string):
   convert dollar strings '$2', '$2.56', '$10', '$1000000', ... to a string/word with chars a-z
   >>> dollars_to_string("$2.56")
   'two dollars fifty six cents'
+  >>> dollars_to_string("$3.")
+  'three dollars'
   """
   ret_str = input_string
   if contains_dollar_sign(input_string):
@@ -69,8 +71,12 @@ def dollars_to_string(input_string):
       num2words.num2words(int(number)) if all(c.isdigit()
                                               for c in number) else number
       for number in input_string.split(".")
+      if number
     )
-    ret_str += (" cents" if '.' in input_string else "")
+    ret_str += (
+      " cents" if '.' in input_string and len([_ for _ in input_string.split(".") if _]) > 1 else
+      (" dollars" if '.' in input_string else "")
+    )
 
   return ret_str.replace("-", " ")
 
@@ -80,9 +86,11 @@ def digits_to_string(input_string):
   convert strings '52.4' to string/word with chars a-z
   >>> digits_to_string("2.56")
   'two point fifty six'
+  >>> digits_to_string("2")
+  'two'
   """
   ret_str = input_string
-  ret_str = " point ".join(num2words.num2words(int(_)) for _ in input_string.split("."))
+  ret_str = " point ".join(num2words.num2words(int(_)) for _ in input_string.split(".") if _)
 
   return ret_str.replace("-", " ")
 
@@ -159,6 +167,7 @@ def fraction_to_string(input_string):
 
 rematch = OrderedDict(
   [
+    ("elipses", (re.compile(r"\.{2,}"), lambda m: " ")),
     ("websites", (re.compile(r"[.](net|org|com|gov)\b"), lambda m: " dot " + m.group().lower().replace(".", ""))),
     (
       "acronyms",
@@ -180,14 +189,16 @@ rematch = OrderedDict(
 def clean_up(input_line):
   """
     Apply all text cleaning operations to input line
+    >>> clean_up("his license plate is a. c, f seven...five ! zero")
+    'his license plate is a c f seven five zero'
   """
-  for char_to_replace in [',', '*', '&']:
+  for char_to_replace in [',', '*', '&', '!', '?']:
     input_line = input_line.replace(char_to_replace, '')
 
   for pat in rematch:
     input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
 
-  for char_to_replace in [',', '*', '&', '.', '-']:
+  for char_to_replace in [',', '.', '-']:
     input_line = input_line.replace(char_to_replace, '')
 
   input_line = input_line.encode().decode('utf-8').lower()
