@@ -19,13 +19,13 @@ def wer(ref, hyp):
 
   # calculate per line WER
   word_error_rate = [
-    100 * editdistance.eval(ref_line.split(), hyp_line.split()) / len(ref_line.split())
+    100 * editdistance.eval(ref_line.split(' '), hyp_line.split(' ')) / len(ref_line.split(' '))
     for ref_line, hyp_line in zip(ref, hyp)
   ]
 
   # average by weighting each line by # of words in references
-  total_wer = sum([error_rate * len(ref_line.split()) for error_rate, ref_line in zip(word_error_rate, ref)]) \
-                / sum(map(lambda l: len(l.split()), ref))
+  total_wer = sum([error_rate * len(ref_line.split(' ')) for error_rate, ref_line in zip(word_error_rate, ref)]) \
+                / sum(map(lambda l: len(l.split(' ')), ref))
 
   return total_wer
 
@@ -89,7 +89,7 @@ def main():
     ref_text = clean_up(reference_file.__str__()).splitlines(keepends=True)
     hyp_text = clean_up(transcript_file.__str__()).splitlines(keepends=True)
     print("-" * 80)
-    print("".join(difflib.ndiff(ref_text, hyp_text)), end="")
+    print("\n".join(difflib.ndiff(ref_text, hyp_text)), end="")
     print("\n" + "-" * 80)
 
   # apply clean up functions and split to a list of lines
@@ -98,8 +98,8 @@ def main():
 
   if args.ignore_nsns:
     # ignore non silence noises and remove them from a transcript
-    ref = [remove_nonsilence_noises(line) for line in ref]
-    hyp = [remove_nonsilence_noises(line) for line in hyp]
+    ref = [clean_up(remove_nonsilence_noises(line).strip()) for line in ref]
+    hyp = [clean_up(remove_nonsilence_noises(line).strip()) for line in hyp]
 
   if args.char_level:
     print("CER: {:5.3f}%".format(cer(ref, hyp)))

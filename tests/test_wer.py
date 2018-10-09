@@ -23,8 +23,8 @@ def test_conversion():
   hyp = clean_up(transcript_file.__str__()).splitlines()
 
   # remove nsns
-  ref = [remove_nonsilence_noises(line) for line in ref]
-  hyp = [remove_nonsilence_noises(line) for line in hyp]
+  ref = [clean_up(remove_nonsilence_noises(line).strip()) for line in ref]
+  hyp = [clean_up(remove_nonsilence_noises(line).strip()) for line in hyp]
 
   # test fixed precision output of wer calculation
   assert "{:5.3f}".format(wer(ref, hyp)) == "3.332"
