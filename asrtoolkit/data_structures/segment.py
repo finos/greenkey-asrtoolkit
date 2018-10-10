@@ -3,6 +3,7 @@
 Class for holding a segment
 
 """
+import json
 
 
 def std_float(number, num_decimals=2):
@@ -24,7 +25,7 @@ def seconds_to_timestamp(seconds):
   """
     Convert from seconds to a timestamp
   """
-  minutes, secondss = divmod(float(seconds), 60)
+  minutes, seconds = divmod(float(seconds), 60)
   hours, minutes = divmod(minutes, 60)
   return "%02d:%02d:%06.3f" % (hours, minutes, seconds)
 
@@ -33,7 +34,7 @@ def clean_float(input_float):
   """
     Return float in seconds (even if it was a timestamp originally)
   """
-  return timestamp_to_seconds(input_float) if ":" in input_float else std_float(input_float)
+  return timestamp_to_seconds(input_float) if ":" in str(input_float) else std_float(input_float)
 
 
 class segment(object):
@@ -42,19 +43,21 @@ class segment(object):
   """
 
   # refer to some file if possible
-  audiofile = ""
+  audiofile = "unknown"
   # by default, use channel 1
-  channel = 1
+  channel = "1"
   # need a speaker id
   speaker = "UnknownSpeaker"
   # start at beginning of file
-  start = 0.0
+  start = clean_float(0.0)
   # this should go the length of the file or the segment
-  stop = 0.0
+  stop = clean_float(0.0)
   # Arbitrarily choose a default gender since unknown does not play well with some programs
   label = "<o,f0,male>"
   # text to be populated from read class
   text = ""
+  # text for printing out to fancy output formats
+  formatted_text = ""
 
   def __init__(self, input_dict=None):
     """
@@ -63,6 +66,16 @@ class segment(object):
     >>> seg = segment({"text":"this is a test"})
 
     """
+    self.__dict__ = {
+      'audiofile': self.audiofile,
+      'channel': self.channel,
+      'speaker': self.speaker,
+      'start': self.start,
+      'stop': self.stop,
+      'label': self.label,
+      'text': self.text,
+      'formatted_text': self.formatted_text
+    }
     self.__dict__.update(input_dict if input_dict else {})
 
   def __str__(self, data_handler=None):
@@ -93,7 +106,10 @@ class segment(object):
       print(exc)
 
     if not valid:
-      print("Skipping segment due to validation error: \n", " ".join(self.__dict__[_] for _ in self.__dict__))
+      print(
+        "Skipping segment due to validation error. \nPlease note that this invalidates WER calculations based on the entire file.\nSegment: ",
+        json.dumps(self.__dict__)
+      )
 
     if "-" in self.audiofile:
       self.audiofile = self.audiofile.replace("-", "_")

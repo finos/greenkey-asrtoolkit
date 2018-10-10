@@ -54,7 +54,9 @@ class time_aligned_text(object):
 
     data_handler = importlib.import_module("asrtoolkit.data_handlers.{:}".format(file_extension))
     with open(file_name, 'w', encoding="utf-8") as f:
-      f.writelines("\n".join(seg.__str__(data_handler) for seg in self.segments))
+      f.write(data_handler.header())
+      f.writelines(data_handler.separator.join(seg.__str__(data_handler) for seg in self.segments))
+      f.write(data_handler.footer())
 
     # return back new object in case we are updating a list in place
     return time_aligned_text(file_name)

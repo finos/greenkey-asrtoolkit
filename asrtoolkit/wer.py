@@ -101,6 +101,11 @@ def main():
     ref = [clean_up(remove_nonsilence_noises(line).strip()) for line in ref]
     hyp = [clean_up(remove_nonsilence_noises(line).strip()) for line in hyp]
 
+  # check if we can do this per line and concatenate if we cannot
+  if len(ref) != len(hyp):
+    ref = " ".join(ref)
+    hyp = " ".join(hyp)
+
   if args.char_level:
     print("CER: {:5.3f}%".format(cer(ref, hyp)))
   else:
