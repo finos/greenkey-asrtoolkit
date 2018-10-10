@@ -48,7 +48,7 @@ def cer(ref, hyp):
 
 
 # defines global regex to remove these nsns
-nonsilence_noises = ["noise", "um", "ah", "er", "umm", "uh"]
+nonsilence_noises = ["noise", "um", "ah", "er", "umm", "uh", "mm", "mn", "mhm", "mnh"]
 re_nonsilence_noises = re.compile(r"\b({})\b".format("|".join(nonsilence_noises)))
 
 
