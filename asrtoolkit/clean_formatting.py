@@ -207,7 +207,7 @@ def clean_up(input_line):
   # check for double spacing
   while "  " in input_line:
     input_line = input_line.replace("  ", " ")
-  return input_line
+  return input_line.strip()
 
 
 def main():
