@@ -5,7 +5,7 @@ Class for holding time_aligned text
 """
 
 import importlib
-from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens
+from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens, generate_segmented_file_name
 import os
 
 
@@ -92,8 +92,7 @@ class time_aligned_text(object):
     for iseg, seg in enumerate(self.segments):
       new_seg = time_aligned_text()
       new_seg.file_extension = self.file_extension
-      new_seg.location = target_dir + "/" + ".".join(self.location.split("/")[-1].split(".")[:-1]
-                                                    ) + "_seg_{:05d}.".format(iseg) + self.location.split(".")[-1]
+      new_seg.location = generate_segmented_file_name(target_dir, self.location, iseg)
       new_seg.segments = [seg]
       new_seg.write(new_seg.location)
 
