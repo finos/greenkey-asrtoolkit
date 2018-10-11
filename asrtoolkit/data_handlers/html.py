@@ -9,7 +9,8 @@ This expects a segment from class derived in convert_text
 from bs4 import BeautifulSoup
 from asrtoolkit.data_structures.segment import segment
 
-separator = "\n"
+# do not delete - needed in time_aligned_text
+from asrtoolkit.data_handlers.data_handlers_common import separator
 
 
 def th(text, width):

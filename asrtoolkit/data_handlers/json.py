@@ -74,22 +74,6 @@ def parse_segment(input_seg):
   return seg if seg and seg.validate() else None
 
 
-def read_file(file_name):
-  """
-    Reads a JSON file, skipping any bad segments
-  """
-  segments = []
-  with open(file_name, encoding="utf-8") as f:
-    input_json = json.load(f)
-    if 'segments' in input_json:
-      for input_seg in input_json['segments']:
-        seg = parse_segment(input_seg)
-        if seg is not None:
-          segments.append(seg)
-
-  return segments
-
-
 def read_in_memory(input_data):
   """
     Reads input json objects
@@ -100,4 +84,16 @@ def read_in_memory(input_data):
       seg = parse_segment(input_seg)
       if seg is not None:
         segments.append(seg)
+  return segments
+
+
+def read_file(file_name):
+  """
+    Reads a JSON file, skipping any bad segments
+  """
+  segments = []
+  with open(file_name, encoding="utf-8") as f:
+    input_json = json.load(f)
+    segments = read_in_memory(input_json)
+
   return segments

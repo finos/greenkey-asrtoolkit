@@ -5,23 +5,17 @@ Module for reading/writing WEBVTT files
 This expects a segment from class derived in convert_text
 """
 
-import re
 from webvtt import WebVTT
-from asrtoolkit.data_structures.segment import segment, seconds_to_timestamp
+from asrtoolkit.data_handlers.webvtt_common import read_caption
+from asrtoolkit.data_structures.segment import seconds_to_timestamp
 
-non_transcript_marks = re.compile(r"\[[A-Za-z0-9]{1,}\]")
-
-separator = "\n"
+# do not delete - needed for time_aligned_text
+from asrtoolkit.data_handlers.data_handlers_common import separator, footer
 
 
 def header():
   " Returns header - see https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API for detailed use "
   return "WEBVTT - This file produced by GreenKey's ASRToolkit.\n\n"
-
-
-def footer():
-  " Returns footer "
-  return ""
 
 
 def format_segment(seg):
@@ -38,29 +32,9 @@ def format_segment(seg):
   return ret_str
 
 
-def read_caption(caption):
-  """
-    Parses caption object to return a segment object
-  """
-  seg = None
-
-  try:
-    start = caption.start_in_seconds
-    stop = caption.end_in_seconds
-
-    text = re.sub(non_transcript_marks, lambda v: "", caption.text.strip()).strip()
-
-    seg = segment({'start': start, 'stop': stop, 'text': text})
-  except Exception as exc:
-    seg = None
-    print(exc)
-
-  return seg if seg and seg.validate() else None
-
-
 def read_file(file_name):
   """
-    Reads a VTT file, skipping any gap lines
+    Reads a VTT file, skipping any bad lines
   """
 
   data = WebVTT.read(file_name)

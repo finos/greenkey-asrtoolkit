@@ -7,17 +7,8 @@ This expects a segment from class derived in convert_text
 
 from asrtoolkit.data_structures.segment import segment
 
-separator = "\n"
-
-
-def header():
-  " Returns empty header "
-  return ""
-
-
-def footer():
-  " Returns empty footer "
-  return ""
+# do not delete - needed in time_aligned_text
+from asrtoolkit.data_handlers.data_handlers_common import separator, header, footer
 
 
 def format_segment(seg):
@@ -27,17 +18,6 @@ def format_segment(seg):
   return seg.text
 
 
-def read_file(file_name):
-  """
-    Reads a TXT file
-  """
-  segments = []
-  with open(file_name, encoding="utf-8") as f:
-    for line in f:
-      segments.append(segment({'text': line.strip()}))
-  return segments
-
-
 def read_in_memory(input_data):
   """
     Reads input text
@@ -45,4 +25,14 @@ def read_in_memory(input_data):
   segments = []
   for line in input_data.splitlines():
     segments.append(segment({'text': line.strip()}))
+  return segments
+
+
+def read_file(file_name):
+  """
+    Reads a TXT file
+  """
+  segments = []
+  with open(file_name, encoding="utf-8") as f:
+    segments = read_in_memory(f.read())
   return segments
