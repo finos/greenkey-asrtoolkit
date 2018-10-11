@@ -36,3 +36,13 @@ def read_file(file_name):
     for line in f:
       segments.append(segment({'text': line.strip()}))
   return segments
+
+
+def read_in_memory(input_data):
+  """
+    Reads input text
+  """
+  segments = []
+  for line in input_data.splitlines():
+    segments.append(segment({'text': line.strip()}))
+  return segments

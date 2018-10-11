@@ -88,3 +88,16 @@ def read_file(file_name):
           segments.append(seg)
 
   return segments
+
+
+def read_in_memory(input_data):
+  """
+    Reads input json objects
+  """
+  segments = []
+  if 'segments' in input_data:
+    for input_seg in input_data['segments']:
+      seg = parse_segment(input_seg)
+      if seg is not None:
+        segments.append(seg)
+  return segments
