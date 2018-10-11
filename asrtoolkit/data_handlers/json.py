@@ -83,7 +83,6 @@ def read_file(file_name):
     input_json = json.load(f)
     if 'segments' in input_json:
       for input_seg in input_json['segments']:
-        print(input_seg)
         seg = parse_segment(input_seg)
         if seg is not None:
           segments.append(seg)
