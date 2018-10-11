@@ -39,6 +39,13 @@ class time_aligned_text(object):
     )
     return "\n".join(_.__str__(data_handler) for _ in self.segments)
 
+  def text(self):
+    """
+      Returns unformatted text from all segments
+    """
+    data_handler = importlib.import_module("asrtoolkit.data_handlers.{:}".format('txt'))
+    return " ".join(_.__str__(data_handler) for _ in self.segments)
+
   def read(self, file_name):
     """ Read a file using class-specific read function """
     self.file_extension = file_name.split(".")[-1]
