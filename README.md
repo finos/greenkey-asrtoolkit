@@ -49,6 +49,12 @@ remove formatting from text files
 ```
 This script standardizes how abbreviations, numbers, and other formatted text is expressed so that ASR engines can easily use these files as training or testing data. Standardizing the formatting of output is essential for reproducible measurements of ASR accuracy.
 
+### split_audio_file 
+```text
+usage: split_audio_file [-h] [--target-dir TARGET_DIR] audio_file transcript
+split_audio_file: error: the following arguments are required: audio_file, transcript
+```
+
 ### prepare_audio_corpora
 ```text
 usage: prepare_audio_corpora [-h] [--target-dir TARGET_DIR]
