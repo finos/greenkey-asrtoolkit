@@ -76,3 +76,18 @@ class audio_file(object):
 
     # return new object
     return audio_file(file_name)
+
+  def split(self, transcript, target_dir):
+    """
+      Split audio file and transcript into many pieces based on valid segments of transcript
+    """
+
+    os.makedirs(target_dir, exist_ok=True)
+    for iseg, seg in enumerate(transcript.segments):
+      cut_utterance(
+        self.location, target_dir + "/" + ".".join(self.location.split("/")[-1].split(".")[:-1]) +
+        "_seg_{:05d}.".format(iseg) + self.location.split(".")[-1], seg.start, seg.stop
+      )
+    transcript.split(target_dir)
+
+    return
