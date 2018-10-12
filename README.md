@@ -22,6 +22,25 @@ optional arguments:
 ```
 This tool allows for easy conversion from STM files to TXT files and back. Other file formats will be added in the near future.
 
+### wer
+```text
+usage: wer [-h] [--diff] [--char-level] [--ignore-nsns]
+           reference_file transcript_file
+
+Compares a reference and transcript file and calculates word error rate (WER)
+between these two files
+
+positional arguments:
+  reference_file   reference "truth" file
+  transcript_file  transcript possibly containing errors
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --diff           verbosely print differences
+  --char-level     calculate character error rate instead of word error rate
+  --ignore-nsns    ignore non silence noises like um, uh, etc.
+```
+
 ### clean_formatting 
 ```text
 usage: clean_formatting input_file1.txt input_file2.txt

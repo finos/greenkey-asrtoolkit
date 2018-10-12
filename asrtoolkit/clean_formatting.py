@@ -182,6 +182,7 @@ rematch = OrderedDict(
     ("fractions", (re.compile(r"\b[0-9]\s?\/\s[0-9]\b"), lambda m: fraction_to_string(m.group()))),
     ("plural_numbers", (re.compile(r"\b[0-9]{1,}s\b"), lambda m: plural_numbers_to_string(m.group()))),
     ("numbers", (re.compile(r"[0-9\.]{1,}"), lambda m: digits_to_string(m.group()))),
+    ("apostrophes", (re.compile(r"\'"), lambda m: " \'")),
   ]
 )
 

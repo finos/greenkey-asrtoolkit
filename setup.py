@@ -19,9 +19,11 @@ setup(
   entry_points={
     'console_scripts':
       [
-        'convert_transcript = asrtoolkit.convert_transcript:main', 'clean_formatting=asrtoolkit.clean_formatting:main',
+        'convert_transcript = asrtoolkit.convert_transcript:main',
+        'clean_formatting=asrtoolkit.clean_formatting:main',
         'prepare_audio_corpora=asrtoolkit.prepare_audio_corpora:main',
-        'degrade_audio_file=asrtoolkit.degrade_audio_file:main'
+        'degrade_audio_file=asrtoolkit.degrade_audio_file:main',
+        'wer=asrtoolkit.wer:main',
       ]
   },
   license='Apache v2',
