@@ -1,5 +1,5 @@
 beautifulsoup4==4.6.0
-editdistance==0.5.2
+editdistance>=0.4
 num2words==0.5.6
 pytest==3.8.1
 termcolor==1.1.0
