@@ -6,6 +6,7 @@ Class for holding time_aligned text
 
 import importlib
 from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens
+from os.path import exists
 
 
 class time_aligned_text(object):
@@ -17,14 +18,29 @@ class time_aligned_text(object):
   segments = []
   file_extension = None
 
-  def __init__(self, input_file=None):
+  def __init__(self, input_data=None):
     """
     Instantiates a time_aligned text object from a file (if input_var is a string)
 
     >>> transcript = time_aligned_text()
     """
-    if input_file is not None and isinstance(input_file, str):
-      self.read(input_file)
+    if input_data is not None and isinstance(input_data, str):
+
+      # read a file if it's a filepath
+      if exists(input_data):
+        self.read(input_data)
+
+      # assume it's a string transcript
+      else:
+        self.file_extension = 'txt'
+        data_handler = importlib.import_module("asrtoolkit.data_handlers.{:}".format(self.file_extension))
+        self.segments = data_handler.read_in_memory(input_data)
+
+    # check if you passed a dictionary in and read using json
+    elif input_data is not None and isinstance(input_data, dict):
+      self.file_extension = 'json'
+      data_handler = importlib.import_module("asrtoolkit.data_handlers.{:}".format(self.file_extension))
+      self.segments = data_handler.read_in_memory(input_data)
 
   def __str__(self):
     """
@@ -38,6 +54,13 @@ class time_aligned_text(object):
       "asrtoolkit.data_handlers.{:}".format(self.file_extension if self.file_extension else 'txt')
     )
     return "\n".join(_.__str__(data_handler) for _ in self.segments)
+
+  def text(self):
+    """
+      Returns unformatted text from all segments
+    """
+    data_handler = importlib.import_module("asrtoolkit.data_handlers.{:}".format('txt'))
+    return " ".join(_.__str__(data_handler) for _ in self.segments)
 
   def read(self, file_name):
     """ Read a file using class-specific read function """
@@ -54,7 +77,9 @@ class time_aligned_text(object):
 
     data_handler = importlib.import_module("asrtoolkit.data_handlers.{:}".format(file_extension))
     with open(file_name, 'w', encoding="utf-8") as f:
-      f.writelines("\n".join(seg.__str__(data_handler) for seg in self.segments))
+      f.write(data_handler.header())
+      f.writelines(data_handler.separator.join(seg.__str__(data_handler) for seg in self.segments))
+      f.write(data_handler.footer())
 
     # return back new object in case we are updating a list in place
     return time_aligned_text(file_name)

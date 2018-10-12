@@ -36,7 +36,6 @@ positional arguments:
 
 optional arguments:
   -h, --help       show this help message and exit
-  --diff           verbosely print differences
   --char-level     calculate character error rate instead of word error rate
   --ignore-nsns    ignore non silence noises like um, uh, etc.
 ```
