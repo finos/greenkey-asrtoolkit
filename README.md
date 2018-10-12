@@ -24,7 +24,7 @@ This tool allows for easy conversion from STM files to TXT files and back. Other
 
 ### wer
 ```text
-usage: wer [-h] [--diff] [--char-level] [--ignore-nsns]
+usage: wer [-h] [--char-level] [--ignore-nsns]
            reference_file transcript_file
 
 Compares a reference and transcript file and calculates word error rate (WER)
@@ -52,8 +52,18 @@ This script standardizes how abbreviations, numbers, and other formatted text is
 ### split_audio_file 
 ```text
 usage: split_audio_file [-h] [--target-dir TARGET_DIR] audio_file transcript
-split_audio_file: error: the following arguments are required: audio_file, transcript
-```
+
+Split an audio file using valid segments from a transcript file. For this
+utility, transcript files must contain start/stop times.
+
+positional arguments:
+  audio_file            input audio file
+  transcript            transcript
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --target-dir TARGET_DIR
+                        Path to target directory```
 
 ### prepare_audio_corpora
 ```text

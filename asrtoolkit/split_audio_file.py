@@ -12,7 +12,7 @@ def main():
   """
     Split audio file using transcript file
   """
-  parser = argparse.ArgumentParser(description="Split an audio file using valid segments from a transcript file")
+  parser = argparse.ArgumentParser(description="Split an audio file using valid segments from a transcript file. For this utility, transcript files must contain start/stop times.")
   parser.add_argument('--target-dir', default='split', required=False, help="Path to target directory")
   parser.add_argument('audio_file', metavar='audio_file', type=str, help='input audio file')
   parser.add_argument('transcript', metavar='transcript', type=str, help='transcript')
