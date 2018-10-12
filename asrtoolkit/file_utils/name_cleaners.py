@@ -20,7 +20,7 @@ def sanitize_hyphens(file_name):
       "Replacing hyphens with underscores in SPH file output - "
       "check to make sure your audio files and transcript files match"
     )
-    file_name = "/".join(file_name.split("/")[:-1]) + file_name.split("/")[-1].replace("-", "_")
+    file_name = "/".join(file_name.split("/")[:-1] + [file_name.split("/")[-1].replace("-", "_")])
   return file_name
 
 
