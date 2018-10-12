@@ -24,6 +24,7 @@ setup(
         'prepare_audio_corpora=asrtoolkit.prepare_audio_corpora:main',
         'degrade_audio_file=asrtoolkit.degrade_audio_file:main',
         'wer=asrtoolkit.wer:main',
+        'split_audio_file=asrtoolkit.split_audio_file:main',
       ]
   },
   license='Apache v2',

@@ -5,7 +5,7 @@ Module for holding information about an audio file and doing basic conversions
 
 import os
 import subprocess
-from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens
+from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens, generate_segmented_file_name
 
 
 def cut_utterance(source_audio_file, target_audio_file, start_time, end_time, sample_rate=16000):
@@ -76,3 +76,15 @@ class audio_file(object):
 
     # return new object
     return audio_file(file_name)
+
+  def split(self, transcript, target_dir):
+    """
+      Split audio file and transcript into many pieces based on valid segments of transcript
+    """
+
+    os.makedirs(target_dir, exist_ok=True)
+    for iseg, seg in enumerate(transcript.segments):
+      cut_utterance(self.location, generate_segmented_file_name(target_dir, self.location, iseg), seg.start, seg.stop)
+    transcript.split(target_dir)
+
+    return

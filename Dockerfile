@@ -5,6 +5,8 @@ LABEL organization="Green Key Technologies <transcription@greenkeytech.com>"
 # APK INSTALLS
 RUN apk update && \
   apk --no-cache add \
+    build-base \
+    gcc \
     py3-pip \
     python3 \
     python3-dev\

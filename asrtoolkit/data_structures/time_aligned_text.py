@@ -5,8 +5,8 @@ Class for holding time_aligned text
 """
 
 import importlib
-from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens
-from os.path import exists
+from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens, generate_segmented_file_name
+import os
 
 
 class time_aligned_text(object):
@@ -27,7 +27,7 @@ class time_aligned_text(object):
     if input_data is not None and isinstance(input_data, str):
 
       # read a file if it's a filepath
-      if exists(input_data):
+      if os.path.exists(input_data):
         self.read(input_data)
 
       # assume it's a string transcript
@@ -83,6 +83,18 @@ class time_aligned_text(object):
 
     # return back new object in case we are updating a list in place
     return time_aligned_text(file_name)
+
+  def split(self, target_dir):
+    """
+      Split transcript into many pieces based on valid segments of transcript
+    """
+    os.makedirs(target_dir, exist_ok=True)
+    for iseg, seg in enumerate(self.segments):
+      new_seg = time_aligned_text()
+      new_seg.file_extension = self.file_extension
+      new_seg.location = generate_segmented_file_name(target_dir, self.location, iseg)
+      new_seg.segments = [seg]
+      new_seg.write(new_seg.location)
 
 
 if __name__ == "__main__":
