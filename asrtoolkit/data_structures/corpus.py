@@ -59,11 +59,11 @@ class corpus(object):
 
   def __init__(self, input_dict=None):
     """
-      Initialize from location and populate list of SPH and STM files into segments
+      Initialize from location and populate list of SPH, WAV, or MP3 audio files and STM files into segments
     """
     self.__dict__.update(input_dict if input_dict else {})
     if not self.exemplars:
-      audio_files = [audio_file(_) for _ in sorted(get_files(self.location, "sph"))]
+      audio_files = sorted([audio_file(_) for _ in get_files(self.location, "sph")] + [audio_file(_) for _ in get_files(self.location, "wav")] + [audio_file(_) for _ in get_files(self.location, "mp3")])
       transcript_files = [time_aligned_text(_) for _ in sorted(get_files(self.location, "stm"))]
       self.exemplars = [
         exemplar({
