@@ -9,9 +9,10 @@ with open('requirements.txt') as f:
 
 setup(
   name='asrtoolkit',
-  version='0.1',
-  description='ASR toolkit for processing ',
-  url='http://github.com/asrtool',
+  version='0.1.1',
+  description=
+  'The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.',
+  url='http://github.com/finos-voice/greenkey-asrtoolkit',
   author='Matthew Goldey',
   author_email='mgoldey@greenkeytech.com',
   install_requires=required,
@@ -29,5 +30,9 @@ setup(
   },
   license='Apache v2',
   packages=find_packages(),
-  zip_safe=True
+  zip_safe=True,
+  classifiers=[
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+  ],
 )
