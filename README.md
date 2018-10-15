@@ -63,7 +63,8 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --target-dir TARGET_DIR
-                        Path to target directory```
+                        Path to target directory
+```
 
 ### prepare_audio_corpora
 ```text
