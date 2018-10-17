@@ -72,13 +72,16 @@ class corpus(object):
         for fl in get_files(self.location, audio_extension):
           filename = strip_extension(fl)
           if filename not in candidate_examples and os.path.exists(filename + ".stm"):
-            candidate_examples[fl] = {'audio_file': audio_file(fl), 'transcript_file': time_aligned_text(fl + ".stm")}
+            candidate_examples[fl] = {
+              'audio_file': audio_file(fl),
+              'transcript_file': time_aligned_text(filename + ".stm")
+            }
 
       self.exemplars = [
         exemplar({
           "audio_file": eg['audio_file'],
           "transcript_file": eg['transcript_file']
-        }) for eg in candidate_examples
+        }) for fn, eg in list(candidate_examples.items())
       ]
 
   def validate(self):

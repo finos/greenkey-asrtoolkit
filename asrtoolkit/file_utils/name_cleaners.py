@@ -15,7 +15,7 @@ def strip_extension(file_name):
   """
     Reutrns file without extension
   """
-  return ".".join(file_name.split(".")[:-1])
+  return ".".join(file_name.split(".")[:-1]) if file_name else ""
 
 
 def sanitize_hyphens(file_name):
