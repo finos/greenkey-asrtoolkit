@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 from asrtoolkit.data_structures.audio_file import audio_file
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
-from asrtoolkit.file_utils.name_cleaners import basename
+from asrtoolkit.file_utils.name_cleaners import basename, strip_extension
 
 
 def get_files(data_dir, extension):
@@ -38,8 +38,8 @@ class exemplar(object):
     " validate exemplar object by constraining that the filenames before the extension are the same "
 
     valid = True
-    audio_filename = ".".join(self.audio_file.location.split(".")[:-1])
-    transcript_filename = ".".join(self.transcript_file.location.split(".")[:-1])
+    audio_filename = strip_extension(self.audio_file.location)
+    transcript_filename = strip_extension(self.transcript_file.location)
     if audio_filename != transcript_filename:
       print(
         "Mismatch between audio and transcript filename - please check the following: \n" +
@@ -63,13 +63,22 @@ class corpus(object):
     """
     self.__dict__.update(input_dict if input_dict else {})
     if not self.exemplars:
-      audio_files = sorted([audio_file(_) for _ in get_files(self.location, "sph")] + [audio_file(_) for _ in get_files(self.location, "wav")] + [audio_file(_) for _ in get_files(self.location, "mp3")])
-      transcript_files = [time_aligned_text(_) for _ in sorted(get_files(self.location, "stm"))]
+
+      candidate_examples = {}
+
+      audio_extensions_to_try = ["sph", "wav", "mp3"]
+
+      for audio_extension in audio_extensions_to_try:
+        for fl in get_files(self.location, audio_extension):
+          filename = strip_extension(fl)
+          if filename not in candidate_examples and os.path.exists(filename + ".stm"):
+            candidate_examples[fl] = {'audio_file': audio_file(fl), 'transcript_file': time_aligned_text(fl + ".stm")}
+
       self.exemplars = [
         exemplar({
-          "audio_file": af,
-          "transcript_file": tf
-        }) for af, tf in zip(audio_files, transcript_files)
+          "audio_file": eg['audio_file'],
+          "transcript_file": eg['transcript_file']
+        }) for eg in candidate_examples
       ]
 
   def validate(self):
