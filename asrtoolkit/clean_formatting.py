@@ -60,17 +60,22 @@ def dollars_to_string(input_string):
   """
   convert dollar strings '$2', '$2.56', '$10', '$1000000', ... to a string/word with chars a-z
   >>> dollars_to_string("$2.56")
-  'two dollars fifty six cents'
+  'two dollars and fifty six cents'
   >>> dollars_to_string("$3.")
   'three dollars'
+  >>> dollars_to_string("$3.5")
+  'three dollars and fifty cents'
   """
   ret_str = input_string
   if contains_dollar_sign(input_string):
     input_string = input_string.replace("$", "")
-    ret_str = " dollars ".join(
+    dollars, cents = input_string.split(".")
+    if len(cents) == 1:
+      cents += "0"
+    ret_str = " dollars and ".join(
       num2words.num2words(int(number)) if all(c.isdigit()
                                               for c in number) else number
-      for number in input_string.split(".")
+      for number in [dollars, cents]
       if number
     )
     ret_str += (
@@ -88,9 +93,18 @@ def digits_to_string(input_string):
   'two point fifty six'
   >>> digits_to_string("2")
   'two'
+  >>> digits_to_string("1.05")
+  'one point zero five'
   """
   ret_str = input_string
-  ret_str = " point ".join(num2words.num2words(int(_)) for _ in input_string.split(".") if _)
+  if input_string:
+    ret_str = num2words.num2words(int(input_string.split(".")[0])) if input_string.split(".")[0] != '' else ''
+    if len(input_string.split(".")) > 1:
+      decimal = input_string.split(".")[1].strip()
+      if decimal:
+        ret_str += " point"
+        ret_str += " zero" * decimal.count("0")
+        ret_str += " " + num2words.num2words(int(decimal))
 
   return ret_str.replace("-", " ")
 
@@ -177,7 +191,13 @@ rematch = OrderedDict(
     ("negatives", (re.compile(r" \- "), lambda m: "")),
     ("positives", (re.compile(r"\+"), lambda m: " plus ")),
     ("ordinals", (re.compile(r"[0-9]{1,}(st|nd|rd|th)"), lambda m: ordinal_to_string(m.group()))),
-    ("dollars", (re.compile(r"\b\$[0-9]{1,}\.?[0-9]{1,}\b"), lambda m: dollars_to_string(m.group()))),
+    (
+      "many_dollars", (
+        re.compile(r"\$([0-9]{1,}\.?[0-9]{0,})\s(billion|million|trillion)"),
+        lambda m: " ".join([dollars_to_string(m.groups()[0]), m.groups()[1], "dollars"])
+      )
+    ),
+    ("dollars", (re.compile(r"\$[0-9]{1,}\.?[0-9]{0,}\w"), lambda m: dollars_to_string(m.group()))),
     ("percent", (re.compile(r"\%"), lambda m: " percent")),
     ("fractions", (re.compile(r"\b[0-9]\s?\/\s[0-9]\b"), lambda m: fraction_to_string(m.group()))),
     ("plural_numbers", (re.compile(r"\b[0-9]{1,}s\b"), lambda m: plural_numbers_to_string(m.group()))),
