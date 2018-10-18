@@ -69,8 +69,12 @@ def dollars_to_string(input_string):
   ret_str = input_string
   if contains_dollar_sign(input_string):
     input_string = input_string.replace("$", "")
-    dollars, cents = input_string.split(".")
-    if len(cents) == 1:
+    if '.' in input_string:
+      dollars, cents = input_string.split(".")
+    else:
+      dollars, cents = input_string, None
+
+    if cents and len(cents) == 1:
       cents += "0"
     ret_str = " dollars and ".join(
       num2words.num2words(int(number)) if all(c.isdigit()
@@ -201,7 +205,7 @@ rematch = OrderedDict(
     ("percent", (re.compile(r"\%"), lambda m: " percent")),
     ("fractions", (re.compile(r"\b[0-9]\s?\/\s[0-9]\b"), lambda m: fraction_to_string(m.group()))),
     ("plural_numbers", (re.compile(r"\b[0-9]{1,}s\b"), lambda m: plural_numbers_to_string(m.group()))),
-    ("numbers", (re.compile(r"[0-9\.]{1,}"), lambda m: digits_to_string(m.group()))),
+    ("numbers", (re.compile(r"[0-9\.]{1,}"), lambda m: " "+ digits_to_string(m.group())+" ")),
     ("apostrophes", (re.compile(r"\'"), lambda m: " \'")),
   ]
 )
