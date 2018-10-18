@@ -9,7 +9,7 @@ with open('requirements.txt') as f:
 
 setup(
   name='asrtoolkit',
-  version='0.1.3',
+  version='0.1.4',
   description=
   'The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.',
   url='http://github.com/finos-voice/greenkey-asrtoolkit',
@@ -26,6 +26,7 @@ setup(
         'degrade_audio_file=asrtoolkit.degrade_audio_file:main',
         'wer=asrtoolkit.wer:main',
         'split_audio_file=asrtoolkit.split_audio_file:main',
+        'extract_excel_spreadsheets=asrtoolkit.extract_excel_spreadsheets.py:main',
       ]
   },
   license='Apache v2',
