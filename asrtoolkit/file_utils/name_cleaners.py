@@ -11,15 +11,16 @@ def basename(file_name):
   return file_name.split("/")[-1]
 
 
-def sanitize_hyphens(file_name):
+def sanitize_hyphens(file_name, silent=True):
   """
     Replace hyphens with underscores if present in file name
   """
   if "-" in file_name.split("/")[-1]:
-    print(
-      "Replacing hyphens with underscores in SPH file output - "
-      "check to make sure your audio files and transcript files match"
-    )
+    if not silent:
+      print(
+        "Replacing hyphens with underscores in SPH file output - "
+        "check to make sure your audio files and transcript files match"
+      )
     file_name = "/".join(file_name.split("/")[:-1] + [file_name.split("/")[-1].replace("-", "_")])
   return file_name
 
