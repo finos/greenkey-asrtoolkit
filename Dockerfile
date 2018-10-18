@@ -16,4 +16,8 @@ RUN apk update && \
 
 COPY . /
 
-RUN pip3 install -e .
+RUN pip3 install -e . && \
+  pip3 install requests
+
+RUN wget https://storage.googleapis.com/gkt-external/sample_audio_files.tar.gz && tar -xvzf sample_audio_files.tar.gz
+
