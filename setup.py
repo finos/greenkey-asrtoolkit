@@ -9,7 +9,7 @@ with open('requirements.txt') as f:
 
 setup(
   name='asrtoolkit',
-  version='0.1.2',
+  version='0.1.3',
   description=
   'The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.',
   url='http://github.com/finos-voice/greenkey-asrtoolkit',
