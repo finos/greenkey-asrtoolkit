@@ -11,6 +11,13 @@ def basename(file_name):
   return file_name.split("/")[-1]
 
 
+def strip_extension(file_name):
+  """
+    Reutrns file without extension
+  """
+  return ".".join(file_name.split(".")[:-1]) if file_name else ""
+
+
 def sanitize_hyphens(file_name, silent=True):
   """
     Replace hyphens with underscores if present in file name
@@ -29,5 +36,5 @@ def generate_segmented_file_name(target_dir, file_name, iseg):
   """
     Take a target location, a current location, and a segment number and generate a target filename
   """
-  return target_dir + "/" + ".".join(file_name.split("/")[-1].split(".")[:-1]) + \
+  return target_dir + "/" + basename(strip_extension(file_name)) + \
             "_seg_{:05d}.".format(iseg) + file_name.split(".")[-1]

@@ -5,7 +5,7 @@ Module for holding information about an audio file and doing basic conversions
 
 import os
 import subprocess
-from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens, generate_segmented_file_name
+from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens, generate_segmented_file_name, strip_extension
 
 
 def cut_utterance(source_audio_file, target_audio_file, start_time, end_time, sample_rate=16000):
@@ -69,10 +69,10 @@ class audio_file(object):
     """
     if file_name.split(".")[-1] != 'sph':
       print("Forcing training data to use SPH file format")
-      file_name = ".".join(file_name.split(".")[-1]) + ".sph"
+      file_name = strip_extension(file_name) + ".sph"
 
     file_name = sanitize_hyphens(file_name)
-    subprocess.call(["sox {} {} rate 16k remix 1".format(self.location, file_name)], shell=True)
+    subprocess.call(["sox {} {} rate 16k remix -".format(self.location, file_name)], shell=True)
 
     # return new object
     return audio_file(file_name)
