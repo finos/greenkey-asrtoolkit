@@ -31,7 +31,7 @@ def test_clean_up():
     ),
     (
       'That is what Leah Bradley said last week about the Indians on TV.',
-      'that is what leah bradley said last week about the indians on tv'
+      'that is what leah bradley said last week about the indians on t v'
     ),
     ("I've never done anything that I'd regret.", "i 've never done anything that i 'd regret"),
     ('He needs 1.375%.', 'he needs one point three hundred and seventy five percent'),
@@ -82,6 +82,26 @@ def test_clean_up():
     ('140.', 'one hundred and forty'),
     ('1000.', 'one thousand'),
     (u'1 2 3 4 5 6 7 8 9 10.', u'one two three four five six seven eight nine ten'),
+    ("his license plate is a. c, f seven...five ! zero", 'his license plate is a c f seven five zero'),
+    ("Q2", 'q two'),
+    ("from our website at www.take2games.com.", 'from our website at www take two games dot com'),
+    ("NBA 2K18", 'n b a two k eighteen'),
+    ("launched WWE 2K 18", 'launched w w e two k eighteen'),
+    (
+      "released L.A. Noire, the The VR Case Files for the HTC VIVE system",
+      'released l a noire the the v r case files for the h t c v i v e system'
+    ),
+    ("Total net bookings were $654 million,", 'total net bookings were six hundred and fifty four million dollars'),
+    (
+      "net booking which grew 6% to $380 million.",
+      'net booking which grew six percent to three hundred and eighty million dollars'
+    ),
+    (
+      "to $25 dollars or $0.21 per share price.",
+      'to twenty five dollars dollars or zero dollars and twenty one cents per share price'
+    ),
+    ("year-over-year", 'year over year'),
+    ("HTC VIVE", 'h t c v i v e'),
   ]
 
   for test in tests:

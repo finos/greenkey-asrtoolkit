@@ -6,8 +6,8 @@ Text line cleaning functions. For WER calculations, final text should be utf cha
 
 from __future__ import print_function
 import re
-import sys
 from collections import OrderedDict
+import argparse
 import num2words
 
 
@@ -65,6 +65,12 @@ def dollars_to_string(input_string):
   'three dollars'
   >>> dollars_to_string("$3.5")
   'three dollars and fifty cents'
+  >>> dollars_to_string("$1")
+  'one dollar'
+  >>> dollars_to_string("$1.00")
+  'one dollar and zero cents'
+  >>> dollars_to_string("$1.01")
+  'one dollar and one cent'
   """
   ret_str = input_string
   if contains_dollar_sign(input_string):
@@ -76,16 +82,19 @@ def dollars_to_string(input_string):
 
     if cents and len(cents) == 1:
       cents += "0"
-    ret_str = " dollars and ".join(
-      num2words.num2words(int(number)) if all(c.isdigit()
-                                              for c in number) else number
-      for number in [dollars, cents]
-      if number
-    )
-    ret_str += (
-      " cents" if '.' in input_string and len([_ for _ in input_string.split(".") if _]) > 1 else
-      (" dollars" if '.' in input_string else "")
-    )
+
+    dollar_words, cent_words = list(map(lambda num: num2words.num2words(int(num)) if num else None, [dollars, cents]))
+
+    ret_str = dollar_words
+    if dollars and int(dollars) != 1:
+      ret_str += " dollars"
+    else:
+      ret_str += " dollar"
+    if cent_words and cents:
+      if cents and int(cents) != 1:
+        ret_str += " and {:} cents".format(cent_words)
+      else:
+        ret_str += " and {:} cent".format(cent_words)
 
   return ret_str.replace("-", " ")
 
@@ -189,7 +198,7 @@ rematch = OrderedDict(
     ("websites", (re.compile(r"[.](net|org|com|gov)\b"), lambda m: " dot " + m.group().lower().replace(".", ""))),
     (
       "acronyms",
-      (re.compile(r"\b[A-Z][.]?[A-Z][.]?[A-Z][.]?\b"), lambda m: " ".join(m.group().lower().replace(".", "")))
+      (re.compile(r"\b(([A-Z]){1,}[.]?){2,}\b"), lambda m: " ".join(m.group().lower().replace(".", "")))
     ),
     ("dashes", (re.compile(r"\-[0-9]\b"), lambda m: "negative " + m.group()[1:])),
     ("negatives", (re.compile(r" \- "), lambda m: "")),
@@ -216,15 +225,35 @@ def clean_up(input_line):
     Apply all text cleaning operations to input line
     >>> clean_up("his license plate is a. c, f seven...five ! zero")
     'his license plate is a c f seven five zero'
+    >>> clean_up("Q2")
+    'q two'
+    >>> clean_up("from our website at www.take2games.com.")
+    'from our website at www take two games dot com'
+    >>> clean_up("NBA 2K18")
+    'n b a two k eighteen'
+    >>> clean_up("launched WWE 2K 18")
+    'launched w w e two k eighteen'
+    >>> clean_up("released L.A. Noire, the The VR Case Files for the HTC VIVE system")
+    'released l a noire the the v r case files for the h t c v i v e system'
+    >>> clean_up("Total net bookings were $654 million,")
+    'total net bookings were six hundred and fifty four million dollars'
+    >>> clean_up("net booking which grew 6% to $380 million.")
+    'net booking which grew six percent to three hundred and eighty million dollars'
+    >>> clean_up("to $25 dollars or $0.21 per share price.")
+    'to twenty five dollars dollars or zero dollars and twenty one cents per share price'
+    >>> clean_up("year-over-year")
+    'year over year'
+    >>> clean_up("HTC VIVE")
+    'h t c v i v e'
   """
-  for char_to_replace in [',', '*', '&', '!', '?']:
+  for char_to_replace in ",*&!?":
     input_line = input_line.replace(char_to_replace, '')
 
   for pat in rematch:
     input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
 
-  for char_to_replace in [',', '.', '-']:
-    input_line = input_line.replace(char_to_replace, '')
+  for char_to_replace in ",.-":
+    input_line = input_line.replace(char_to_replace, ' ')
 
   input_line = input_line.encode().decode('utf-8').lower()
 
@@ -238,27 +267,34 @@ def main():
   """
     Either run tests or clean formatting for files, depending on # of arguments
   """
-  if len(sys.argv) == 1:
+
+  parser = argparse.ArgumentParser(description='cleans input *.txt files and outputs *_cleaned.txt')
+  parser.add_argument('files', type=str, nargs='+', help='list of input files')
+  try:
+    args = parser.parse_args()
+    for file_name in args.files:
+      extension = file_name.split(".")[-1]
+      if extension != 'txt':
+        print("File {:} does not end in .txt - please only use this for cleaning txt files".format(file_name))
+        continue
+
+      with open(file_name, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+
+      cleaned = []
+      for line in lines:
+        cleaned.append(clean_up(line))
+
+      with open(file_name.replace('.txt', '') + '_cleaned.txt', 'w', encoding='utf-8') as f:
+        f.writelines(cleaned)
+
+      print('File output: ' + file_name.replace('.txt', '') + '_cleaned.txt')
+
+  except:
+    # no arguments
+    print("Running doctests instead of applying clean_formatting to text files")
     import doctest
     doctest.testmod()
-
-  for file_name in sys.argv[1:]:
-    extension = file_name.split(".")[-1]
-    if extension != 'txt':
-      print("File does not end in .txt - please only use this for cleaning txt files")
-      continue
-
-    with open(file_name, 'r', encoding='utf-8') as f:
-      lines = f.readlines()
-
-    cleaned = []
-    for line in lines:
-      cleaned.append(clean_up(line))
-
-    with open(file_name.replace('.txt', '') + '_cleaned.txt', 'w', encoding='utf-8') as f:
-      f.writelines(cleaned)
-
-    print('File output: ' + file_name.replace('.txt', '') + '_cleaned.txt')
 
 
 if __name__ == '__main__':

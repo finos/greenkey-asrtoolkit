@@ -42,9 +42,15 @@ optional arguments:
 
 ### clean_formatting 
 ```text
-usage: clean_formatting input_file1.txt input_file2.txt
+usage: clean_formatting.py [-h] files [files ...]
 
-remove formatting from text files
+cleans input *.txt files and outputs *_cleaned.txt
+
+positional arguments:
+  files       list of input files
+
+optional arguments:
+  -h, --help  show this help message and exit
 
 ```
 This script standardizes how abbreviations, numbers, and other formatted text is expressed so that ASR engines can easily use these files as training or testing data. Standardizing the formatting of output is essential for reproducible measurements of ASR accuracy.
@@ -94,9 +100,26 @@ Degrade audio files to 8 kHz format similar to G711 codec
 ```
 This script reduces audio quality of input audio files so that acoustic models can learn features from telephony with the G711 codec.
 
+### extract_excel_spreadsheets
+
+```text
+usage: extract_excel_spreadsheets.py [-h] [--input-folder INPUT_FOLDER]
+                                     [--output-corpus OUTPUT_CORPUS]
+
+convert a folder of excel spreadsheets to a corpus of text files
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --input-folder INPUT_FOLDER
+                        input folder of excel spreadsheets ending in .xls or
+                        .xlsx
+  --output-corpus OUTPUT_CORPUS
+                        output folder for storing text corpus
+```
+
 ### Requirements
 
-- Python 3.6 with `pip`
+- Python 3.5 with `pip`
 
 ### Dependencies
 

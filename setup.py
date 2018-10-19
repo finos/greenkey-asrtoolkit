@@ -7,11 +7,15 @@ from setuptools import setup, find_packages
 with open('requirements.txt') as f:
   required = f.read().splitlines()
 
+with open('README.md') as f:
+  long_description = f.read()
+
 setup(
   name='asrtoolkit',
   version='0.1.4',
   description=
   'The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.',
+  long_description=long_description,
   url='http://github.com/finos-voice/greenkey-asrtoolkit',
   author='Matthew Goldey',
   author_email='mgoldey@greenkeytech.com',
@@ -26,7 +30,7 @@ setup(
         'degrade_audio_file=asrtoolkit.degrade_audio_file:main',
         'wer=asrtoolkit.wer:main',
         'split_audio_file=asrtoolkit.split_audio_file:main',
-        'extract_excel_spreadsheets=asrtoolkit.extract_excel_spreadsheets.py:main',
+        'extract_excel_spreadsheets=asrtoolkit.extract_excel_spreadsheets:main',
       ]
   },
   license='Apache v2',

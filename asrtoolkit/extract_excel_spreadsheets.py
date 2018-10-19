@@ -7,9 +7,7 @@ and formats it into a target corpus folder for language model training
 """
 
 import os
-import sys
 import pandas as pd
-from pandas import ExcelFile
 from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.file_utils.name_cleaners import basename, strip_extension, sanitize
 from glob import glob
