@@ -48,8 +48,8 @@ def parse_segment(input_seg):
     if 'channel' in input_seg:
       extracted_dict['channel'] = input_seg['channel']
 
-    if 'speakerInfo' in input_seg:
-      extracted_dict['speaker'] = input_seg['speakerInfo']
+    if 'speakerInfo' in input_seg and 'ID' in input_seg['speakerInfo']:
+      extracted_dict['speaker'] = input_seg['speakerInfo']['ID']
 
     if 'startTimeSec' in input_seg:
       extracted_dict['start'] = input_seg['startTimeSec']
