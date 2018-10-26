@@ -26,14 +26,8 @@ class time_aligned_text(object):
     """
     if input_data is not None and isinstance(input_data, str) and os.path.exists(input_data):
       self.read(input_data)
-    elif input_data is not None and isinstance(input_data, str):
-      # assume it's a string transcript
-      self.file_extension = 'txt'
-      data_handler = importlib.import_module("asrtoolkit.data_handlers.{:}".format(self.file_extension))
-      self.segments = data_handler.read_in_memory(input_data)
-    elif input_data is not None and isinstance(input_data, dict):
-      # check if you passed a dictionary in and read using json
-      self.file_extension = 'json'
+    elif input_data is not None and type(input_data) in [str, dict]:
+      self.file_extension = 'txt' if isinstance(input_data, str) else 'json'
       data_handler = importlib.import_module("asrtoolkit.data_handlers.{:}".format(self.file_extension))
       self.segments = data_handler.read_in_memory(input_data)
 

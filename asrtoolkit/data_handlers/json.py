@@ -37,37 +37,34 @@ def format_segment(seg):
   return json.dumps(output_dict, ensure_ascii=True)
 
 
-def assign_if_present(seg, output_dict, value, dict_key=None, interior_key=None, proc_val=lambda val: val):
-  """
-  Assigns value to object if present
-  """
-
-  dict_key = value if dict_key is None else dict_key
-
-  if value in seg:
-    output_dict[dict_key] = proc_val(seg[value] if interior_key is None else seg[value][interior_key])
-  return output_dict
-
-
 def parse_segment(input_seg):
   """
     Creates a segment object from an input GreenKey segment
   """
 
+  extracted_dict = {}
+
+  def assign_if_present(value, dict_key=None, interior_key=None, proc_val=lambda val: val):
+    """
+      Assigns value to extracted_dict object if present in input_seg
+    """
+
+    dict_key = value if dict_key is None else dict_key
+
+    if value in input_seg:
+      extracted_dict[dict_key] = proc_val(input_seg[value] if interior_key is None else input_seg[value][interior_key])
+
   seg = None
   try:
-    extracted_dict = {}
-    extracted_dict = assign_if_present(seg, extracted_dict, 'channel')
-    extracted_dict = assign_if_present(seg, extracted_dict, 'startTimeSec', 'start')
-    extracted_dict = assign_if_present(seg, extracted_dict, 'stopTimeSec', 'stop')
-    extracted_dict = assign_if_present(seg, extracted_dict, 'endTimeSec', 'stop')
-    extracted_dict = assign_if_present(seg, extracted_dict, 'transcript', 'text')
-    extracted_dict = assign_if_present(seg, extracted_dict, 'formatted_transcript', 'formatted_text')
-    extracted_dict = assign_if_present(seg, extracted_dict, 'punctuated_transcript', 'formatted_text')
-    extracted_dict = assign_if_present(seg, extracted_dict, 'speakerInfo', 'speaker', 'ID')
-    extracted_dict = assign_if_present(
-      seg, extracted_dict, 'genderInfo', 'label', 'gender', lambda gender: "<o,f0,{:}>".format(gender)
-    )
+    assign_if_present('channel')
+    assign_if_present('startTimeSec', 'start')
+    assign_if_present('stopTimeSec', 'stop')
+    assign_if_present('endTimeSec', 'stop')
+    assign_if_present('transcript', 'text')
+    assign_if_present('formatted_transcript', 'formatted_text')
+    assign_if_present('punctuated_transcript', 'formatted_text')
+    assign_if_present('speakerInfo', 'speaker', 'ID')
+    assign_if_present('genderInfo', 'label', 'gender', lambda gender: "<o,f0,{:}>".format(gender))
 
     seg = segment(extracted_dict)
 
