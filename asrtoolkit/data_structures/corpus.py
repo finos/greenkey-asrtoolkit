@@ -38,8 +38,8 @@ class exemplar(object):
     " validate exemplar object by constraining that the filenames before the extension are the same "
 
     valid = True
-    audio_filename = strip_extension(self.audio_file.location)
-    transcript_filename = strip_extension(self.transcript_file.location)
+    audio_filename = basename(strip_extension(self.audio_file.location))
+    transcript_filename = basename(strip_extension(self.transcript_file.location))
     if audio_filename != transcript_filename:
       print(
         "Mismatch between audio and transcript filename - please check the following: \n" +
@@ -63,15 +63,27 @@ class corpus(object):
     """
     self.__dict__.update(input_dict if input_dict else {})
     audio_extensions_to_try = ["sph", "wav", "mp3"][::-1]
-
     self.exemplars += [
       exemplar({
         'audio_file': audio_file(fl),
         'transcript_file': time_aligned_text(strip_extension(fl) + ".stm")
       })
       for audio_extension in audio_extensions_to_try
-      for fl in get_files(self.location, audio_extension)
+      for fl in (get_files(self.location, audio_extension) if self.location else [])
       if (os.path.exists(strip_extension(fl) + ".stm"))
+    ]
+
+    # gather all exemplars from /stm and /sph subdirectories if present
+    self.exemplars += [
+      exemplar(
+        {
+          'audio_file': audio_file(fl),
+          'transcript_file': time_aligned_text(self.location + "/stm/" + basename(strip_extension(fl)) + ".stm")
+        }
+      )
+      for audio_extension in audio_extensions_to_try
+      for fl in (get_files(self.location + "/sph/", audio_extension) if self.location else [])
+      if (os.path.exists(self.location + "/stm/" + basename(strip_extension(fl)) + ".stm"))
     ]
 
   def validate(self):
@@ -81,7 +93,7 @@ class corpus(object):
 
     return sum(_.validate() for _ in self.exemplars)
 
-  def prepare_for_training(self, target=None):
+  def prepare_for_training(self, target=None, nested=False):
     """
       Run validation and audio file preparation steps
     """
@@ -93,15 +105,19 @@ class corpus(object):
 
     # process audio files concurrently for speed
     futures = [
-      executor.submit(partial(_.audio_file.prepare_for_training, target + "/" + basename(_.audio_file.location)))
-      for _ in self.exemplars
+      executor.submit(
+        partial(
+          _.audio_file.prepare_for_training, target + ("/sph/" if nested else "/") + basename(_.audio_file.location)
+        )
+      ) for _ in self.exemplars
     ]
 
     # trigger conversion and gather results
     audio_files = [future.result() for future in tqdm(futures)]
 
     transcript_files = [
-      _.transcript_file.write(target + "/" + basename(_.transcript_file.location)) for _ in self.exemplars
+      _.transcript_file.write(target + ("/stm/" if nested else "/") + basename(_.transcript_file.location))
+      for _ in self.exemplars
     ]
 
     new_corpus = corpus(
