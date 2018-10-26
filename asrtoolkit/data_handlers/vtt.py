@@ -33,9 +33,7 @@ def format_segment(seg):
 
 
 def read_file(file_name):
-  """
-    Reads a VTT file, skipping any bad lines
-  """
+  """ Reads a VTT file """
 
   data = WebVTT.read(file_name)
   captions = data.captions

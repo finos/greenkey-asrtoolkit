@@ -11,6 +11,58 @@ import argparse
 data_dirs = ["test", "train", "dev"]
 
 from asrtoolkit.data_structures.corpus import corpus
+from asrtoolkit.file_utils.common_file_operations import make_list_of_dirs
+
+
+def auto_split_corpora(corpora):
+  """ given input corpora dict of corpora, auto split if it doesn't satisfy all_ready contraint """
+  print(corpora)
+  all_ready = all(corpora[data_dir].validate() for data_dir in data_dirs)
+  # dump extra data into training data by default
+  corpora['train'] += corpora['unsorted']
+  if not all_ready:
+    print("Not all training corpora were prepared. Automatically shuffling into training, testing, development sets")
+
+    # first pass, populate train directory
+    corpora['train'] += corpora['dev'] + corpora['test']
+
+    # pick a file from training set to be dev set
+    corpora['dev'] = corpora['train'][-1]
+    corpora['train'] = corpora['train'][:-1]
+
+    # pick 20% for testing
+    split_index = int(corpora['train'].validate() * 4 // 5)
+    corpora['test'] = corpora['train'][split_index:]
+    corpora['train'] = corpora['train'][:split_index]
+  return corpora
+
+
+def get_corpus(loc):
+  """ returns corpus for input location """
+  return corpus({"location": loc})
+
+
+def prep_all_for_training(corpora, target_dir):
+  """
+    prepare all corpora for training
+  """
+  for data_dir in data_dirs:
+    corpora[data_dir].prepare_for_training(target_dir + "/" + data_dir)
+
+
+def gather_all_corpora(corpora_dirs):
+  """
+    Finds all existing corpora and gathers into a dictionary
+  """
+  corpora = {
+    data_dir: (get_corpus(corpus_dir + "/" + data_dir) if os.path.exists(corpus_dir + "/" + data_dir) else corpus())
+    for corpus_dir in corpora_dirs if os.path.exists(corpus_dir) for data_dir in data_dirs
+  }
+
+  corpora['unsorted'] = corpus()
+  for unsorted_corpus in list(map(get_corpus, corpora_dirs)):
+    corpora['unsorted'] += unsorted_corpus
+  return corpora
 
 
 def main():
@@ -23,41 +75,13 @@ def main():
 
   args = parser.parse_args()
 
-  for data_dir in data_dirs:
-    os.makedirs(args.target_dir + "/" + data_dir, exist_ok=True)
+  make_list_of_dirs([args.target_dir + "/" + data_dir for data_dir in data_dirs])
 
-  corpora = {"dev": corpus(), "test": corpus(), "train": corpus(), "unsorted": corpus()}
+  corpora = gather_all_corpora(args.corpora)
 
-  for corpus_dir in args.corpora:
-    for data_dir in data_dirs:
-      if os.path.exists(corpus_dir + "/" + data_dir):
-        corpora[data_dir] += corpus({"location": corpus_dir + "/" + data_dir})
-    corpora['unsorted'] += corpus({"location": corpus_dir})
+  corpora = auto_split_corpora(corpora)
 
-  all_ready = all(corpora[data_dir].validate() for data_dir in data_dirs)
-  # dump extra data into training data by default
-  corpora['train'] += corpora['unsorted']
-  if not all_ready:
-    print("Not all training corpora were prepared. Automatically shuffling into training, testing, development sets")
-
-    # first pass, populate train directory
-    if not corpora['train'].validate():
-      corpora['train'] += corpora['dev'] + corpora['test']
-
-    # pick a file from training set to be dev set
-    if not corpora['dev'].validate():
-      corpora['dev'] = corpora['train'][-1]
-      corpora['train'] = corpora['train'][:-1]
-
-    # pick 20% for testing
-    if not corpora['test'].validate():
-      split_index = int(corpora['train'].validate() * 4 // 5)
-      corpora['test'] = corpora['train'][split_index:]
-      corpora['train'] = corpora['train'][:split_index]
-
-  # prepare for training
-  for data_dir in data_dirs:
-    corpora[data_dir].prepare_for_training(args.target_dir + "/" + data_dir)
+  prep_all_for_training(corpora, args.target_dir)
 
 
 if __name__ == "__main__":

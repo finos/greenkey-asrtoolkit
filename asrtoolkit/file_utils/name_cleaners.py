@@ -13,7 +13,7 @@ def basename(file_name):
 
 def strip_extension(file_name):
   """
-    Reutrns file without extension
+    Returns file without extension
   """
   return ".".join(file_name.split(".")[:-1]) if file_name else ""
 
@@ -21,15 +21,22 @@ def strip_extension(file_name):
 def sanitize(file_name, chars_to_replace='- ', silent=True):
   """
     replace input characters with underscores if present in file name
+  >>> sanitize("-asdflkj_ .tmp")
+  '_asdflkj__.tmp'
   """
+
+  def replace_char(input_char, file_name):
+    " replace specific char if present "
+    if input_char in file_name and not silent:
+      print(
+        "replacing '{:}'s with underscores in sph file output - ".format(c) +
+        "check to make sure your audio files and transcript files match"
+      )
+    return "/".join(file_name.split("/")[:-1] + [basename(file_name).replace(c, "_")])
+
   for c in chars_to_replace:
-    if "-" in basename(file_name):
-      if not silent:
-        print(
-          "replacing '{:}'s with underscores in sph file output - ".format(c) +
-          "check to make sure your audio files and transcript files match"
-        )
-      file_name = "/".join(file_name.split("/")[:-1] + [basename(file_name).replace(c, "_")])
+    file_name = replace_char(c, file_name)
+
   return file_name
 
 
