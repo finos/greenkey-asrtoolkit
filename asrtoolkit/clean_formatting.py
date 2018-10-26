@@ -45,17 +45,6 @@ def ordinal_to_string(input_string):
   return ret_str
 
 
-def contains_dollar_sign(input_string):
-  """
-    check if string contains '$'
-  >>> contains_dollar_sign("$5")
-  True
-  >>> contains_dollar_sign("5")
-  False
-  """
-  return any(_ == "$" for _ in input_string)
-
-
 def dollars_to_string(input_string):
   """
   convert dollar strings '$2', '$2.56', '$10', '$1000000', ... to a string/word with chars a-z
@@ -72,29 +61,27 @@ def dollars_to_string(input_string):
   >>> dollars_to_string("$1.01")
   'one dollar and one cent'
   """
-  ret_str = input_string
-  if contains_dollar_sign(input_string):
-    input_string = input_string.replace("$", "")
-    if '.' in input_string:
-      dollars, cents = input_string.split(".")
-    else:
-      dollars, cents = input_string, None
 
-    if cents and len(cents) == 1:
-      cents += "0"
+  def format_dollars(dollar_string, dollars):
+    " format dollar string "
+    return dollar_string + " dollars" if dollars and int(dollars) != 1 else "one dollar"
 
-    dollar_words, cent_words = list(map(lambda num: num2words.num2words(int(num)) if num else None, [dollars, cents]))
+  def format_cents(cents_string, cents):
+    " format cent string "
+    return (" and {:} cents".format(cents_string)
+            if int(cents) != 1 else " and one cent") if (cents_string and cents) else ""
 
-    ret_str = dollar_words
-    if dollars and int(dollars) != 1:
-      ret_str += " dollars"
-    else:
-      ret_str += " dollar"
-    if cent_words and cents:
-      if cents and int(cents) != 1:
-        ret_str += " and {:} cents".format(cent_words)
-      else:
-        ret_str += " and {:} cent".format(cent_words)
+  input_string = input_string.replace("$", "")
+
+  dollars, cents = input_string.split(".") if '.' in input_string else [input_string, None]
+
+  dollar_words, cent_words = list(
+    map(
+      lambda num: num2words.num2words(int(num)) if num else None,
+      [dollars, cents + "0" if (cents and len(cents) == 1) else cents]
+    )
+  )
+  ret_str = format_dollars(dollar_words, dollars) + format_cents(cent_words, cents)
 
   return ret_str.replace("-", " ")
 
@@ -109,15 +96,21 @@ def digits_to_string(input_string):
   >>> digits_to_string("1.05")
   'one point zero five'
   """
+
+  def get_numbers_after_decicmal_point(input_string):
+    " Catch everything after decimal point "
+    ret_str = ""
+    decimal = input_string.split(".")[1].strip() if len(input_string.split(".")) > 1 else ""
+    if decimal:
+      ret_str += " point"
+      ret_str += " zero" * decimal.count("0")
+      ret_str += " " + num2words.num2words(int(decimal))
+    return ret_str
+
   ret_str = input_string
   if input_string:
     ret_str = num2words.num2words(int(input_string.split(".")[0])) if input_string.split(".")[0] != '' else ''
-    if len(input_string.split(".")) > 1:
-      decimal = input_string.split(".")[1].strip()
-      if decimal:
-        ret_str += " point"
-        ret_str += " zero" * decimal.count("0")
-        ret_str += " " + num2words.num2words(int(decimal))
+    ret_str += get_numbers_after_decicmal_point(input_string)
 
   return ret_str.replace("-", " ")
 
@@ -158,18 +151,15 @@ def plural_numbers_to_string(input_string):
   'eights'
   >>> plural_numbers_to_string("80s")
   'eighties'
+  >>> plural_numbers_to_string("1980s")
+  'nineteen eighties'
   """
-  # inline lambda to pluralize decades/tens
-
   input_string = "".join(_ for _ in input_string if _.isdigit())
-  ret_str = input_string
 
-  if len(input_string) == 4 and input_string[-2:] != "00":
-    part1 = digits_to_string(int(input_string[:2]))
-    part2 = pluralize(input_string[2:])
-    ret_str = " ".join((part1, part2))
-  elif input_string:
-    ret_str = pluralize(input_string)
+  ret_str = (
+    " ".join((digits_to_string(input_string[:2]), pluralize(input_string[2:]))) if
+    (len(input_string) == 4 and input_string[-2:] != "00") else pluralize(input_string)
+  )
 
   return ret_str
 
@@ -196,10 +186,7 @@ rematch = OrderedDict(
   [
     ("elipses", (re.compile(r"\.{2,}"), lambda m: " ")),
     ("websites", (re.compile(r"[.](net|org|com|gov)\b"), lambda m: " dot " + m.group().lower().replace(".", ""))),
-    (
-      "acronyms",
-      (re.compile(r"\b(([A-Z]){1,}[.]?){2,}\b"), lambda m: " ".join(m.group().lower().replace(".", "")))
-    ),
+    ("acronyms", (re.compile(r"\b(([A-Z]){1,}[.]?){2,}\b"), lambda m: " ".join(m.group().lower().replace(".", "")))),
     ("dashes", (re.compile(r"\-[0-9]\b"), lambda m: "negative " + m.group()[1:])),
     ("negatives", (re.compile(r" \- "), lambda m: "")),
     ("positives", (re.compile(r"\+"), lambda m: " plus ")),
@@ -207,14 +194,14 @@ rematch = OrderedDict(
     (
       "many_dollars", (
         re.compile(r"\$([0-9]{1,}\.?[0-9]{0,})\s(billion|million|trillion)"),
-        lambda m: " ".join([dollars_to_string(m.groups()[0]), m.groups()[1], "dollars"])
+        lambda m: " ".join([digits_to_string(m.groups()[0]), m.groups()[1], "dollars"])
       )
     ),
     ("dollars", (re.compile(r"\$[0-9]{1,}\.?[0-9]{0,}\w"), lambda m: dollars_to_string(m.group()))),
     ("percent", (re.compile(r"\%"), lambda m: " percent")),
     ("fractions", (re.compile(r"\b[0-9]\s?\/\s[0-9]\b"), lambda m: fraction_to_string(m.group()))),
     ("plural_numbers", (re.compile(r"\b[0-9]{1,}s\b"), lambda m: plural_numbers_to_string(m.group()))),
-    ("numbers", (re.compile(r"[0-9\.]{1,}"), lambda m: " "+ digits_to_string(m.group())+" ")),
+    ("numbers", (re.compile(r"[0-9\.]{1,}"), lambda m: " " + digits_to_string(m.group()) + " ")),
     ("apostrophes", (re.compile(r"\'"), lambda m: " \'")),
   ]
 )
@@ -263,6 +250,24 @@ def clean_up(input_line):
   return input_line.strip()
 
 
+def clean_text_file(input_text_file):
+  """
+    Clean a text file
+  """
+
+  with open(input_text_file, 'r', encoding='utf-8') as f:
+    lines = f.readlines()
+
+  cleaned = []
+  for line in lines:
+    cleaned.append(clean_up(line))
+
+  with open(input_text_file.replace('.txt', '') + '_cleaned.txt', 'w', encoding='utf-8') as f:
+    f.writelines(cleaned)
+
+  print('File output: ' + input_text_file.replace('.txt', '') + '_cleaned.txt')
+
+
 def main():
   """
     Either run tests or clean formatting for files, depending on # of arguments
@@ -270,31 +275,14 @@ def main():
 
   parser = argparse.ArgumentParser(description='cleans input *.txt files and outputs *_cleaned.txt')
   parser.add_argument('files', type=str, nargs='+', help='list of input files')
-  try:
-    args = parser.parse_args()
-    for file_name in args.files:
-      extension = file_name.split(".")[-1]
-      if extension != 'txt':
-        print("File {:} does not end in .txt - please only use this for cleaning txt files".format(file_name))
-        continue
 
-      with open(file_name, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
-
-      cleaned = []
-      for line in lines:
-        cleaned.append(clean_up(line))
-
-      with open(file_name.replace('.txt', '') + '_cleaned.txt', 'w', encoding='utf-8') as f:
-        f.writelines(cleaned)
-
-      print('File output: ' + file_name.replace('.txt', '') + '_cleaned.txt')
-
-  except:
-    # no arguments
-    print("Running doctests instead of applying clean_formatting to text files")
-    import doctest
-    doctest.testmod()
+  args = parser.parse_args()
+  for file_name in args.files:
+    extension = file_name.split(".")[-1]
+    if extension != 'txt':
+      print("File {:} does not end in .txt - please only use this for cleaning txt files".format(file_name))
+      continue
+    clean_text_file(file_name)
 
 
 if __name__ == '__main__':

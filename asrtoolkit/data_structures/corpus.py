@@ -62,27 +62,17 @@ class corpus(object):
       Initialize from location and populate list of SPH, WAV, or MP3 audio files and STM files into segments
     """
     self.__dict__.update(input_dict if input_dict else {})
-    if not self.exemplars:
+    audio_extensions_to_try = ["sph", "wav", "mp3"][::-1]
 
-      candidate_examples = {}
-
-      audio_extensions_to_try = ["sph", "wav", "mp3"]
-
-      for audio_extension in audio_extensions_to_try:
-        for fl in get_files(self.location, audio_extension):
-          filename = strip_extension(fl)
-          if filename not in candidate_examples and os.path.exists(filename + ".stm"):
-            candidate_examples[fl] = {
-              'audio_file': audio_file(fl),
-              'transcript_file': time_aligned_text(filename + ".stm")
-            }
-
-      self.exemplars = [
-        exemplar({
-          "audio_file": eg['audio_file'],
-          "transcript_file": eg['transcript_file']
-        }) for fn, eg in list(candidate_examples.items())
-      ]
+    self.exemplars += [
+      exemplar({
+        'audio_file': audio_file(fl),
+        'transcript_file': time_aligned_text(strip_extension(fl) + ".stm")
+      })
+      for audio_extension in audio_extensions_to_try
+      for fl in get_files(self.location, audio_extension)
+      if (os.path.exists(strip_extension(fl) + ".stm"))
+    ]
 
   def validate(self):
     """

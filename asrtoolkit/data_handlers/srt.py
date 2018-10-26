@@ -26,9 +26,7 @@ def format_segment(seg):
 
 
 def read_file(file_name):
-  """
-    Reads an SRT file, skipping any bad lines
-  """
+  """ Reads an SRT file """
 
   data = WebVTT.from_srt(file_name)
   captions = data.captions

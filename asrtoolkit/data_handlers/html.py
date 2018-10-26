@@ -58,7 +58,8 @@ def parse_line(line):
     start_stop, speaker, text = [[val for val in col.children][0] for col in cols]
     start, stop = start_stop[1:-1].split(" - ")
     seg = segment({'speaker': speaker, 'start': start, 'stop': stop, 'text': text})
-  return seg if seg and seg.validate() else None
+    seg = seg if seg.validate() else None
+  return seg
 
 
 def read_file(file_name):
@@ -67,10 +68,7 @@ def read_file(file_name):
   """
   soup = BeautifulSoup(open(file_name).read(), "html.parser")
   table = soup.find("table", {})
-  segments = []
-  for line in table.findAll('tr'):
-    seg = parse_line(line)
-    if seg is not None:
-      segments.append(seg)
+
+  segments = [_ for _ in map(parse_line, table.findAll('tr')) if _]
 
   return segments

@@ -42,30 +42,30 @@ def parse_segment(input_seg):
     Creates a segment object from an input GreenKey segment
   """
 
+  extracted_dict = {}
+
+  def assign_if_present(value, dict_key=None, interior_key=None, proc_val=lambda val: val):
+    """
+      Assigns value to extracted_dict object if present in input_seg
+    """
+
+    dict_key = value if dict_key is None else dict_key
+
+    if value in input_seg:
+      extracted_dict[dict_key] = proc_val(input_seg[value] if interior_key is None else input_seg[value][interior_key])
+
   seg = None
   try:
-    extracted_dict = {}
-    if 'channel' in input_seg:
-      extracted_dict['channel'] = input_seg['channel']
+    assign_if_present('channel')
+    assign_if_present('startTimeSec', 'start')
+    assign_if_present('stopTimeSec', 'stop')
+    assign_if_present('endTimeSec', 'stop')
+    assign_if_present('transcript', 'text')
+    assign_if_present('formatted_transcript', 'formatted_text')
+    assign_if_present('punctuated_transcript', 'formatted_text')
+    assign_if_present('speakerInfo', 'speaker', 'ID')
+    assign_if_present('genderInfo', 'label', 'gender', lambda gender: "<o,f0,{:}>".format(gender))
 
-    if 'speakerInfo' in input_seg and 'ID' in input_seg['speakerInfo']:
-      extracted_dict['speaker'] = input_seg['speakerInfo']['ID']
-
-    if 'startTimeSec' in input_seg:
-      extracted_dict['start'] = input_seg['startTimeSec']
-
-    if 'endTimeSec' in input_seg:
-      extracted_dict['stop'] = input_seg['endTimeSec']
-
-    if 'genderInfo' in input_seg and 'gender' in input_seg['genderInfo']:
-      extracted_dict['label'] = "<o,f0,{:}>".format(input_seg['genderInfo']['gender'])
-
-    if 'transcript' in input_seg:
-      extracted_dict['text'] = input_seg['transcript']
-
-    extracted_dict['formatted_text'] = input_seg['punctuated_transcript'] if 'punctuated_transcript' in input_seg else (
-      input_seg['formatted_transcript'] if 'formatted_transcript' in input_seg else ""
-    )
     seg = segment(extracted_dict)
 
   except Exception as exc:
@@ -79,11 +79,7 @@ def read_in_memory(input_data):
     Reads input json objects
   """
   segments = []
-  if 'segments' in input_data:
-    for input_seg in input_data['segments']:
-      seg = parse_segment(input_seg)
-      if seg is not None:
-        segments.append(seg)
+  segments = [_ for _ in map(parse_segment, input_data['segments']) if _ is not None]
   return segments
 
 
