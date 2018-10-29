@@ -6,6 +6,7 @@ Module for holding information about an audio file and doing basic conversions
 import os
 import subprocess
 from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens, generate_segmented_file_name, strip_extension
+import hashlib
 
 
 def cut_utterance(source_audio_file, target_audio_file, start_time, end_time, sample_rate=16000):
@@ -53,15 +54,25 @@ class audio_file(object):
   """
     Create a corpus object for storing information about where files are and how many
   """
-  location = None
 
   def __init__(self, location=""):
     """
     Populate file location into
     """
+    self.location = None
     if not os.path.exists(location):
       raise "File not found"
     self.location = location
+
+  def hash(self):
+    """
+      Returns a sha1 hash of the file
+    """
+    if self.location:
+      with open(self.location, 'rb') as f:
+        return hashlib.sha1(f.read()).hexdigest()
+    else:
+      return hashlib.sha1("".encode()).hexdigest()
 
   def prepare_for_training(self, file_name):
     """

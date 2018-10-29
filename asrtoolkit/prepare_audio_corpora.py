@@ -4,10 +4,8 @@ Script for preparing SPH, STM files into training, testing, and development sets
 
 If present, train, test, dev sets will be used from the individual corpora
 """
-
-import os
 import argparse
-
+import json
 data_dirs = ["test", "train", "dev"]
 
 from asrtoolkit.data_structures.corpus import corpus
@@ -34,6 +32,11 @@ def auto_split_corpora(corpora):
     split_index = int(corpora['train'].validate() * 4 // 5)
     corpora['test'] = corpora['train'][split_index:]
     corpora['train'] = corpora['train'][:split_index]
+
+    # ensure no duplicates
+    corpora['train'] -= corpora['test']
+    corpora['test'] -= corpora['dev']
+    corpora['train'] -= corpora['dev']
   return corpora
 
 
@@ -44,10 +47,11 @@ def get_corpus(loc):
 
 def prep_all_for_training(corpora, target_dir, nested):
   """
-    prepare all corpora for training
+    prepare all corpora for training and return logs of what was where
   """
-  for data_dir in data_dirs:
-    corpora[data_dir].prepare_for_training(target_dir + "/" + data_dir, nested)
+  return {
+    data_dir: corpora[data_dir].prepare_for_training(target_dir + "/" + data_dir, nested) for data_dir in data_dirs
+  }
 
 
 def gather_all_corpora(corpora_dirs):
@@ -55,14 +59,7 @@ def gather_all_corpora(corpora_dirs):
     Finds all existing corpora and gathers into a dictionary
   """
 
-  corpora = {
-    data_dir: (get_corpus(corpus_dir + "/" + data_dir) if os.path.exists(corpus_dir + "/" + data_dir) else corpus())
-    for corpus_dir in corpora_dirs if os.path.exists(corpus_dir) for data_dir in data_dirs
-  }
-
-  default_empty_corpora = {data_dir: corpus() for data_dir in data_dirs}
-
-  corpora = {**corpora, **default_empty_corpora}
+  corpora = {data_dir: get_corpus(corpus_dir + "/" + data_dir) for corpus_dir in corpora_dirs for data_dir in data_dirs}
 
   corpora['unsorted'] = corpus()
   for unsorted_corpus in list(map(get_corpus, corpora_dirs)):
@@ -99,7 +96,9 @@ def main():
 
   corpora = auto_split_corpora(corpora)
 
-  prep_all_for_training(corpora, args.target_dir, args.nested)
+  log = prep_all_for_training(corpora, args.target_dir, args.nested)
+  with open(args.target_dir + "/corpora.json", 'w') as f:
+    f.write(json.dumps(log))
 
 
 if __name__ == "__main__":

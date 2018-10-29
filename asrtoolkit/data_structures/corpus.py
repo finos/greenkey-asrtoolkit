@@ -28,10 +28,10 @@ class exemplar(object):
   """
     Create an exemplar class to pair one audio file with one transcript file
   """
-  audio_file = None
-  transcript_file = None
 
   def __init__(self, input_dict=None):
+    self.audio_file = None
+    self.transcript_file = None
     self.__dict__.update(input_dict if input_dict else {})
 
   def validate(self):
@@ -49,49 +49,72 @@ class exemplar(object):
 
     return valid
 
+  def hash(self):
+    """
+      Returns combined hash of two files
+    """
+    return self.audio_file.hash() + self.transcript_file.hash()
+
 
 class corpus(object):
   """
     Create a corpus object for storing information about where files are and how many
   """
-  location = None
-  exemplars = []
 
   def __init__(self, input_dict=None):
     """
       Initialize from location and populate list of SPH, WAV, or MP3 audio files and STM files into segments
     """
+    self.location = None
+    self.exemplars = []
     self.__dict__.update(input_dict if input_dict else {})
-    audio_extensions_to_try = ["sph", "wav", "mp3"][::-1]
-    self.exemplars += [
-      exemplar({
-        'audio_file': audio_file(fl),
-        'transcript_file': time_aligned_text(strip_extension(fl) + ".stm")
-      })
-      for audio_extension in audio_extensions_to_try
-      for fl in (get_files(self.location, audio_extension) if self.location else [])
-      if (os.path.exists(strip_extension(fl) + ".stm"))
-    ]
 
-    # gather all exemplars from /stm and /sph subdirectories if present
-    self.exemplars += [
-      exemplar(
-        {
+    # only if not defined above should we search for exemplars based on location
+    if not self.exemplars:
+      audio_extensions_to_try = ["sph", "wav", "mp3"][::-1]
+      self.exemplars += [
+        exemplar({
           'audio_file': audio_file(fl),
-          'transcript_file': time_aligned_text(self.location + "/stm/" + basename(strip_extension(fl)) + ".stm")
-        }
-      )
-      for audio_extension in audio_extensions_to_try
-      for fl in (get_files(self.location + "/sph/", audio_extension) if self.location else [])
-      if (os.path.exists(self.location + "/stm/" + basename(strip_extension(fl)) + ".stm"))
-    ]
+          'transcript_file': time_aligned_text(strip_extension(fl) + ".stm")
+        })
+        for audio_extension in audio_extensions_to_try
+        for fl in (get_files(self.location, audio_extension) if self.location else [])
+        if (os.path.exists(strip_extension(fl) + ".stm"))
+      ]
+
+      # gather all exemplars from /stm and /sph subdirectories if present
+      self.exemplars += [
+        exemplar(
+          {
+            'audio_file': audio_file(fl),
+            'transcript_file': time_aligned_text(self.location + "/stm/" + basename(strip_extension(fl)) + ".stm")
+          }
+        )
+        for audio_extension in audio_extensions_to_try
+        for fl in (get_files(self.location + "/sph/", audio_extension) if self.location else [])
+        if (os.path.exists(self.location + "/stm/" + basename(strip_extension(fl)) + ".stm"))
+      ]
 
   def validate(self):
     """
       Check to see if any audio/transcript files are unpaired and report which ones
     """
-
+    dict_of_examples = {_.hash(): _ for _ in self.exemplars}
+    self.exemplars = [dict_of_examples[_] for _ in set(dict_of_examples)]
     return sum(_.validate() for _ in self.exemplars)
+
+  def log(self):
+    """
+      Log what each hashed example contains
+    """
+    return {
+      _.hash(): {
+        'audio_file': _.audio_file.location,
+        'audio_file_hash': _.audio_file.hash(),
+        'transcript_file': _.transcript_file.location,
+        'transcript_file_hash': _.transcript_file.hash()
+      } for _ in self.exemplars
+    }
 
   def prepare_for_training(self, target=None, nested=False):
     """
@@ -132,6 +155,7 @@ class corpus(object):
       }
     )
     new_corpus.validate()
+    return new_corpus.log()
 
   def __add__(self, other):
     """ Allow addition of corpora via + operator """

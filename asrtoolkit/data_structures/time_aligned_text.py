@@ -4,9 +4,10 @@ Class for holding time_aligned text
 
 """
 
-import importlib
-from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens, generate_segmented_file_name
 import os
+import importlib
+import hashlib
+from asrtoolkit.file_utils.name_cleaners import sanitize_hyphens, generate_segmented_file_name
 
 
 class time_aligned_text(object):
@@ -14,22 +15,32 @@ class time_aligned_text(object):
   Class for storing time-aligned text and converting between formats
   """
 
-  location = None
-  segments = []
-  file_extension = None
-
   def __init__(self, input_data=None):
     """
     Instantiates a time_aligned text object from a file (if input_var is a string)
 
     >>> transcript = time_aligned_text()
     """
+    self.location = ""
+    self.segments = []
+    self.file_extension = None
+
     if input_data is not None and isinstance(input_data, str) and os.path.exists(input_data):
       self.read(input_data)
     elif input_data is not None and type(input_data) in [str, dict]:
       self.file_extension = 'txt' if isinstance(input_data, str) else 'json'
       data_handler = importlib.import_module("asrtoolkit.data_handlers.{:}".format(self.file_extension))
       self.segments = data_handler.read_in_memory(input_data)
+
+  def hash(self):
+    """
+      Returns a sha1 hash of the file
+    """
+    if self.location:
+      with open(self.location) as f:
+        return hashlib.sha1(f.read().encode()).hexdigest()
+    else:
+      return hashlib.sha1("".encode()).hexdigest()
 
   def __str__(self):
     """
