@@ -61,6 +61,7 @@ def parse_segment(input_seg):
     assign_if_present('stopTimeSec', 'stop')
     assign_if_present('endTimeSec', 'stop')
     assign_if_present('transcript', 'text')
+    assign_if_present('corrected_transcript', 'text')
     assign_if_present('formatted_transcript', 'formatted_text')
     assign_if_present('punctuated_transcript', 'formatted_text')
     assign_if_present('speakerInfo', 'speaker', 'ID')
