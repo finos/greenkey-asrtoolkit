@@ -140,8 +140,6 @@ Please make sure you read and observe our [Code of Conduct].
 - [Matthew Goldey](https://github.com/mgoldey)
 - [Tejas Shastry](https://github.com/tshastry)
 
-For all others who have aided this project, please see the [list of contributors].
-
 ## License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE.md](https://raw.githubusercontent.com/finos-voice/greenkey-asrtoolkit/master/LICENSE) file for details.
