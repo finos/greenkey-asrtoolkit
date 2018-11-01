@@ -10,17 +10,8 @@ This expects a segment from class derived in convert_text
 from asrtoolkit.data_structures.segment import segment
 from asrtoolkit.clean_formatting import clean_up
 
-separator = "\n"
-
-
-def header():
-  " Returns empty header "
-  return ""
-
-
-def footer():
-  " Returns empty footer "
-  return ""
+# leave in place for other imports
+from asrtoolkit.data_handlers.data_handlers_common import separator, header, footer
 
 
 def format_segment(seg):
