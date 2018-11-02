@@ -119,13 +119,13 @@ optional arguments:
 
 ### Requirements
 
-- Python > 3.5 with `pip`
+- Python >= 3.5 with `pip`
 
 ## Contributing
 
 ### Code of Conduct
 
-Please make sure you read and observe our [Code of Conduct].
+Please make sure you read and observe our [Code of Conduct](https://raw.githubusercontent.com/finos-voice/greenkey-asrtoolkit/master/CODE_OF_CONDUCT.md).
 
 ### Pull Request process
 
@@ -139,9 +139,8 @@ Please make sure you read and observe our [Code of Conduct].
 
 - [Matthew Goldey](https://github.com/mgoldey)
 - [Tejas Shastry](https://github.com/tshastry)
+- [Amy Geojo](https://github.com/ageojo)
 
 ## License
 
-This project is licensed under the Apache 2.0 License - see the [LICENSE.md](https://raw.githubusercontent.com/finos-voice/greenkey-asrtoolkit/master/LICENSE) file for details.
-
-<!-- Markdown link & img defs -->
+This project is licensed under the Apache 2.0 License - see the [LICENSE](https://raw.githubusercontent.com/finos-voice/greenkey-asrtoolkit/master/LICENSE) file for details.

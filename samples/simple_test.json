@@ -1,0 +1,112 @@
+{
+  "duration": 3.2,
+  "transcription_time": 5.1,
+  "version": "3.5.1",
+  "timestamp": 1541178463841,
+  "audioScore": 2.97,
+  "audioComponents": {
+    "snr": 52.0,
+    "clipping": 0.0,
+    "peaksCount": 19.0,
+    "sampleRate": 48000.0,
+    "signalRange": 2852.0,
+    "meanFrequency": 1411.48,
+    "meanAmplitude": 1974.57
+  },
+  "segments": [
+    {
+      "transcript": "testing testing one two three",
+      "words": [
+        {
+          "word": "testing",
+          "start": 0.24,
+          "length": 0.93,
+          "confidence": 0.94
+        },
+        {
+          "word": "testing",
+          "start": 1.2,
+          "length": 0.6,
+          "confidence": 1.0
+        },
+        {
+          "word": "one",
+          "start": 1.8,
+          "length": 0.21,
+          "confidence": 1.0
+        },
+        {
+          "word": "two",
+          "start": 2.01,
+          "length": 0.18,
+          "confidence": 0.96
+        },
+        {
+          "word": "three",
+          "start": 2.19,
+          "length": 0.75,
+          "confidence": 1.0
+        }
+      ],
+      "confidence": 0.98,
+      "model": "greenkey_svt_lstm",
+      "status": 0,
+      "time_elapsed": 5.1,
+      "boundary": "long",
+      "startTimeSec": 0,
+      "endTimeSec": 3.2,
+      "channel": 1,
+      "genderInfo": {
+        "confidence": 0.0
+      },
+      "audioScore": [
+        2.97,
+        {
+          "snr": 52.0,
+          "clipping": 0.0,
+          "peaksCount": 19.0,
+          "sampleRate": 48000.0,
+          "signalRange": 2852.0,
+          "meanFrequency": 1411.48,
+          "meanAmplitude": 1974.57
+        }
+      ],
+      "formatted_transcript": "Testing testing 1 2 3.",
+      "formatted_entities": [
+        {
+          "word": "Testing",
+          "start": 0.24,
+          "length": 0.93,
+          "confidence": 0.94
+        },
+        {
+          "word": "testing",
+          "start": 1.2,
+          "length": 0.6,
+          "confidence": 1.0
+        },
+        {
+          "word": "1 2 3.",
+          "start": 1.8,
+          "length": 1.14,
+          "confidence": 0.99
+        }
+      ],
+      "punctuated_transcript": "Testing testing 1 2 3.",
+      "sentiment": {
+        "polarity": 0.0,
+        "subjectivity": 0.0
+      }
+    }
+  ],
+  "cloud_influence": 0.0,
+  "progress": 100.0,
+  "insights": {
+    "keyTerms": [],
+    "keyPhrases": [],
+    "averageSentiment": {
+      "polarity": 0.0,
+      "subjectivity": 0.0
+    }
+  }
+}
