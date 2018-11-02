@@ -51,8 +51,10 @@ def parse_segment(input_seg):
 
     dict_key = value if dict_key is None else dict_key
 
-    if value in input_seg:
-      extracted_dict[dict_key] = proc_val(input_seg[value] if interior_key is None else input_seg[value][interior_key])
+    if value in input_seg and interior_key and interior_key in input_seg[value]:
+      extracted_dict[dict_key] = proc_val(input_seg[value][interior_key])
+    elif value in input_seg and not interior_key:
+      extracted_dict[dict_key] = proc_val(input_seg[value])
 
   seg = None
   try:
