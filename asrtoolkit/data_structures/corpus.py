@@ -97,9 +97,9 @@ class corpus(object):
 
   def validate(self):
     """
-      Check to see if any audio/transcript files are unpaired and report which ones
+      Check to and validate each example after sorting by audio file hash since stm hash may change
     """
-    dict_of_examples = {_.hash(): _ for _ in self.exemplars}
+    dict_of_examples = {_.audio_file.hash(): _ for _ in self.exemplars}
     self.exemplars = [dict_of_examples[_] for _ in set(dict_of_examples)]
     return sum(_.validate() for _ in self.exemplars)
 
