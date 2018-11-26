@@ -47,6 +47,14 @@ class exemplar(object):
       )
       valid = False
 
+    if not os.path.getsize(self.audio_file.location):
+      print("Audio file {:} is empty".format(self.audio_file.location))
+      valid = False
+
+    if not os.path.getsize(self.transcript_file.location):
+      print("Transcript file {:} is empty".format(self.transcript_file.location))
+      valid = False
+
     return valid
 
   def hash(self):
@@ -113,7 +121,8 @@ class corpus(object):
         'audio_file_hash': _.audio_file.hash(),
         'transcript_file': _.transcript_file.location,
         'transcript_file_hash': _.transcript_file.hash()
-      } for _ in self.exemplars
+      }
+      for _ in self.exemplars
     }
 
   def prepare_for_training(self, target=None, nested=False):
