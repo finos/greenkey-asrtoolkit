@@ -6,6 +6,9 @@
 
 ## The GreenKey ASRToolkit provides tools for file conversion and ASR corpora organization. These are intended to simplify the workflow for building, customizing, and analyzing ASR models, useful for scientists, engineers, and other technologists in speech recognition.
 
+### File formats supported
+
+File formats have format-specific handlers in asrtoolkit/data_handlers. The scripts `convert_transcript` and `wer` support [`stm`](http://www1.icsi.berkeley.edu/Speech/docs/sctk-1.2/infmts.htm), [`srt`](http://zuggy.wz.cz/), [`vtt`](https://w3c.github.io/webvtt/), `txt`, and [GreenKey `json`](https://transcription.greenkeytech.com/) formatted transcripts. A custom `html` format is also available, though this should not be considered a stable format for long term storage as it is subject to change without notice.
 
 ### convert_transcript 
 ```text
@@ -20,7 +23,7 @@ positional arguments:
 optional arguments:
   -h, --help   show this help message and exit
 ```
-This tool allows for easy conversion from STM files to TXT files and back. Other file formats will be added in the near future.
+This tool allows for easy conversion between file formats listed above.
 
 ### wer
 ```text
@@ -38,6 +41,8 @@ optional arguments:
   -h, --help       show this help message and exit
   --char-level     calculate character error rate instead of word error rate
   --ignore-nsns    ignore non silence noises like um, uh, etc.
+
+This tool allows for easy comparison of reference and hypothesis transcripts in any format listed above.
 ```
 
 ### clean_formatting 
