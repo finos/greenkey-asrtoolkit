@@ -186,6 +186,12 @@ rematch = OrderedDict(
   [
     ("elipses", (re.compile(r"\.{2,}"), lambda m: " ")),
     ("websites", (re.compile(r"[.](net|org|com|gov)\b"), lambda m: " dot " + m.group().lower().replace(".", ""))),
+    (
+      "phone_numbers", (
+        re.compile(r"\b((1|44)[ -.]?)?([\(]?([0-9]{1,}[\)]?[ -.]?){2,})[0-9]{4}\b"),
+        lambda m: " ".join(digits_to_string(_) for _ in m.group() if _.isdigit())
+      )
+    ),
     ("acronyms", (re.compile(r"\b(([A-Z]){1,}[.]?){2,}\b"), lambda m: " ".join(m.group().lower().replace(".", "")))),
     ("dashes", (re.compile(r"\-[0-9]\b"), lambda m: "negative " + m.group()[1:])),
     ("negatives", (re.compile(r" \- "), lambda m: "")),
@@ -232,6 +238,8 @@ def clean_up(input_line):
     'year over year'
     >>> clean_up("HTC VIVE")
     'h t c v i v e'
+    >>> clean_up("you can reach me at 1-(317)-222-2222 or fax me at 555-555-5555")
+    'you can reach me at one three one seven two two two two two two two or fax me at five five five five five five five five five five'
   """
   for char_to_replace in ",*&!?":
     input_line = input_line.replace(char_to_replace, '')
