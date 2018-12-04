@@ -14,7 +14,7 @@ File formats have format-specific handlers in asrtoolkit/data_handlers. The scri
 ```text
 usage: convert_transcript [-h] input_file output_file
 
-convert between text file formats
+convert a single transcript from one text file format to another
 
 positional arguments:
   input_file   input file
@@ -23,7 +23,7 @@ positional arguments:
 optional arguments:
   -h, --help   show this help message and exit
 ```
-This tool allows for easy conversion between file formats listed above.
+This tool allows for easy conversion among file formats listed above.
 
 ### wer
 ```text
