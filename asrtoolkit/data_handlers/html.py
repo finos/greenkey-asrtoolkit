@@ -41,7 +41,7 @@ def footer():
 def format_segment(seg):
   """
     Formats a segment assuming it's an instance of class segment with elements
-    audiofile, channel, speaker, start and stop times, label, and text
+    filename, channel, speaker, start and stop times, label, and text
   """
 
   return "<tr>" + "".join(
