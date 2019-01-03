@@ -3,7 +3,7 @@
 Test xlsx extraction
 """
 
-import hashlib, os
+import os
 from asrtoolkit.extract_excel_spreadsheets import proc_input_dir_to_corpus
 
 

@@ -188,7 +188,7 @@ rematch = OrderedDict(
     ("websites", (re.compile(r"[.](net|org|com|gov)\b"), lambda m: " dot " + m.group().lower().replace(".", ""))),
     (
       "phone_numbers", (
-        re.compile(r"\b((1|44)[ -.]?)?([\(]?([0-9]{1,}[\)]?[ -.]?){2,})[0-9]{4}\b"),
+        re.compile(r"\b((1|44)[ -.]?)?([\(]?([0-9]{1,}[\)]?[ -.]?){2,5})[0-9]{4}\b"),
         lambda m: " ".join(digits_to_string(_) for _ in m.group() if _.isdigit())
       )
     ),
