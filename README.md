@@ -25,6 +25,13 @@ optional arguments:
 ```
 This tool allows for easy conversion among file formats listed above.
 
+Note: Attributes of a segment object not present in a parsed file retain their default values
+
+- For example, a `segment` object is created for each line of an STM line
+- each is initialized with the following default values which are not encoded in STM files: `formatted_text=''`;  `confidence=1.0` 
+
+
+
 ### wer
 ```text
 usage: wer [-h] [--char-level] [--ignore-nsns]

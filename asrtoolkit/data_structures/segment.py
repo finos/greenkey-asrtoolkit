@@ -40,10 +40,15 @@ def clean_float(input_float):
 class segment(object):
   """
   Class for holding segment-specific information
+    segment objects corresponds to dict under the key 'segment'
+    in the ASR generated transcript (lattice)
+    - the fields included below are shared across 'segments'
+    but 'segments' may contain many other fields (i.e. sentiment) depending on
+    the the text processing pipeline selected.
   """
 
   # refer to some file if possible
-  audiofile = "unknown"
+  filename = "unknown"
   # by default, use channel 1
   channel = "1"
   # need a speaker id
@@ -58,23 +63,32 @@ class segment(object):
   text = ""
   # text for printing out to fancy output formats
   formatted_text = ""
+  # confidence in accuracy of text
+  confidence = 1.0
 
   def __init__(self, input_dict=None):
     """
-    Stores and initializes audiofile, channel, speaker,  start & stop times, label, and text
+    Stores and initializes filename, channel, speaker, start & stop times, label,
+    and formatted and unformatted text fields.
+    - Unmodified ASR transcripts are unformatted text.
+    - Raw Chat data is formatted text;
+      `clean_up` from asrtoolkit.clean_formatting is used to convert it to unformatted text
+    Note: `channel` (as currently defined) applies only to audio input
+      - all chat data will retain default value of '1'
 
     >>> seg = segment({"text":"this is a test"})
 
     """
     self.__dict__ = {
-      'audiofile': self.audiofile,
+      'filename': self.filename,
       'channel': self.channel,
       'speaker': self.speaker,
       'start': self.start,
       'stop': self.stop,
       'label': self.label,
       'text': self.text,
-      'formatted_text': self.formatted_text
+      'formatted_text': self.formatted_text,
+      'confidence': self.confidence
     }
     self.__dict__.update(input_dict if input_dict else {})
 
@@ -105,14 +119,14 @@ class segment(object):
       valid = False
       print(exc)
 
-    if not valid:
+    if not valid:   #TODO log instead of print
       print(
         "Skipping segment due to validation error. \nPlease note that this invalidates WER calculations based on the entire file.\nSegment: ",
         json.dumps(self.__dict__)
       )
 
-    if "-" in self.audiofile:
-      self.audiofile = self.audiofile.replace("-", "_")
+    if "-" in self.filename:
+      self.filename = self.filename.replace("-", "_")
       print("Please rename audio file to replace hyphens with underscores")
 
     return valid
