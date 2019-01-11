@@ -242,7 +242,7 @@ def clean_up(input_line):
     'you can reach me at one three one seven two two two two two two two or fax me at five five five five five five five five five five'
   """
   for char_to_replace in ",*&!?":
-    input_line = input_line.replace(char_to_replace, '')
+    input_line = input_line.replace(char_to_replace, ' ')
 
   for pat in rematch:
     input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
@@ -264,14 +264,14 @@ def clean_text_file(input_text_file):
   """
 
   with open(input_text_file, 'r', encoding='utf-8') as f:
-    lines = f.readlines()
+    lines = f.read().splitlines()
 
   cleaned = []
   for line in lines:
     cleaned.append(clean_up(line))
 
   with open(input_text_file.replace('.txt', '') + '_cleaned.txt', 'w', encoding='utf-8') as f:
-    f.writelines(cleaned)
+    f.write(" ".join(cleaned))
 
   print('File output: ' + input_text_file.replace('.txt', '') + '_cleaned.txt')
 
