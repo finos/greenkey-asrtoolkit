@@ -7,6 +7,11 @@ RUN apk update && \
   apk --no-cache add \
     build-base \
     gcc \
+    g++ \
+    libc-dev \
+    libstdc++ \
+    linux-headers \
+    make \
     py3-pip \
     python3 \
     python3-dev\
