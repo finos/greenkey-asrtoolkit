@@ -1,7 +1,3 @@
-# Pipenv
-Pipfile
-Pipfile.lock
-
 # Compiled python modules.
 *.pyc
 
