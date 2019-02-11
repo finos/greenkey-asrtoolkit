@@ -21,7 +21,9 @@ RUN apk update && \
 
 COPY . /
 
-RUN pip3 install -e .[dev] && \
+# inline fix for pandas issue
+RUN pip3 install numpy && \
+  pip3 install -e .[dev] && \
   pip3 install "requests>=2.18.4"
 
 RUN wget https://storage.googleapis.com/gkt-external/sample_audio_files.tar.gz && tar -xvzf sample_audio_files.tar.gz
