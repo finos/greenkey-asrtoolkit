@@ -21,6 +21,7 @@ setup(
   author='Matthew Goldey',
   author_email='mgoldey@greenkeytech.com',
   install_requires=required,
+  extras_require={'dev': ['pandas']},
   keywords="asr speech recognition greenkey word error rate",
   entry_points={
     'console_scripts':
