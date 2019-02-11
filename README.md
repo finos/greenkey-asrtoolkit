@@ -113,6 +113,7 @@ Degrade audio files to 8 kHz format similar to G711 codec
 This script reduces audio quality of input audio files so that acoustic models can learn features from telephony with the G711 codec.
 
 ### extract_excel_spreadsheets
+Note that the use of this function requires the separate installation of `pandas`. This can be done via `pip install pandas`.
 
 ```text
 usage: extract_excel_spreadsheets.py [-h] [--input-folder INPUT_FOLDER]
