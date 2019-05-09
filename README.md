@@ -1,6 +1,6 @@
 # GreenKey Automatic Speech Recognition (ASR) Toolkit [![Build Status](https://travis-ci.org/finos-voice/greenkey-asrtoolkit.svg?branch=master)](https://travis-ci.org/finos-voice/greenkey-asrtoolkit)
 
-<img src="https://greenkeytech.com/wp-content/uploads/2019/02/gk_logo_colorlight.png" width="100" />
+<img src="https://greenkeytech.com/wp-content/uploads/2019/02/gk_logo_colorlight.png" width="300" />
 
 ---
 
