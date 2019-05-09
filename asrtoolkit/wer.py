@@ -10,11 +10,11 @@ import re
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.clean_formatting import clean_up
 
-# defines global regex for tagged noises
-re_tagged_noises = re.compile(r"[\[<][A-Za-z ]*[\]>]")
+# defines global regex for tagged noises and silence
+re_tagged_nonspeech = re.compile(r"[\[<][A-Za-z #]*[\]>]")
 
 # defines global regex to remove these nsns
-nonsilence_noises = ["noise", "um", "ah", "er", "umm", "uh", "mm", "mn", "mhm", "mnh"]
+nonsilence_noises = ["noise", "um", "ah", "er", "umm", "uh", "mm", "mn", "mhm", "mnh", "huh", "hmm"]
 re_nonsilence_noises = re.compile(r"\b({})\b".format("|".join(nonsilence_noises)))
 
 
@@ -39,9 +39,9 @@ def wer(ref, hyp, remove_nsns=False):
   if type(hyp) == time_aligned_text:
     hyp = hyp.text()
 
-  # remove tagged noises
-  ref = re.sub(re_tagged_noises, ' ', ref)
-  hyp = re.sub(re_tagged_noises, ' ', hyp)
+  # remove tagged noises and other nonspeech events
+  ref = re.sub(re_tagged_nonspeech, ' ', ref)
+  hyp = re.sub(re_tagged_nonspeech, ' ', hyp)
 
   # optionally, remove non silence noises
   if remove_nsns:
