@@ -66,7 +66,7 @@ class segment(object):
   # confidence in accuracy of text
   confidence = 1.0
 
-  def __init__(self, input_dict=None):
+  def __init__(self, *args, **kwargs):
     """
     Stores and initializes filename, channel, speaker, start & stop times, label,
     and formatted and unformatted text fields.
@@ -79,18 +79,11 @@ class segment(object):
     >>> seg = segment({"text":"this is a test"})
 
     """
-    self.__dict__ = {
-      'filename': self.filename,
-      'channel': self.channel,
-      'speaker': self.speaker,
-      'start': self.start,
-      'stop': self.stop,
-      'label': self.label,
-      'text': self.text,
-      'formatted_text': self.formatted_text,
-      'confidence': self.confidence
-    }
-    self.__dict__.update(input_dict if input_dict else {})
+    for dictionary in args:
+      for key in dictionary:
+        setattr(self, key, dictionary[key])
+    for key in kwargs:
+      setattr(self, key, kwargs[key])
 
   def __str__(self, data_handler=None):
     """
@@ -119,7 +112,7 @@ class segment(object):
       valid = False
       print(exc)
 
-    if not valid:   #TODO log instead of print
+    if not valid:  #TODO log instead of print
       print(
         "Skipping segment due to validation error. \nPlease note that this invalidates WER calculations based on the entire file.\nSegment: ",
         json.dumps(self.__dict__)
