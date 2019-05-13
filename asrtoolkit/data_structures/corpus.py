@@ -34,25 +34,28 @@ class exemplar(object):
     self.transcript_file = None
     self.__dict__.update(input_dict if input_dict else {})
 
-  def validate(self):
+  def validate(self, verbose=False):
     " validate exemplar object by constraining that the filenames before the extension are the same "
 
     valid = True
     audio_filename = basename(strip_extension(self.audio_file.location))
     transcript_filename = basename(strip_extension(self.transcript_file.location))
     if audio_filename != transcript_filename:
-      print(
-        "Mismatch between audio and transcript filename - please check the following: \n" +
-        ", ".join((audio_filename, transcript_filename))
-      )
+      if verbose:
+        print(
+          "Mismatch between audio and transcript filename - please check the following: \n" +
+          ", ".join((audio_filename, transcript_filename))
+        )
       valid = False
 
     if not os.path.getsize(self.audio_file.location):
-      print("Audio file {:} is empty".format(self.audio_file.location))
+      if verbose:
+        print("Audio file {:} is empty".format(self.audio_file.location))
       valid = False
 
     if not os.path.getsize(self.transcript_file.location):
-      print("Transcript file {:} is empty".format(self.transcript_file.location))
+      if verbose:
+        print("Transcript file {:} is empty".format(self.transcript_file.location))
       valid = False
 
     return valid
@@ -121,9 +124,14 @@ class corpus(object):
         'audio_file_hash': _.audio_file.hash(),
         'transcript_file': _.transcript_file.location,
         'transcript_file_hash': _.transcript_file.hash()
-      }
-      for _ in self.exemplars
+      } for _ in self.exemplars
     }
+
+  def calculate_number_of_segments(self):
+    """
+      Calculate how many segments are in this corpus
+    """
+    return sum(len(eg.transcript_file.segments) for eg in self.exemplars)
 
   def prepare_for_training(self, target=None, nested=False):
     """

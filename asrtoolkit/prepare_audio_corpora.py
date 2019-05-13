@@ -12,21 +12,23 @@ from asrtoolkit.data_structures.corpus import corpus
 from asrtoolkit.file_utils.common_file_operations import make_list_of_dirs
 
 
-def auto_split_corpora(corpora):
+def auto_split_corpora(corpora, min_size=50):
   """ given input corpora dict of corpora, auto split if it doesn't satisfy all_ready constraint """
   all_ready = all(corpora[data_dir].validate() if data_dir in corpora else False for data_dir in data_dirs)
 
   # dump extra data into training data by default
-  corpora['train'] += corpora['unsorted']
+  if 'unsorted' in corpora:
+    corpora['train'] += corpora['unsorted']
   if not all_ready:
     print("Not all training corpora were prepared. Automatically shuffling into training, testing, development sets")
 
     # first pass, populate train directory
     corpora['train'] += corpora['dev'] + corpora['test']
 
-    # pick a file from training set to be dev set
-    corpora['dev'] = corpora['train'][-1]
-    corpora['train'] = corpora['train'][:-1]
+    # pick a file from training set to be dev set such that it contains min_size segments
+    corpora['dev'], corpora['train'] = corpora['train'][:1], corpora['train'][1:]
+    while corpora['dev'].calculate_number_of_segments() < min_size and corpora['train'].validate() > 0:
+      corpora['dev'], corpora['train'] = (corpora['dev'] + corpora['train'][:1]), corpora['train'][1:]
 
     # pick 20% for testing
     split_index = int(corpora['train'].validate() * 4 // 5)
@@ -37,7 +39,15 @@ def auto_split_corpora(corpora):
     corpora['train'] -= corpora['test']
     corpora['test'] -= corpora['dev']
     corpora['train'] -= corpora['dev']
-  return corpora
+
+  if corpora['dev'].calculate_number_of_segments() < min_size \
+    or corpora['train'].calculate_number_of_segments() < min_size:
+
+    # throw error
+    raise (Exception("Error - insufficient data - please add more and try again"))
+
+  else:
+    return corpora
 
 
 def get_corpus(loc):
