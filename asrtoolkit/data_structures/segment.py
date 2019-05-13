@@ -80,8 +80,9 @@ class segment(object):
 
     """
     for dictionary in args:
-      for key in dictionary:
-        setattr(self, key, dictionary[key])
+      if isinstance(dictionary, dict):
+        for key in dictionary:
+          setattr(self, key, dictionary[key])
     for key in kwargs:
       setattr(self, key, kwargs[key])
 

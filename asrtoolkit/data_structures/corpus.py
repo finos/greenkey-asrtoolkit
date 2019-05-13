@@ -34,8 +34,9 @@ class exemplar(object):
   def __init__(self, *args, **kwargs):
     " Instantiate using input args and kwargs "
     for dictionary in args:
-      for key in dictionary:
-        setattr(self, key, dictionary[key])
+      if isinstance(dictionary, dict):
+        for key in dictionary:
+          setattr(self, key, dictionary[key])
     for key in kwargs:
       setattr(self, key, kwargs[key])
 
@@ -74,8 +75,9 @@ class corpus(object):
       Initialize from location and populate list of SPH, WAV, or MP3 audio files and STM files into segments
     """
     for dictionary in args:
-      for key in dictionary:
-        setattr(self, key, dictionary[key])
+      if isinstance(dictionary, dict):
+        for key in dictionary:
+          setattr(self, key, dictionary[key])
     for key in kwargs:
       setattr(self, key, kwargs[key])
 
