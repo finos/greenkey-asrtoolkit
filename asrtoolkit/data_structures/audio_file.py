@@ -74,16 +74,16 @@ class audio_file(object):
     else:
       return hashlib.sha1("".encode()).hexdigest()
 
-  def prepare_for_training(self, file_name):
+  def prepare_for_training(self, file_name, sample_rate=16000):
     """
-      Converts to single channel (from channel 1) 16k audio file in SPH file format
+      Converts to single channel (from channel 1) audio file in SPH file format
     """
     if file_name.split(".")[-1] != 'sph':
       print("Forcing training data to use SPH file format")
       file_name = strip_extension(file_name) + ".sph"
 
     file_name = sanitize_hyphens(file_name)
-    subprocess.call(["sox {} {} rate 16k remix -".format(self.location, file_name)], shell=True)
+    subprocess.call(["sox {} {} rate {} remix -".format(self.location, file_name, sample_rate)], shell=True)
 
     # return new object
     return audio_file(file_name)
