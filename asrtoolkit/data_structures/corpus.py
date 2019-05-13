@@ -34,29 +34,18 @@ class exemplar(object):
     self.transcript_file = None
     self.__dict__.update(input_dict if input_dict else {})
 
-  def validate(self, verbose=False):
+  def validate(self):
     " validate exemplar object by constraining that the filenames before the extension are the same "
 
-    valid = True
     audio_filename = basename(strip_extension(self.audio_file.location))
     transcript_filename = basename(strip_extension(self.transcript_file.location))
-    if audio_filename != transcript_filename:
-      if verbose:
-        print(
-          "Mismatch between audio and transcript filename - please check the following: \n" +
-          ", ".join((audio_filename, transcript_filename))
-        )
-      valid = False
 
-    if not os.path.getsize(self.audio_file.location):
-      if verbose:
-        print("Audio file {:} is empty".format(self.audio_file.location))
-      valid = False
-
-    if not os.path.getsize(self.transcript_file.location):
-      if verbose:
-        print("Transcript file {:} is empty".format(self.transcript_file.location))
-      valid = False
+    # Audio and transcript filename must match
+    # Audio file must not be empty
+    # Transcript file must not be empty
+    valid = audio_filename == transcript_filename \
+            and os.path.getsize(self.audio_file.location) \
+            and os.path.getsize(self.transcript_file.location)
 
     return valid
 
