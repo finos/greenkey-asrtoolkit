@@ -79,10 +79,9 @@ class segment(object):
     >>> seg = segment({"text":"this is a test"})
 
     """
-    for dictionary in args:
-      if isinstance(dictionary, dict):
-        for key in dictionary:
-          setattr(self, key, dictionary[key])
+    for dictionary in [_ for _ in args if isinstance(_, dict)]:
+      for key in dictionary:
+        setattr(self, key, dictionary[key])
     for key in kwargs:
       setattr(self, key, kwargs[key])
 
@@ -113,7 +112,7 @@ class segment(object):
       valid = False
       print(exc)
 
-    if not valid:  #TODO log instead of print
+    if not valid:  # TODO log instead of print
       print(
         "Skipping segment due to validation error. \nPlease note that this invalidates WER calculations based on the entire file.\nSegment: ",
         json.dumps(self.__dict__)
@@ -128,4 +127,4 @@ class segment(object):
 
 if __name__ == "__main__":
   import doctest
-  doctest.testmod()
+  doctest.testmod(raise_on_error=True, verbose=True)
