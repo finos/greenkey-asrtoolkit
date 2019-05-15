@@ -14,6 +14,9 @@ class time_aligned_text(object):
   """
   Class for storing time-aligned text and converting between formats
   """
+  location = ""
+  segments = []
+  file_extension = None
 
   def __init__(self, input_data=None):
     """
@@ -21,10 +24,6 @@ class time_aligned_text(object):
 
     >>> transcript = time_aligned_text()
     """
-    self.location = ""
-    self.segments = []
-    self.file_extension = None
-
     if input_data is not None and isinstance(input_data, str) and os.path.exists(input_data):
       self.read(input_data)
     elif input_data is not None and type(input_data) in [str, dict]:

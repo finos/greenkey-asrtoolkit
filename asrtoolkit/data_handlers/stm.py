@@ -22,8 +22,8 @@ def format_segment(seg):
     filename, channel, speaker, start and stop times, label, and text
   """
   return " ".join(
-    [str(seg.__dict__[_]) for _ in ('filename', 'channel', 'speaker', 'start', 'stop', 'label')] +
-    [clean_up(seg.__dict__['text'])]  # clean_up used to unformat stm file text
+    [str(getattr(seg,_)) for _ in ('filename', 'channel', 'speaker', 'start', 'stop', 'label')] +
+    [clean_up(seg.text)]  # clean_up used to unformat stm file text
   )
 
 
@@ -49,7 +49,7 @@ def parse_line(line):
         'text': text,
       }
     )
-  return seg if seg and seg.validate() else None
+  return seg if (seg is not None) and seg.validate() else None
 
 
 def read_file(file_name):
