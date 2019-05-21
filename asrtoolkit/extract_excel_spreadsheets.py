@@ -14,10 +14,14 @@ from glob import glob
 import argparse
 
 
+def clean_line(line):
+  "clean up a line and test for empty values"
+  return clean_up(" ".join(map(lambda val: str(val) if not pd.isnull(val) else '',line)))
+
+
 def dump_sheet(output_file, sheet):
   "dump a sheet from a list of spreadsheets into a file"
-  output_lines = "\n".join([" ".join([str(_) for _ in line if not pd.isnull(_)]) for line in sheet]).splitlines()
-  output_file.write("\n".join((clean_up(line) for line in output_lines if line != "")))
+  output_file.write("\n".join(clean_line(line) for line in sheet if clean_line(line)))
 
 
 def extract_xlsx(filename, target_folder):
