@@ -13,12 +13,12 @@ from asrtoolkit.data_structures.segment import segment
 from asrtoolkit.data_handlers.data_handlers_common import separator
 
 
-def th(text, width):
-  " make a table delimiter with input width "
+def table_header(text, width):
+  " make a table header with input width "
   return "<th align=\"left\" width=\"{:}%\">{:}</th>".format(width, text)
 
 
-def td(text):
+def table_delimiter(text):
   " make a table delimiter element "
   return "<td align=\"left\">{:}</td>".format(text)
 
@@ -29,7 +29,7 @@ def header():
   widths = [10, 8, 82]
 
   return "<table>\n<tr>" + "".join(
-    th(t, w) for t, w in zip(["[Start time - End time]", "Speaker", "Transcript"], widths)
+    table_header(t, w) for t, w in zip(["[Start time - End time]", "Speaker", "Transcript"], widths)
   ) + "</tr>\n"
 
 
@@ -45,7 +45,7 @@ def format_segment(seg):
   """
 
   return "<tr>" + "".join(
-    td(t) for t in
+    table_delimiter(t) for t in
     ["[{:} - {:}]".format(seg.start, seg.stop), seg.speaker, seg.formatted_text if seg.formatted_text else seg.text]
   ) + "</tr>\n"
 
