@@ -1,10 +1,10 @@
-FROM alpine:latest
+FROM alpine:edge
 LABEL maintainer="Matthew Goldey <mgoldey@greenkeytech.com>"
 LABEL organization="Green Key Technologies <transcription@greenkeytech.com>"
 
 # APK INSTALLS
 RUN apk update && \
-  apk --no-cache add \
+  apk --no-cache add -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
     build-base \
     gcc \
     g++ \
@@ -15,6 +15,7 @@ RUN apk update && \
     py3-pip \
     python3 \
     python3-dev\
+    py3-pandas \
     sox \
     wget && \
   rm -rf /var/cache/apk/*
