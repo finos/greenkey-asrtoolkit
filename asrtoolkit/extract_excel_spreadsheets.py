@@ -14,6 +14,16 @@ from glob import glob
 import argparse
 
 
+def clean_line(line):
+  "clean up a line and test for empty values"
+  return clean_up(" ".join(map(lambda val: str(val) if not pd.isnull(val) else '',line)))
+
+
+def dump_sheet(output_file, sheet):
+  "dump a sheet from a list of spreadsheets into a file"
+  output_file.write("\n".join(clean_line(line) for line in sheet if clean_line(line)))
+
+
 def extract_xlsx(filename, target_folder):
   """
   For an excel spreadsheet, extract to a text file
@@ -21,11 +31,9 @@ def extract_xlsx(filename, target_folder):
   working_excel_data_structure = pd.ExcelFile(filename)
   raw_name = sanitize(strip_extension(basename(filename)))
 
-  with open(''.join([target_folder, '/', raw_name, ".txt"]), 'a+') as f:
+  with open(''.join([target_folder, '/', raw_name, ".txt"]), 'a+') as output_file:
     for sheet in working_excel_data_structure.sheet_names:
-      data = working_excel_data_structure.parse(sheet).values
-      output_lines = "\n".join([" ".join([str(_) for _ in line if not pd.isnull(_)]) for line in data]).splitlines()
-      f.write("\n".join((clean_up(line) for line in output_lines if line != "")))
+      dump_sheet(output_file, working_excel_data_structure.parse(sheet).values)
 
 
 def proc_input_dir_to_corpus(input_dir, output_dir):
