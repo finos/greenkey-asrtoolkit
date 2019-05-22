@@ -203,7 +203,7 @@ rematch = OrderedDict(
         lambda m: " ".join([digits_to_string(m.groups()[0]), m.groups()[1], "dollars"])
       )
     ),
-    ("dollars", (re.compile(r"\$[0-9]{1,}\.?[0-9]{0,}\w"), lambda m: dollars_to_string(m.group()))),
+    ("dollars", (re.compile(r"\$[0-9]{1,}\.?[0-9]{0,}"), lambda m: dollars_to_string(m.group()))),
     ("percent", (re.compile(r"\%"), lambda m: " percent")),
     ("fractions", (re.compile(r"\b[0-9]\s?\/\s[0-9]\b"), lambda m: fraction_to_string(m.group()))),
     ("plural_numbers", (re.compile(r"\b[0-9]{1,}s\b"), lambda m: plural_numbers_to_string(m.group()))),
@@ -245,7 +245,10 @@ def clean_up(input_line):
     input_line = input_line.replace(char_to_replace, ' ')
 
   for pat in rematch:
-    input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
+    try:
+      input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
+    except Exception as exc:
+      print("Exception {} with line {}".format(exc, input_line))
 
   for char_to_replace in ",.-":
     input_line = input_line.replace(char_to_replace, ' ')
