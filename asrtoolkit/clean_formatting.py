@@ -213,6 +213,35 @@ rematch = OrderedDict(
 )
 
 
+def remove_special_chars(line, chars_to_replace):
+  "remove a set of special chars"
+  for char_to_replace in chars_to_replace:
+    line = line.replace(char_to_replace, ' ')
+  return line
+
+
+def remove_double_spaces(line):
+  "remove all double spaces"
+  while "  " in line:
+    line = line.replace("  ", " ")
+  return line
+
+
+def apply_all_regex_and_replacements(input_line, rematch):
+  """
+  For a line and list of paired regex and replacements, 
+    apply all replacements for all regex on the line
+  """
+
+  for pat in rematch:
+    try:
+      input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
+    except Exception as exc:
+      print("Exception {} with line {}".format(exc, input_line))
+
+  return input_line
+
+
 def clean_up(input_line):
   """
     Apply all text cleaning operations to input line
@@ -241,23 +270,17 @@ def clean_up(input_line):
     >>> clean_up("you can reach me at 1-(317)-222-2222 or fax me at 555-555-5555")
     'you can reach me at one three one seven two two two two two two two or fax me at five five five five five five five five five five'
   """
-  for char_to_replace in ",*&!?":
-    input_line = input_line.replace(char_to_replace, ' ')
+  input_line = remove_special_chars(input_line, ",*&!?")
 
-  for pat in rematch:
-    try:
-      input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
-    except Exception as exc:
-      print("Exception {} with line {}".format(exc, input_line))
+  input_line = apply_all_regex_and_replacements(input_line, rematch)
 
-  for char_to_replace in ",.-":
-    input_line = input_line.replace(char_to_replace, ' ')
+  input_line = remove_special_chars(input_line, ",.-")
 
   input_line = input_line.encode().decode('utf-8').lower()
 
   # check for double spacing
-  while "  " in input_line:
-    input_line = input_line.replace("  ", " ")
+  input_line = remove_double_spaces(input_line)
+
   return input_line.strip()
 
 
