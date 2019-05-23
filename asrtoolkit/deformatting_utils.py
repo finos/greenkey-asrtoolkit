@@ -64,6 +64,23 @@ def format_quantities(input_string):
   return input_string, quant
 
 
+def format_dollars_and_cents(input_string):
+  "formats de-formatted dollars and cents from dollars and cents string"
+  # split into pieces
+  dollars, cents = input_string.split(".") if '.' in input_string else [input_string, None]
+
+  # format all as numbers
+  dollar_words, cent_words = list(
+    map(
+      lambda num: num2words.num2words(int(num)) if num else None,
+      [dollars, cents + "0" if (cents and len(cents) == 1) else cents]
+    )
+  )
+
+  # format the output
+  return format_dollars(dollar_words, dollars) + format_cents(cent_words, cents)
+
+
 def dollars_to_string(input_string):
   """
   convert dollar strings '$2', '$2.56', '$10', '$1000000', ... to a string/word with chars a-z
@@ -89,20 +106,7 @@ def dollars_to_string(input_string):
   input_string, quant = format_quantities(input_string)
 
   if not quant:
-    # split into pieces
-    dollars, cents = input_string.split(".") if '.' in input_string else [input_string, None]
-
-    # format all as numbers
-    dollar_words, cent_words = list(
-      map(
-        lambda num: num2words.num2words(int(num)) if num else None,
-        [dollars, cents + "0" if (cents and len(cents) == 1) else cents]
-      )
-    )
-
-    # format the output
-    ret_str = format_dollars(dollar_words, dollars) + format_cents(cent_words, cents)
-
+    format_dollars_and_cents
   else:
     ret_str = " ".join([num2words.num2words(float(input_string)), quant, 'dollars'])
 
@@ -111,6 +115,15 @@ def dollars_to_string(input_string):
 
   return ret_str
 
+def get_numbers_after_decicmal_point(input_string):
+  " Format every number after decimal point "
+  ret_str = ""
+  decimal = input_string.split(".")[1].strip() if len(input_string.split(".")) > 1 else ""
+  if decimal:
+    ret_str += " point"
+    ret_str += " zero" * decimal.count("0")
+    ret_str += " " + num2words.num2words(int(decimal))
+  return ret_str
 
 def digits_to_string(input_string):
   """
@@ -122,17 +135,6 @@ def digits_to_string(input_string):
   >>> digits_to_string("1.05")
   'one point zero five'
   """
-
-  def get_numbers_after_decicmal_point(input_string):
-    " Catch everything after decimal point "
-    ret_str = ""
-    decimal = input_string.split(".")[1].strip() if len(input_string.split(".")) > 1 else ""
-    if decimal:
-      ret_str += " point"
-      ret_str += " zero" * decimal.count("0")
-      ret_str += " " + num2words.num2words(int(decimal))
-    return ret_str
-
   ret_str = input_string
   if input_string:
     ret_str = num2words.num2words(int(input_string.split(".")[0])) if input_string.split(".")[0] != '' else ''
