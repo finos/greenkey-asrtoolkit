@@ -71,7 +71,7 @@ def apply_all_regex_and_replacements(input_line, rematch):
     try:
       input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
     except Exception as exc:
-      print("Exception {} with line {}".format(exc, input_line))
+      print("Exception {} with line {} for pattern {}".format(exc, input_line, pat))
 
   return input_line
 
@@ -103,6 +103,8 @@ def clean_up(input_line):
     'h t c v i v e'
     >>> clean_up("you can reach me at 1-(317)-222-2222 or fax me at 555-555-5555")
     'you can reach me at one three one seven two two two two two two two or fax me at five five five five five five five five five five'
+    >>> clean_up("I heard Mr. McDonald has $6.23")
+    'i heard mr mcdonald has six dollars and twenty three cents'
   """
   input_line = remove_special_chars(input_line, ",*&!?")
 

@@ -106,7 +106,7 @@ def dollars_to_string(input_string):
   input_string, quant = format_quantities(input_string)
 
   if not quant:
-    format_dollars_and_cents
+    ret_str = format_dollars_and_cents(input_string)
   else:
     ret_str = " ".join([num2words.num2words(float(input_string)), quant, 'dollars'])
 
@@ -114,6 +114,7 @@ def dollars_to_string(input_string):
   ret_str = ret_str.replace("-", " ")
 
   return ret_str
+
 
 def get_numbers_after_decicmal_point(input_string):
   " Format every number after decimal point "
@@ -124,6 +125,7 @@ def get_numbers_after_decicmal_point(input_string):
     ret_str += " zero" * decimal.count("0")
     ret_str += " " + num2words.num2words(int(decimal))
   return ret_str
+
 
 def digits_to_string(input_string):
   """
