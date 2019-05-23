@@ -45,6 +45,29 @@ def ordinal_to_string(input_string):
   return ret_str
 
 
+def format_dollars(dollar_string, dollars):
+  " format dollar string "
+  return dollar_string + " dollars" if dollars and int(dollars) != 1 else "one dollar"
+
+
+def format_cents(cents_string, cents):
+  " format cent string "
+  return (" and {:} cents".format(cents_string)
+          if int(cents) != 1 else " and one cent") if (cents_string and cents) else ""
+
+
+def format_quantities(input_string):
+  " split off quantities "
+  quant = ''
+  possible_quant = input_string[-1].upper() if input_string else ''
+  if possible_quant in {'B', 'M'}:
+    quant = 'billion' if possible_quant == 'B' else 'million'
+  if quant:
+    input_string = input_string[:-1]
+
+  return input_string, quant
+
+
 def dollars_to_string(input_string):
   """
   convert dollar strings '$2', '$2.56', '$10', '$1000000', ... to a string/word with chars a-z
@@ -60,30 +83,37 @@ def dollars_to_string(input_string):
   'one dollar and zero cents'
   >>> dollars_to_string("$1.01")
   'one dollar and one cent'
+  >>> dollars_to_string("$1.01B")
+  'one point zero one billion dollars'
   """
-
-  def format_dollars(dollar_string, dollars):
-    " format dollar string "
-    return dollar_string + " dollars" if dollars and int(dollars) != 1 else "one dollar"
-
-  def format_cents(cents_string, cents):
-    " format cent string "
-    return (" and {:} cents".format(cents_string)
-            if int(cents) != 1 else " and one cent") if (cents_string and cents) else ""
 
   input_string = input_string.replace("$", "")
 
-  dollars, cents = input_string.split(".") if '.' in input_string else [input_string, None]
+  # peel off quantity if present
+  input_string, quant = format_quantities(input_string)
 
-  dollar_words, cent_words = list(
-    map(
-      lambda num: num2words.num2words(int(num)) if num else None,
-      [dollars, cents + "0" if (cents and len(cents) == 1) else cents]
+  if not quant:
+    # split into pieces
+    dollars, cents = input_string.split(".") if '.' in input_string else [input_string, None]
+
+    # format all as numbers
+    dollar_words, cent_words = list(
+      map(
+        lambda num: num2words.num2words(int(num)) if num else None,
+        [dollars, cents + "0" if (cents and len(cents) == 1) else cents]
+      )
     )
-  )
-  ret_str = format_dollars(dollar_words, dollars) + format_cents(cent_words, cents)
 
-  return ret_str.replace("-", " ")
+    # format the output
+    ret_str = format_dollars(dollar_words, dollars) + format_cents(cent_words, cents)
+
+  else:
+    ret_str = " ".join([num2words.num2words(float(input_string)), quant, 'dollars'])
+
+  # remove minus signs
+  ret_str = ret_str.replace("-", " ")
+
+  return ret_str
 
 
 def digits_to_string(input_string):
