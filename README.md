@@ -156,4 +156,6 @@ Please make sure you read and observe our [Code of Conduct](https://raw.githubus
 
 ## License
 
-This project is licensed under the Apache 2.0 License - see the [LICENSE](https://raw.githubusercontent.com/finos-voice/greenkey-asrtoolkit/master/LICENSE) file for details.
+Copyright 2019 Greenkey
+
+The code in this repository is distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
