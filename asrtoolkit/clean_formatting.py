@@ -79,7 +79,8 @@ def apply_all_regex_and_replacements(input_line, rematch):
 
 def check_for_formatted_chars(input_line):
   "returns True if formatting present otherwise False"
-  return set(input_line).difference(set(string.ascii_lowercase + " '"))
+
+  return bool(set(input_line).difference(set(string.ascii_lowercase + " ")))
 
 
 def clean_up(input_line):
@@ -114,7 +115,7 @@ def clean_up(input_line):
   """
 
   if check_for_formatted_chars(input_line):
-    
+
     input_line = remove_special_chars(input_line, ",*&!?")
 
     input_line = apply_all_regex_and_replacements(input_line, rematch)
