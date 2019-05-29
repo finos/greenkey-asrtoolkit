@@ -78,7 +78,7 @@ def apply_all_regex_and_replacements(input_line, rematch):
 
 
 def check_for_formatted_chars(input_line):
-  "returns True if formatting present otherwise False"
+  "returns True if formatting or special chars are present otherwise False"
 
   return bool(set(input_line).difference(set(string.ascii_lowercase + " ")))
 
