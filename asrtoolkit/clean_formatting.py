@@ -79,7 +79,7 @@ def apply_all_regex_and_replacements(input_line, rematch):
 
 def check_for_formatted_chars(input_line):
   "returns True if formatting absent otherwise False"
-  return not set(input_line).difference(set(string.ascii_lowercase + " '-"))
+  return not set(input_line).difference(set(string.ascii_lowercase + " '"))
 
 
 def clean_up(input_line):
