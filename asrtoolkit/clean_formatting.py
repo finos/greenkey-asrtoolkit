@@ -6,6 +6,7 @@ Text line cleaning functions. For WER calculations, final text should be utf cha
 
 from __future__ import print_function
 import re
+import string
 from collections import OrderedDict
 import argparse
 from asrtoolkit.deformatting_utils import (
@@ -76,6 +77,11 @@ def apply_all_regex_and_replacements(input_line, rematch):
   return input_line
 
 
+def check_for_formatted_chars(input_line):
+  "returns True if formatting absent otherwise False"
+  return not set(input_line).difference(set(string.ascii_lowercase + " '-"))
+
+
 def clean_up(input_line):
   """
     Apply all text cleaning operations to input line
@@ -106,6 +112,10 @@ def clean_up(input_line):
     >>> clean_up("I heard Mr. McDonald has $6.23")
     'i heard mr mcdonald has six dollars and twenty three cents'
   """
+
+  if check_for_formatted_chars(input_line):
+    return input_line
+
   input_line = remove_special_chars(input_line, ",*&!?")
 
   input_line = apply_all_regex_and_replacements(input_line, rematch)
