@@ -78,8 +78,8 @@ def apply_all_regex_and_replacements(input_line, rematch):
 
 
 def check_for_formatted_chars(input_line):
-  "returns True if formatting absent otherwise False"
-  return not set(input_line).difference(set(string.ascii_lowercase + " '"))
+  "returns True if formatting present otherwise False"
+  return set(input_line).difference(set(string.ascii_lowercase + " '"))
 
 
 def clean_up(input_line):
@@ -114,15 +114,14 @@ def clean_up(input_line):
   """
 
   if check_for_formatted_chars(input_line):
-    return input_line
+    
+    input_line = remove_special_chars(input_line, ",*&!?")
 
-  input_line = remove_special_chars(input_line, ",*&!?")
+    input_line = apply_all_regex_and_replacements(input_line, rematch)
 
-  input_line = apply_all_regex_and_replacements(input_line, rematch)
+    input_line = remove_special_chars(input_line, ",.-")
 
-  input_line = remove_special_chars(input_line, ",.-")
-
-  input_line = input_line.encode().decode('utf-8').lower()
+    input_line = input_line.encode().decode('utf-8').lower()
 
   # check for double spacing
   input_line = remove_double_spaces(input_line)
