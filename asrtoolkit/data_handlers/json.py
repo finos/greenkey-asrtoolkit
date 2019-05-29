@@ -40,9 +40,11 @@ def format_segment(seg):
   output_dict['startTimeSec'] = seg.start
   output_dict['endTimeSec'] = seg.stop
   output_dict['genderInfo'] = {'gender': seg.label.split(",")[-1].replace(">", "")}
-  output_dict['punctuated_transcript'] = seg.formatted_text
   output_dict['transcript'] = seg.text
   output_dict['confidence'] = seg.confidence
+  
+  if len(seg.formatted_text) > 0:
+    output_dict['formatted_transcript'] = seg.formatted_text
 
   return json.dumps(output_dict, ensure_ascii=True)
 
