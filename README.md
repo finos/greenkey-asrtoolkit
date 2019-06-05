@@ -156,6 +156,6 @@ Please make sure you read and observe our [Code of Conduct](https://raw.githubus
 
 ## License
 
-Copyright 2019 Greenkey
+Copyright 2019 GreenKey Technologies
 
 The code in this repository is distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
