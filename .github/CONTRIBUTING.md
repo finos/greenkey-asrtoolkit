@@ -1,4 +1,4 @@
-# Contributing to GreenKey Asrtoolkit
+# Contributing to GreenKey ASRtoolkit
 
 When contributing to this repository, please first discuss the change you wish to make via issue,
 email, or any other method with the owners of this repository before making a change. 
@@ -17,7 +17,7 @@ that must also be met.**
 
 _NOTE:_ Commits and pull requests to FINOS repositories will only be accepted from those contributors with an active, executed Individual Contributor License Agreement (ICLA) with FINOS OR who are covered under an existing and active Corporate Contribution License Agreement (CCLA) executed with FINOS. Commits from individuals not covered under an ICLA or CCLA will be flagged and blocked by the FINOS Clabot tool. Please note that some CCLAs require individuals/employees to be explicitly named on the CCLA.
 
-As a result, PRs submitted to the GreenKey Asrtoolkit project cannot be accepted until you have a CLA in place with the Foundation.
+As a result, PRs submitted to the GreenKey ASRtoolkit project cannot be accepted until you have a CLA in place with the Foundation.
 
 *Need an ICLA? Unsure if you are covered under an existing CCLA? Email [help@finos.org](mailto:help@finos.org)*
 
