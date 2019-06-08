@@ -53,11 +53,12 @@ def format_cents(cents_string, cents):
 
 
 def format_quantities(input_string):
-  " split off quantities "
-  quant = ''
+  " split off quantities and change into words"
+
   possible_quant = input_string[-1].upper() if input_string else ''
-  if possible_quant in {'B', 'M'}:
-    quant = 'billion' if possible_quant == 'B' else 'million'
+  quantity_dict = {'B': "billion", "M": "million", "K": "thousand"}
+  quant = quantity_dict[possible_quant] if possible_quant in quantity_dict else ''
+
   if quant:
     input_string = input_string[:-1]
 
