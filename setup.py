@@ -13,8 +13,7 @@ with open('README.md') as f:
 setup(
   name='asrtoolkit',
   version='0.1.18',
-  description=
-  'The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.',
+  description='The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.',
   long_description=long_description,
   long_description_content_type='text/markdown',
   url='http://github.com/finos-voice/greenkey-asrtoolkit',

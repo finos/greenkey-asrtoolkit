@@ -22,7 +22,7 @@ def format_segment(seg):
     filename, channel, speaker, start and stop times, label, and text
   """
   return " ".join(
-    [str(getattr(seg,_)) for _ in ('filename', 'channel', 'speaker', 'start', 'stop', 'label')] +
+    [str(getattr(seg, _)) for _ in ('filename', 'channel', 'speaker', 'start', 'stop', 'label')] +
     [clean_up(seg.text)]  # clean_up used to unformat stm file text
   )
 

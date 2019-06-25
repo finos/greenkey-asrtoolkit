@@ -22,8 +22,9 @@ def cut_utterance(source_audio_file, target_audio_file, start_time, end_time, sa
     """
   subprocess.call(
     [
-      "sox {} -r {} -b 16 -c 1 {} trim {} ={}"
-      .format(source_audio_file, str(sample_rate), target_audio_file, str(start_time), str(end_time))
+      "sox {} -r {} -b 16 -c 1 {} trim {} ={}".format(
+        source_audio_file, str(sample_rate), target_audio_file, str(start_time), str(end_time)
+      )
     ],
     shell=True
   )

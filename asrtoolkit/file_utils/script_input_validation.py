@@ -21,6 +21,7 @@ def valid_input_file(file_name, valid_extensions=[]):
   """
   return exists(file_name) and get_extension(file_name) in (valid_extensions if valid_extensions else VALID_EXTENSIONS)
 
+
 def assign_if_valid(file_name):
   from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
   " returns a time_aligned_text object if valid else None"

@@ -17,5 +17,6 @@ def validate():
   # so write it back in place
   convert(args.input_file, args.input_file)
 
+
 if __name__ == "__main__":
   validate()

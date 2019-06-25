@@ -11,7 +11,6 @@ from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.file_utils.script_input_validation import assign_if_valid
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 
-
 # defines global regex for tagged noises and silence
 re_tagged_nonspeech = re.compile(r"[\[<][A-Za-z #]*[\]>]")
 
@@ -81,8 +80,6 @@ def cer(ref, hyp, remove_nsns=False):
 
   # calculate per line CER
   return 100 * editdistance.eval(ref, hyp) / len(ref)
-
-
 
 
 def main():
