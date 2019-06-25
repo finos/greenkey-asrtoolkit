@@ -14,4 +14,4 @@ install:
   - pip install -e .[dev]
 # command to run tests
 script:
-  - python -m pytest -s --doctest-modules
+  - python -m pytest -v --doctest-modules
