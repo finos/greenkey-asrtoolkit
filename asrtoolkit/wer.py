@@ -82,6 +82,11 @@ def cer(ref, hyp, remove_nsns=False):
   return 100 * editdistance.eval(ref, hyp) / len(ref)
 
 
+def assign_if_valid(file_name):
+  " returns a time_aligned_text object if valid else None"
+  return time_aligned_text(file_name) if valid_input_file(file_name) else None
+
+
 def main():
   parser = argparse.ArgumentParser(
     description='Compares a reference and transcript file and calculates word error rate (WER) between these two files'
@@ -99,14 +104,12 @@ def main():
   args = parser.parse_args()
 
   # read files from arguments
-  ref = time_aligned_text(args.reference_file) if valid_input_file(args.reference_file) else None
-  hyp = time_aligned_text(args.transcript_file) if valid_input_file(args.transcript_file) else None
+  ref = assign_if_valid(args.reference_file)
+  hyp = assign_if_valid(args.transcript_file)
 
   if ref is None or hyp is None:
     print("Error with an input file. Please check all files exist and are accepted by ASRToolkit")
-    return
-
-  if args.char_level:
+  elif args.char_level:
     print("CER: {:5.3f}%".format(cer(ref, hyp, args.ignore_nsns)))
   else:
     print("WER: {:5.3f}%".format(wer(ref, hyp, args.ignore_nsns)))
