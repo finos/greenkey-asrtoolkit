@@ -8,7 +8,7 @@ import argparse
 from asrtoolkit.file_utils.script_input_validation import assign_if_valid
 
 
-def main():
+def convert():
   parser = argparse.ArgumentParser(description='convert between text file formats')
   parser.add_argument('input_file', metavar='input_file', type=str, help='input file')
   parser.add_argument('output_file', metavar='output_file', type=str, help='output file')
@@ -23,4 +23,4 @@ def main():
 
 
 if __name__ == "__main__":
-  main()
+  convert()
