@@ -3,7 +3,7 @@
 Simple wrapper for validating script inputs
 """
 
-from os.path import exists
+from os.path import isfile
 from asrtoolkit.file_utils.name_cleaners import get_extension
 
 VALID_EXTENSIONS = ["json", "srt", "stm", "vtt", "txt", "html"]
@@ -19,7 +19,7 @@ def valid_input_file(file_name, valid_extensions=[]):
   >>> valid_input_file("requirements.txt")
   True
   """
-  return exists(file_name) and get_extension(file_name) in (valid_extensions if valid_extensions else VALID_EXTENSIONS)
+  return isfile(file_name) and get_extension(file_name) in (valid_extensions if valid_extensions else VALID_EXTENSIONS)
 
 
 def assign_if_valid(file_name):
