@@ -14,34 +14,36 @@ from asrtoolkit.data_handlers.data_handlers_common import separator, footer
 
 
 def header():
-  " Returns header - see https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API for detailed use "
-  return "WEBVTT - This file produced by GreenKey's ASRToolkit.\n\n"
+    " Returns header - see https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API for detailed use "
+    return "WEBVTT - This file produced by GreenKey's ASRToolkit.\n\n"
 
 
 def format_segment(seg):
-  """
+    """
     Formats a segment assuming it's an instance of class segment with elements
     filename, channel, speaker, start and stop times, label, and text
-  """
+    """
 
-  ret_str = "{:} --> {:}".format(seconds_to_timestamp(seg.start), seconds_to_timestamp(seg.stop))
-  ret_str += " <v Channel {:}>".format(seg.channel)
-  ret_str += " <v Speaker {:}>".format(seg.speaker)
-  ret_str += "\n{:}\n".format(seg.formatted_text if seg.formatted_text else seg.text)
+    ret_str = "{:} --> {:}".format(seconds_to_timestamp(seg.start),
+                                   seconds_to_timestamp(seg.stop))
+    ret_str += " <v Channel {:}>".format(seg.channel)
+    ret_str += " <v Speaker {:}>".format(seg.speaker)
+    ret_str += "\n{:}\n".format(
+        seg.formatted_text if seg.formatted_text else seg.text)
 
-  return ret_str
+    return ret_str
 
 
 def read_file(file_name):
-  """ Reads a VTT file """
+    """ Reads a VTT file """
 
-  data = WebVTT.read(file_name)
-  captions = data.captions
+    data = WebVTT.read(file_name)
+    captions = data.captions
 
-  segments = []
-  for caption in captions:
-    seg = read_caption(caption)
-    if seg is not None:
-      segments.append(seg)
+    segments = []
+    for caption in captions:
+        seg = read_caption(caption)
+        if seg is not None:
+            segments.append(seg)
 
-  return segments
+    return segments
