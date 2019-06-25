@@ -5,8 +5,7 @@ Python class for validating STM files used in Automatic Speech Recognition
 
 import argparse
 
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
-from asrtoolkit.file_utils.script_input_validation import valid_input_file
+from asrtoolkit.file_utils.script_input_validation import assign_if_valid
 
 
 def main():
@@ -14,9 +13,9 @@ def main():
   parser.add_argument('input_file', metavar='input_file', type=str, help='input stm file')
   args = parser.parse_args()
 
-  if valid_input_file(args.input_file):
-    # after reading in, only valid lines will remain
-    input_file = time_aligned_text(args.input_file)
+  # after reading in, only valid lines will remain
+  input_file = assign_if_valid(args.input_file)
+  if input_file is not None:
     # write back to original file name
     input_file.write(args.input_file)
   else:
