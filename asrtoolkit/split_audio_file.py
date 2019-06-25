@@ -5,6 +5,8 @@ Script for splitting audio files using a transcript with start/stop times
 
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.data_structures.audio_file import audio_file
+from asrtoolkit.file_utils.script_input_validation import valid_input_file
+
 import argparse
 
 
@@ -13,8 +15,7 @@ def main():
     Split audio file using transcript file
   """
   parser = argparse.ArgumentParser(
-    description=
-    "Split an audio file using valid segments from a transcript file. For this utility, transcript files must contain start/stop times."
+    description="Split an audio file using valid segments from a transcript file. For this utility, transcript files must contain start/stop times."
   )
   parser.add_argument('--target-dir', default='split', required=False, help="Path to target directory")
   parser.add_argument('audio_file', metavar='audio_file', type=str, help='input audio file')
@@ -22,8 +23,16 @@ def main():
 
   args = parser.parse_args()
 
-  transcript = time_aligned_text(args.transcript)
-  source_audio = audio_file(args.audio_file)
+  if valid_input_file(args.transcript):
+    transcript = time_aligned_text(args.transcript)
+  else:
+    print("Invalid transcript file {}".format(args.transcript))
+
+  if valid_input_file(args.audio_file, ["mp3", "sph", "wav", "au", "raw"]):
+    source_audio = audio_file(args.audio_file)
+  else:
+    print("Invalid audio file {}".format(args.audio_file))
+
   source_audio.split(transcript, args.target_dir)
 
 

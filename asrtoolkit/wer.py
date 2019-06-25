@@ -7,8 +7,9 @@ import argparse
 import editdistance
 import re
 
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.clean_formatting import clean_up
+from asrtoolkit.file_utils.script_input_validation import assign_if_valid
+from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 
 # defines global regex for tagged noises and silence
 re_tagged_nonspeech = re.compile(r"[\[<][A-Za-z #]*[\]>]")
@@ -98,10 +99,12 @@ def main():
   args = parser.parse_args()
 
   # read files from arguments
-  ref = time_aligned_text(args.reference_file)
-  hyp = time_aligned_text(args.transcript_file)
+  ref = assign_if_valid(args.reference_file)
+  hyp = assign_if_valid(args.transcript_file)
 
-  if args.char_level:
+  if ref is None or hyp is None:
+    print("Error with an input file. Please check all files exist and are accepted by ASRToolkit")
+  elif args.char_level:
     print("CER: {:5.3f}%".format(cer(ref, hyp, args.ignore_nsns)))
   else:
     print("WER: {:5.3f}%".format(wer(ref, hyp, args.ignore_nsns)))

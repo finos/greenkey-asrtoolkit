@@ -9,6 +9,7 @@ import re
 import string
 from collections import OrderedDict
 import argparse
+
 from asrtoolkit.deformatting_utils import (
   digits_to_string,
   ordinal_to_string,
@@ -16,6 +17,8 @@ from asrtoolkit.deformatting_utils import (
   dollars_to_string,
   plural_numbers_to_string,
 )
+
+from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
 rematch = OrderedDict(
   [
@@ -158,8 +161,7 @@ def main():
 
   args = parser.parse_args()
   for file_name in args.files:
-    extension = file_name.split(".")[-1]
-    if extension != 'txt':
+    if not valid_input_file(file_name, valid_extensions=['txt']):
       print("File {:} does not end in .txt - please only use this for cleaning txt files".format(file_name))
       continue
     clean_text_file(file_name)

@@ -40,7 +40,6 @@ class exemplar(object):
     for key in kwargs:
       setattr(self, key, kwargs[key])
 
-
   def validate(self):
     " validate exemplar object by constraining that the filenames before the extension are the same "
 
@@ -80,7 +79,6 @@ class corpus(object):
           setattr(self, key, dictionary[key])
     for key in kwargs:
       setattr(self, key, kwargs[key])
-
 
     # only if not defined above should we search for exemplars based on location
     if not self.exemplars:

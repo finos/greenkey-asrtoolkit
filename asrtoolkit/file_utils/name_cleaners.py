@@ -4,6 +4,15 @@ Simple wrapper for name-cleaning functions
 """
 
 
+def get_extension(file_name):
+  """
+    Returns file extension
+    >>> get_extension("foo.txt")
+    'txt'
+  """
+  return file_name.split(".")[-1]
+
+
 def basename(file_name):
   """
     Returns basename of a file without the preceding directory

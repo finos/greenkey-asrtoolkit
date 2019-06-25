@@ -42,7 +42,7 @@ def format_segment(seg):
   output_dict['genderInfo'] = {'gender': seg.label.split(",")[-1].replace(">", "")}
   output_dict['transcript'] = seg.text
   output_dict['confidence'] = seg.confidence
-  
+
   if len(seg.formatted_text) > 0:
     output_dict['formatted_transcript'] = seg.formatted_text
 
@@ -95,7 +95,7 @@ def parse_segment(input_seg):
     seg = segment(extracted_dict)
 
   except Exception as exc:
-    print(exc)      #TODO log instead
+    print(exc)  #TODO log instead
 
   return seg if seg and seg.validate() else None
 

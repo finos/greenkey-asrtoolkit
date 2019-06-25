@@ -16,7 +16,7 @@ import argparse
 
 def clean_line(line):
   "clean up a line and test for empty values"
-  return clean_up(" ".join(map(lambda val: str(val) if not pd.isnull(val) else '',line)))
+  return clean_up(" ".join(map(lambda val: str(val) if not pd.isnull(val) else '', line)))
 
 
 def dump_sheet(output_file, sheet):
