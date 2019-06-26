@@ -22,7 +22,13 @@ from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
 LOGGER = logging.getLogger(__name__)
 
+invalid_chars = re.compile("[^A-Za-z '<>]")
+
 rematch = OrderedDict([
+    ("millions", (re.compile(r"\b(mln|mio|mlns)\b"), lambda m: 'million')),
+    ("pleases", (re.compile(r"\b(plz|pls)\b"), lambda m: 'please')),
+    ("thanks", (re.compile(r"\b(thks|thx)\b"), lambda m: 'thanks')),
+    ("otc", (re.compile(r"\b(otc)\b"), lambda m: 'o t c')),
     ("ellipses", (re.compile(r"\.{2,}"), lambda m: " ")),
     ("websites", (re.compile(r"[.](net|org|com|gov)\b"),
                   lambda m: " dot " + m.group().lower().replace(".", ""))),
@@ -62,6 +68,14 @@ def remove_special_chars(line, chars_to_replace):
     for char_to_replace in chars_to_replace:
         line = line.replace(char_to_replace, ' ')
     return line
+
+
+def remove_all_special_chars(line):
+    """
+    Only allow ascii characters, spaces, apostrophes, 
+    and angle brackets (for noises) to be output
+    """
+    return re.sub(invalid_chars, ' ', line)
 
 
 def remove_double_spaces(line):
@@ -122,6 +136,8 @@ def clean_up(input_line):
     'you can reach me at one three one seven two two two two two two two or fax me at five five five five five five five five five five'
     >>> clean_up("I heard Mr. McDonald has $6.23")
     'i heard mr mcdonald has six dollars and twenty three cents'
+    >>> clean_up(" for client X (hide name pls), plz giv $1 mln shs thx")
+    'for client x hide name please please giv one million dollars shs thanks'
     """
 
     if check_for_formatted_chars(input_line):
@@ -130,7 +146,7 @@ def clean_up(input_line):
 
         input_line = apply_all_regex_and_replacements(input_line, rematch)
 
-        input_line = remove_special_chars(input_line, ",.-")
+        input_line = remove_all_special_chars(input_line)
 
         input_line = input_line.encode().decode('utf-8').lower()
 
