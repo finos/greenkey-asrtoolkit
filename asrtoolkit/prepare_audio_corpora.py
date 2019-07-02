@@ -38,7 +38,7 @@ def auto_split_corpora(corpora, min_size=50):
                 corpora['dev'] + corpora['train'][:1]), corpora['train'][1:]
 
         # pick 20% for testing
-        split_index = int(corpora['train'].validate() * 4 // 5)
+        split_index = len(corpora['train'].validate()) * 4 // 5
         corpora['test'] = corpora['train'][split_index:]
         corpora['train'] = corpora['train'][:split_index]
 
