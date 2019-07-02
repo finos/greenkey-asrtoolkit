@@ -83,6 +83,9 @@ class corpus(object):
 
         # only if not defined above should we search for exemplars based on location
         if not self.exemplars:
+            # instantiate exemplars for this object to override static class variable
+            self.exemplars = []
+            
             audio_extensions_to_try = ["sph", "wav", "mp3"][::-1]
             self.exemplars += [
                 exemplar({
