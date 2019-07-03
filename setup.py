@@ -25,7 +25,7 @@ setup(
     keywords="asr speech recognition greenkey word error rate",
     entry_points={
         'console_scripts': [
-            'convert_transcript = asrtoolkit.convert_transcript:main',
+            'convert_transcript = asrtoolkit.convert_transcript:convert',
             'clean_formatting=asrtoolkit.clean_formatting:main',
             'prepare_audio_corpora=asrtoolkit.prepare_audio_corpora:main',
             'degrade_audio_file=asrtoolkit.degrade_audio_file:main',
