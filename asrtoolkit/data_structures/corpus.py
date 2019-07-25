@@ -142,7 +142,7 @@ class corpus(object):
         """
         return sum(len(eg.transcript_file.segments) for eg in self.exemplars)
 
-    def prepare_for_training(self, target=None, nested=False):
+    def prepare_for_training(self, target=None, nested=False, sample_rate=16000):
         """
         Run validation and audio file preparation steps
         """
@@ -157,8 +157,10 @@ class corpus(object):
             executor.submit(
                 partial(
                     _.audio_file.prepare_for_training,
-                    target + ("/sph/" if nested else "/") +
-                    basename(_.audio_file.location))) for _ in self.exemplars
+                    file_name=target + ("/sph/" if nested else "/") + basename(_.audio_file.location),
+                    sample_rate=sample_rate
+                )
+            ) for _ in self.exemplars
         ]
 
         # trigger conversion and gather results
