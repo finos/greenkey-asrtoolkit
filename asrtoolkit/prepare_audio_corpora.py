@@ -63,14 +63,17 @@ def get_corpus(loc):
     return corpus({"location": loc})
 
 
-def prep_all_for_training(corpora, target_dir, nested):
+def prep_all_for_training(corpora, target_dir, nested, sample_rate=16000):
     """
     prepare all corpora for training and return logs of what was where
     """
     return {
         data_dir:
-        corpora[data_dir].prepare_for_training(target_dir + "/" + data_dir,
-                                               nested)
+        corpora[data_dir].prepare_for_training(
+            target_dir + "/" + data_dir,
+            nested,
+            sample_rate
+        )
         for data_dir in data_dirs
     }
 
