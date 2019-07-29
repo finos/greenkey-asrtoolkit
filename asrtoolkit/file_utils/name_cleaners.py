@@ -18,7 +18,7 @@ def basename(file_name):
     """
     Returns basename of a file without the preceding directory
     """
-    return file_name.split(os.sep)[-1]
+    return os.path.basename(file_name)
 
 
 def strip_extension(file_name):
