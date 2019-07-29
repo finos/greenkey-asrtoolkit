@@ -67,11 +67,11 @@ class audio_file(object):
 
     def __init__(self, location=""):
         """
-        Populate file location into
+        Populate file location info
         """
         self.location = None
         if not os.path.exists(location):
-            raise "File not found"
+            raise FileNotFoundError('Could not find file at "{}"'.format(location))
         self.location = location
 
     def hash(self):
