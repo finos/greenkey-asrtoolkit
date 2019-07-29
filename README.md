@@ -1,4 +1,4 @@
-# GreenKey Automatic Speech Recognition (ASR) Toolkit [![Build Status](https://travis-ci.org/finos-voice/greenkey-asrtoolkit.svg?branch=master)](https://travis-ci.org/finos-voice/greenkey-asrtoolkit)
+# GreenKey Automatic Speech Recognition (ASR) Toolkit [![Build Status](https://travis-ci.org/finos/greenkey-asrtoolkit.svg?branch=master)](https://travis-ci.org/finos/greenkey-asrtoolkit)
 
 <img src="https://greenkeytech.com/wp-content/uploads/2019/02/gk_logo_colorlight.png" width="300" />
 
@@ -138,7 +138,7 @@ optional arguments:
 
 ### Code of Conduct
 
-Please make sure you read and observe our [Code of Conduct](https://raw.githubusercontent.com/finos-voice/greenkey-asrtoolkit/master/CODE_OF_CONDUCT.md).
+Please make sure you read and observe our [Code of Conduct](https://raw.githubusercontent.com/finos/greenkey-asrtoolkit/master/CODE_OF_CONDUCT.md).
 
 ### Pull Request process
 
