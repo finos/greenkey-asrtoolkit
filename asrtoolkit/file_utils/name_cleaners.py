@@ -3,6 +3,7 @@
 Simple wrapper for name-cleaning functions
 """
 
+import os
 
 def get_extension(file_name):
     """
@@ -16,8 +17,8 @@ def get_extension(file_name):
 def basename(file_name):
     """
     Returns basename of a file without the preceding directory
-  """
-    return file_name.split("/")[-1]
+    """
+    return file_name.split(os.sep)[-1]
 
 
 def strip_extension(file_name):
@@ -43,7 +44,7 @@ def sanitize(file_name, chars_to_replace='- ', silent=True):
                 "check to make sure your audio files and transcript files match"
             )
         return "/".join(
-            file_name.split("/")[:-1] + [basename(file_name).replace(c, "_")])
+            file_name.split(os.sep)[:-1] + [basename(file_name).replace(c, "_")])
 
     for c in chars_to_replace:
         file_name = replace_char(c, file_name)
