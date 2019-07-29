@@ -93,7 +93,7 @@ class audio_file(object):
             file_name = strip_extension(file_name) + ".sph"
 
         file_name = sanitize_hyphens(file_name)
-        subprocess.call([
+        subprocess.check_output([
             "sox {} {} rate {} remix -".format(self.location, file_name,
                                                sample_rate)
         ],
