@@ -65,8 +65,6 @@ def combine_audio(audio_files, output_file, gain=False):
     gain_str = ''
     if gain:
         gain_str = 'gain -n 0'
-    print( audio_file )
-    print( ' '.join(audio_files) )
     subprocess.call(["sox -m {} {} {}".format(" ".join(audio_files),
                                               output_file, gain_str)],
                     shell=True)
