@@ -9,6 +9,7 @@ from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
 import argparse
 import logging
+import sys
 
 LOGGER = logging.getLogger(__name__)
 
@@ -40,11 +41,13 @@ def main():
         transcript = time_aligned_text(args.transcript)
     else:
         LOGGER.error("Invalid transcript file {}".format(args.transcript))
+        sys.exit(1)
 
     if valid_input_file(args.audio_file, ["mp3", "sph", "wav", "au", "raw"]):
         source_audio = audio_file(args.audio_file)
     else:
         LOGGER.error("Invalid audio file {}".format(args.audio_file))
+        sys.exit(1)
 
     source_audio.split(transcript, args.target_dir)
 
