@@ -60,6 +60,17 @@ def degrade_audio(source_audio_file, target_audio_file=None):
     os.remove(tmp2)
 
 
+def combine_audio(audio_files, output_file, gain=False):
+    # Combine audio files with possible remormalization to 0dB
+    gain_str = ''
+    if gain:
+        gain_str = 'gain -n 0'
+    print( audio_file )
+    print( ' '.join(audio_files) )
+    subprocess.call(["sox -m {} {} {}".format(" ".join(audio_files),
+                                              output_file, gain_str)],
+                    shell=True)
+
 class audio_file(object):
     """
     Create a corpus object for storing information about where files are and how many
