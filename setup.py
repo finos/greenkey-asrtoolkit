@@ -31,6 +31,7 @@ setup(
             'degrade_audio_file=asrtoolkit.degrade_audio_file:main',
             'wer=asrtoolkit.wer:main',
             'split_audio_file=asrtoolkit.split_audio_file:main',
+            'combine_audio_files=asrtoolkit.combine_audio_files:main',
             'extract_excel_spreadsheets=asrtoolkit.extract_excel_spreadsheets:main',
         ]
     },
