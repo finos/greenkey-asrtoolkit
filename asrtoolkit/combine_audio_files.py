@@ -2,18 +2,16 @@
 """
 Script for splitting audio files using a transcript with start/stop times
 """
+import argparse
+import logging
+import os
+import operator
+from functools import reduce
 
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.data_structures.audio_file import audio_file, combine_audio
 from asrtoolkit.file_utils.script_input_validation import valid_input_file
-from asrtoolkit.file_utils.name_cleaners import basename, strip_extension, get_extension
-
-import argparse
-import logging
-import os
-import sys
-import operator
-from functools import reduce
+from asrtoolkit.file_utils.name_cleaners import strip_extension
 
 LOGGER = logging.getLogger(__name__)
 
@@ -82,7 +80,7 @@ transcript is the first transcript.
         LOGGER.error("The number of audio files, {}, must be equal to the number of transcripts, {}".format( 
                       len(args.audio_files), len(ags.transcripts) ))
 
-    audio_files = [ check_audio_file( _ ) for _ in args.audio_files ]
+    [ check_audio_file( _ ) for _ in args.audio_files ]
     transcripts = [ check_transcript( _ ) for _ in args.transcripts ]
     
     [ check_transcript_segment( _ ) for transcript in transcripts for _ in transcript.segments ]
