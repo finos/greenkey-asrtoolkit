@@ -30,7 +30,7 @@ def check_audio_file(audio_file_name):
 
 
 def check_transcript_segment(segment):
-    if not hasattr( segment, 'start' ):
+    if not hasattr(segment, 'start'):
         LOGGER.error("Transcript segment doesn't include the start time, segment: {}".format(segment))
 
 
