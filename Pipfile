@@ -14,5 +14,6 @@ webvtt-py = "*"
 
 [dev-packages]
 pandas = "*"
+yapf = "*"
 
 [requires]
