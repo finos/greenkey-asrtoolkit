@@ -39,7 +39,7 @@ def combine_transcripts(transcripts, output_file_name):
     out_transcript = reduce(operator.add, transcripts)
     out_transcript.location = os.path.join(strip_extension(output_file_name) + '.' +
                                            out_transcript.file_extension)
-    out_transcript.write(out_transcript.location )
+    out_transcript.write(out_transcript.location)
 
 
 def main():
