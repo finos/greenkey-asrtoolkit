@@ -57,6 +57,20 @@ class time_aligned_text(object):
                 self.file_extension if self.file_extension else 'txt'))
         return "\n".join(_.__str__(data_handler) for _ in self.segments)
 
+    def __add__(self, other):
+        """
+        Add two transcripts
+        Set the location after adding if you want to save this!
+        """
+        new_segments = self.segments + other.segments
+        # Sort the segments by their start time then stop time
+        new_segments.sort(key=lambda s: (float(s.start), float(s.stop)))
+    
+        out_transcript = time_aligned_text()
+        out_transcript.file_extension = self.file_extension
+        out_transcript.segments = new_segments
+        return out_transcript
+
     def text(self):
         """
         Returns unformatted text from all segments
