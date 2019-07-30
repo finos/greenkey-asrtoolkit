@@ -5,6 +5,7 @@ Script for splitting audio files using a transcript with start/stop times
 import argparse
 import logging
 import os
+import sys
 import operator
 from functools import reduce
 
@@ -20,6 +21,7 @@ def check_transcript(transcript):
         return time_aligned_text(input_data=transcript)
     else:
         LOGGER.error("Invalid transcript file {}".format(transcript))
+        sys.exit(1)
 
 
 def check_audio_file(audio_file_name):
@@ -27,11 +29,13 @@ def check_audio_file(audio_file_name):
         return audio_file(audio_file_name)
     else:
         LOGGER.error("Invalid audio file {}".format(audio_file_name))
+        sys.exit(1)
 
 
 def check_transcript_segment(segment):
     if not hasattr(segment, 'start'):
         LOGGER.error("Transcript segment doesn't include the start time, segment: {}".format(segment))
+        sys.exit(1)
 
 
 def combine_transcripts(transcripts, output_file_name):
@@ -79,6 +83,7 @@ transcript is the first transcript.
     if len(args.audio_files) != len(args.transcripts):
         LOGGER.error("The number of audio files, {}, must be equal to the number of transcripts, {}".format( 
                       len(args.audio_files), len(ags.transcripts) ))
+        sys.exit(1)
 
     [ check_audio_file( _ ) for _ in args.audio_files ]
     transcripts = [ check_transcript( _ ) for _ in args.transcripts ]
