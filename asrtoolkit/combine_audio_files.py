@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Script for splitting audio files using a transcript with start/stop times
+Script for combining audio files using their transcript files with start/stop times
 """
 import argparse
 import logging
@@ -56,9 +56,10 @@ def main():
     """
     parser = argparse.ArgumentParser(
         description=
-        '''Combine a audio files using segments from their transcript files. For this utility, transcript files must contain start/stop times.
-   Lists of transcripts and audio files must be ordered identically, meaning the first audio file's
-transcript is the first transcript.
+        '''Combine audio files using segments from their transcript files. For this utility, transcript files must contain start/stop times.
+           Lists of transcripts and audio files must be ordered identically, meaning the first audio file's
+           transcript is the first transcript.
+           Note: transcripts from each file are not checked for overlapping time intervals when they are combined and sorted.
         ''')
     parser.add_argument('--output_file',
                         default='output.wav',
