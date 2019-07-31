@@ -153,9 +153,20 @@ Please make sure you read and observe our [Code of Conduct](https://raw.githubus
 - [Matthew Goldey](https://github.com/mgoldey)
 - [Tejas Shastry](https://github.com/tshastry)
 - [Amy Geojo](https://github.com/ageojo)
+- [Svyat Vergun](https://github.com/sv-github)
+- [Ashley Shultz](https://github.com/AGiantSquid)
+- [Colin Brochtrup](https://github.com/cbrochtrup)
 
 ## License
 
+The code in this repository is distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
 Copyright 2019 GreenKey Technologies
 
-The code in this repository is distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+<!-- Markdown link & img defs -->
+[FINOS]: https://www.finos.org
+[Code of Conduct]: https://www.finos.org/code-of-conduct
+[Voice Program]: https://finosfoundation.atlassian.net/wiki/spaces/VOICE/overview
+[SemVer]: http://semver.org
+[list of contributors]: https://github.com/finos/greenkey-asrtoolkit/graphs/contributors
+[tags on this repository]: https://github.com/finos/greenkey-asrtoolkit/tags
