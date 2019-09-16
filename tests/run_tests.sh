@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-python3 -m pytest -v --doctest-modules
+python3 -m pytest -vv --doctest-modules

@@ -14,6 +14,29 @@ import sys
 LOGGER = logging.getLogger(__name__)
 
 
+def split_audio_file(source_audio_file, source_transcript, target_directory):
+    """
+    Execute the split logic
+    """
+    source_audio = audio_file(source_audio_file)
+    transcript = time_aligned_text(source_transcript)
+    source_audio.split(transcript, target_directory)
+
+
+def validate_transcript(transcript):
+    "exit if invalid transcript"
+    if not valid_input_file(transcript):
+        LOGGER.error("Invalid transcript file {}".format(transcript))
+        sys.exit(1)
+
+
+def validate_audio_file(source_audio_file):
+    if not valid_input_file(source_audio_file,
+                            ["mp3", "sph", "wav", "au", "raw"]):
+        LOGGER.error("Invalid audio file {}".format(source_audio_file))
+        sys.exit(1)
+
+
 def main():
     """
     Split audio file using transcript file
@@ -22,34 +45,22 @@ def main():
         description=
         "Split an audio file using valid segments from a transcript file. For this utility, transcript files must contain start/stop times."
     )
-    parser.add_argument('--target-dir',
-                        default='split',
+    parser.add_argument("--target-dir",
+                        default="split",
                         required=False,
                         help="Path to target directory")
-    parser.add_argument('audio_file',
-                        metavar='audio_file',
+    parser.add_argument("audio_file",
+                        metavar="audio_file",
                         type=str,
-                        help='input audio file')
-    parser.add_argument('transcript',
-                        metavar='transcript',
+                        help="input audio file")
+    parser.add_argument("transcript",
+                        metavar="transcript",
                         type=str,
-                        help='transcript')
+                        help="transcript")
 
     args = parser.parse_args()
 
-    if valid_input_file(args.transcript):
-        transcript = time_aligned_text(args.transcript)
-    else:
-        LOGGER.error("Invalid transcript file {}".format(args.transcript))
-        sys.exit(1)
-
-    if valid_input_file(args.audio_file, ["mp3", "sph", "wav", "au", "raw"]):
-        source_audio = audio_file(args.audio_file)
-    else:
-        LOGGER.error("Invalid audio file {}".format(args.audio_file))
-        sys.exit(1)
-
-    source_audio.split(transcript, args.target_dir)
+    split_audio_file(args.audio_file, args.transcript, args.target_dir)
 
 
 if __name__ == "__main__":
