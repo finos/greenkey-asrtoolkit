@@ -5,6 +5,7 @@ Simple wrapper for name-cleaning functions
 
 import os
 
+
 def get_extension(file_name):
     """
     Returns file extension
@@ -44,7 +45,8 @@ def sanitize(file_name, chars_to_replace='- ', silent=True):
                 "check to make sure your audio files and transcript files match"
             )
         return os.sep.join(
-            file_name.split(os.sep)[:-1] + [basename(file_name).replace(c, "_")])
+            file_name.split(os.sep)[:-1] +
+            [basename(file_name).replace(c, "_")])
 
     for c in chars_to_replace:
         file_name = replace_char(c, file_name)
@@ -63,5 +65,5 @@ def generate_segmented_file_name(target_dir, file_name, iseg):
     """
     Take a target location, a current location, and a segment number and generate a target filename
     """
-    return target_dir + os.sep + basename(strip_extension(file_name)) + \
-              "_seg_{:05d}.".format(iseg) + file_name.split(".")[-1]
+    return sanitize_hyphens(target_dir + os.sep + basename(strip_extension(file_name)) + \
+              "_seg_{:05d}.".format(iseg) + file_name.split(".")[-1])

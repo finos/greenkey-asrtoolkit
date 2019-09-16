@@ -12,7 +12,7 @@ with open('README.md') as f:
 
 setup(
     name='asrtoolkit',
-    version='0.1.19',
+    version='0.1.20',
     description=
     'The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.',
     long_description=long_description,
@@ -25,7 +25,7 @@ setup(
     keywords="asr speech recognition greenkey word error rate",
     entry_points={
         'console_scripts': [
-            'convert_transcript = asrtoolkit.convert_transcript:convert',
+            'convert_transcript = asrtoolkit.convert_transcript:main',
             'clean_formatting=asrtoolkit.clean_formatting:main',
             'prepare_audio_corpora=asrtoolkit.prepare_audio_corpora:main',
             'degrade_audio_file=asrtoolkit.degrade_audio_file:main',
