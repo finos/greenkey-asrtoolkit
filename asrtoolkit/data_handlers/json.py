@@ -39,8 +39,8 @@ def format_segment(seg):
     """
     output_dict = {}
     output_dict['speakerInfo'] = seg.speaker
-    output_dict['startTimeSec'] = seg.start
-    output_dict['endTimeSec'] = seg.stop
+    output_dict['startTimeSec'] = float(seg.start)
+    output_dict['endTimeSec'] = float(seg.stop)
     output_dict['genderInfo'] = {
         'gender': seg.label.split(",")[-1].replace(">", "")
     }
