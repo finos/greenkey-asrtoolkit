@@ -90,7 +90,7 @@ def main():
     if len(args.audio_files) != len(args.transcripts):
         LOGGER.error(
             "The number of audio files, {}, must be equal to the number of transcripts, {}"
-            .format(len(args.audio_files), len(ags.transcripts)))
+            .format(len(args.audio_files), len(args.transcripts)))
         sys.exit(1)
 
     [check_audio_file(_) for _ in args.audio_files]
