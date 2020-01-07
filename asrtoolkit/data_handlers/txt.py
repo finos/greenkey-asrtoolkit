@@ -5,10 +5,9 @@ Module for reading TXT files
 This expects a segment from class derived in convert_text
 """
 
-from asrtoolkit.data_structures.segment import segment
-
 # do not delete - needed in time_aligned_text
-from asrtoolkit.data_handlers.data_handlers_common import separator, header, footer
+from asrtoolkit.data_handlers.data_handlers_common import footer, header, separator
+from asrtoolkit.data_structures.segment import segment
 
 
 def format_segment(seg):
@@ -24,7 +23,7 @@ def read_in_memory(input_data):
     """
     segments = []
     for line in input_data.splitlines():
-        segments.append(segment({'text': line.strip()}))
+        segments.append(segment({"text": line.strip()}))
     return segments
 
 

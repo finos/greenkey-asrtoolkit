@@ -5,9 +5,10 @@ Module for reading/writing JSON files
 This expects a segment from class derived in convert_text
 """
 
-from asrtoolkit.data_structures.segment import segment
 import json
 import logging
+
+from asrtoolkit.data_structures.segment import segment
 
 LOGGER = logging.getLogger(__name__)
 separator = ",\n"
@@ -15,7 +16,7 @@ separator = ",\n"
 
 def header():
     " Returns empty header "
-    return "{\n\"segments\":["
+    return '{\n"segments":['
 
 
 def footer():
@@ -38,17 +39,17 @@ def format_segment(seg):
       each segment-dict contains a fragment of text (+ additional information)
     """
     output_dict = {}
-    output_dict['speakerInfo'] = seg.speaker
-    output_dict['startTimeSec'] = float(seg.start)
-    output_dict['endTimeSec'] = float(seg.stop)
-    output_dict['genderInfo'] = {
-        'gender': seg.label.split(",")[-1].replace(">", "")
+    output_dict["speakerInfo"] = seg.speaker
+    output_dict["startTimeSec"] = float(seg.start)
+    output_dict["endTimeSec"] = float(seg.stop)
+    output_dict["genderInfo"] = {
+        "gender": seg.label.split(",")[-1].replace(">", "")
     }
-    output_dict['transcript'] = seg.text
-    output_dict['confidence'] = seg.confidence
+    output_dict["transcript"] = seg.text
+    output_dict["confidence"] = seg.confidence
 
     if len(seg.formatted_text) > 0:
-        output_dict['formatted_transcript'] = seg.formatted_text
+        output_dict["formatted_transcript"] = seg.formatted_text
 
     return json.dumps(output_dict, ensure_ascii=True)
 
@@ -88,18 +89,18 @@ def parse_segment(input_seg):
 
     seg = None
     try:
-        assign_if_present('channel')
-        assign_if_present('startTimeSec', 'start')
-        assign_if_present('stopTimeSec', 'stop')
-        assign_if_present('endTimeSec', 'stop')
-        assign_if_present('transcript', 'text')
-        assign_if_present('corrected_transcript', 'text')
-        assign_if_present('formatted_transcript', 'formatted_text')
-        assign_if_present('punctuated_transcript', 'formatted_text')
-        assign_if_present('speakerInfo', 'speaker', 'ID')
-        assign_if_present('genderInfo', 'label',
-                          'gender', lambda gender: "<o,f0,{:}>".format(gender))
-        assign_if_present('confidence', 'confidence')
+        assign_if_present("channel")
+        assign_if_present("startTimeSec", "start")
+        assign_if_present("stopTimeSec", "stop")
+        assign_if_present("endTimeSec", "stop")
+        assign_if_present("transcript", "text")
+        assign_if_present("corrected_transcript", "text")
+        assign_if_present("formatted_transcript", "formatted_text")
+        assign_if_present("punctuated_transcript", "formatted_text")
+        assign_if_present("speakerInfo", "speaker", "ID")
+        assign_if_present("genderInfo", "label", "gender",
+                          lambda gender: "<o,f0,{:}>".format(gender))
+        assign_if_present("confidence", "confidence")
 
         seg = segment(extracted_dict)
 
@@ -125,7 +126,7 @@ def read_in_memory(input_data):
     input_data['segments'][i]['segment'] --> mapped to ith segment object (with 'start', 'stop' etc'
     """
     segments = [
-        _ for _ in map(parse_segment, input_data['segments']) if _ is not None
+        _ for _ in map(parse_segment, input_data["segments"]) if _ is not None
     ]
     return segments
 

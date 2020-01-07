@@ -4,9 +4,11 @@ Python class for converting file formats used in Automatic Speech Recognition
 """
 
 import argparse
-import sys
 import logging
+import sys
+
 from asrtoolkit.file_utils.script_input_validation import assign_if_valid
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -23,15 +25,15 @@ def convert(input_file, output_file):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='convert between text file formats')
-    parser.add_argument('input_file',
-                        metavar='input_file',
+        description="convert between text file formats")
+    parser.add_argument("input_file",
+                        metavar="input_file",
                         type=str,
-                        help='input file')
-    parser.add_argument('output_file',
-                        metavar='output_file',
+                        help="input file")
+    parser.add_argument("output_file",
+                        metavar="output_file",
                         type=str,
-                        help='output file')
+                        help="output file")
     args = parser.parse_args()
 
     check_input_file_validity(args.input_file)

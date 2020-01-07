@@ -7,11 +7,10 @@ Expected file format is derived from http://www1.icsi.berkeley.edu/Speech/docs/s
 This expects a segment from class derived in convert_text
 """
 
-from asrtoolkit.data_structures.segment import segment
 from asrtoolkit.clean_formatting import clean_up
-
 # leave in place for other imports
-from asrtoolkit.data_handlers.data_handlers_common import separator, header, footer
+from asrtoolkit.data_handlers.data_handlers_common import footer, header, separator
+from asrtoolkit.data_structures.segment import segment
 
 
 def format_segment(seg):
@@ -23,7 +22,7 @@ def format_segment(seg):
     """
     return " ".join([
         str(getattr(seg, _))
-        for _ in ('filename', 'channel', 'speaker', 'start', 'stop', 'label')
+        for _ in ("filename", "channel", "speaker", "start", "stop", "label")
     ] + [clean_up(seg.text)]  # clean_up used to unformat stm file text
                     )
 
@@ -40,13 +39,13 @@ def parse_line(line):
         filename, channel, speaker, start, stop, label = data[:6]
         text = " ".join(data[6:])
         seg = segment({
-            'filename': filename,
-            'channel': channel,
-            'speaker': speaker,
-            'start': start,
-            'stop': stop,
-            'label': label,
-            'text': text,
+            "filename": filename,
+            "channel": channel,
+            "speaker": speaker,
+            "start": start,
+            "stop": stop,
+            "label": label,
+            "text": text,
         })
     return seg if (seg is not None) and seg.validate() else None
 

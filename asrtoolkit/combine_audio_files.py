@@ -4,15 +4,15 @@ Script for combining audio files using their transcript files with start/stop ti
 """
 import argparse
 import logging
+import operator
 import os
 import sys
-import operator
 from functools import reduce
 
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.data_structures.audio_file import audio_file, combine_audio
-from asrtoolkit.file_utils.script_input_validation import valid_input_file
+from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.file_utils.name_cleaners import strip_extension
+from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ def check_audio_file(audio_file_name):
 
 
 def check_transcript_segment(segment):
-    if not hasattr(segment, 'start'):
+    if not hasattr(segment, "start"):
         LOGGER.error(
             "Transcript segment doesn't include the start time, segment: {}".
             format(segment))
@@ -45,7 +45,7 @@ def combine_transcripts(transcripts, output_file_name):
     # Get one list of segments
     out_transcript = reduce(operator.add, transcripts)
     out_transcript.location = os.path.join(
-        strip_extension(output_file_name) + '.' +
+        strip_extension(output_file_name) + "." +
         out_transcript.file_extension)
     out_transcript.write(out_transcript.location)
 
@@ -56,33 +56,37 @@ def main():
     """
     parser = argparse.ArgumentParser(
         description=
-        '''Combine audio files using segments from their transcript files. For this utility, transcript files must contain start/stop times.
+        """Combine audio files using segments from their transcript files. For this utility, transcript files must contain start/stop times.
            Lists of transcripts and audio files must be ordered identically, meaning the first audio file's
            transcript is the first transcript.
            Note: transcripts from each file are not checked for overlapping time intervals when they are combined and sorted.
-        ''')
-    parser.add_argument('--output_file',
-                        default='output.wav',
+        """)
+    parser.add_argument("--output_file",
+                        default="output.wav",
                         required=True,
-                        help='Name of output file')
-    parser.add_argument('--audio_files',
-                        metavar='audio_files',
-                        type=str,
-                        nargs='+',
-                        required=True,
-                        help='List of input audio files')
-    parser.add_argument('--transcripts',
-                        metavar='transcripts',
-                        type=str,
-                        nargs='+',
-                        required=True,
-                        help='List of transcripts')
+                        help="Name of output file")
     parser.add_argument(
-        '--renormalize',
+        "--audio_files",
+        metavar="audio_files",
+        type=str,
+        nargs="+",
+        required=True,
+        help="List of input audio files",
+    )
+    parser.add_argument(
+        "--transcripts",
+        metavar="transcripts",
+        type=str,
+        nargs="+",
+        required=True,
+        help="List of transcripts",
+    )
+    parser.add_argument(
+        "--renormalize",
         default=False,
-        action='store_true',
+        action="store_true",
         help=
-        'Renormalize files to undo sox normalizing by 1/num_audio_files. Useful when combined audio has little overlap'
+        "Renormalize files to undo sox normalizing by 1/num_audio_files. Useful when combined audio has little overlap",
     )
     # Sending audio through tanh could be helpful if there are significant transient audio signals
 

@@ -3,8 +3,9 @@
 Script for degrading audio files to G711 audio quality
 """
 
-import sys
 import logging
+import sys
+
 from asrtoolkit.data_structures.audio_file import degrade_audio
 from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
