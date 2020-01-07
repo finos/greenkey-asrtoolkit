@@ -29,13 +29,12 @@ def strip_extension(file_name):
     return ".".join(file_name.split(".")[:-1]) if file_name else ""
 
 
-def sanitize(file_name, chars_to_replace='- ', silent=True):
+def sanitize(file_name, chars_to_replace="- ", silent=True):
     """
     replace input characters with underscores if present in file name
     >>> sanitize("-asdflkj_ .tmp")
     '_asdflkj__.tmp'
     """
-
     def replace_char(input_char, file_name):
         " replace specific char if present "
         if input_char in file_name and not silent:
@@ -58,12 +57,14 @@ def sanitize_hyphens(file_name, silent=True):
     """
     replace hyphens with underscores if present in file name
     """
-    return sanitize(file_name, '-', silent=silent)
+    return sanitize(file_name, "-", silent=silent)
 
 
 def generate_segmented_file_name(target_dir, file_name, iseg):
     """
     Take a target location, a current location, and a segment number and generate a target filename
     """
-    return sanitize_hyphens(target_dir + os.sep + basename(strip_extension(file_name)) + \
-              "_seg_{:05d}.".format(iseg) + file_name.split(".")[-1])
+    return sanitize_hyphens(target_dir + os.sep +
+                            basename(strip_extension(file_name)) +
+                            "_seg_{:05d}.".format(iseg) +
+                            file_name.split(".")[-1])

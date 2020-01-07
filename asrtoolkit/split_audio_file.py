@@ -3,20 +3,22 @@
 Script for splitting audio files using a transcript with start/stop times
 """
 
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
-from asrtoolkit.data_structures.audio_file import audio_file
-from asrtoolkit.file_utils.script_input_validation import valid_input_file
-
 import argparse
 import logging
 import sys
+
+from asrtoolkit.data_structures.audio_file import audio_file
+from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
+from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
 LOGGER = logging.getLogger(__name__)
 
 
 def split_audio_file(source_audio_file, source_transcript, target_directory):
     """
-    Execute the split logic
+    Split source audio file into segments denoted by transcript file
+    into target_directory
+    Results in stm and sph files in target directory
     """
     source_audio = audio_file(source_audio_file)
     transcript = time_aligned_text(source_transcript)
@@ -24,7 +26,9 @@ def split_audio_file(source_audio_file, source_transcript, target_directory):
 
 
 def validate_transcript(transcript):
-    "exit if invalid transcript"
+    """
+    Exit if invalid transcript
+    """
     if not valid_input_file(transcript):
         LOGGER.error("Invalid transcript file {}".format(transcript))
         sys.exit(1)

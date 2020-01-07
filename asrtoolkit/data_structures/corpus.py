@@ -3,15 +3,15 @@
 Module for organizing SPH, STM files from a corpus
 """
 
-import os
 import glob
+import os
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
-from tqdm import tqdm
 
 from asrtoolkit.data_structures.audio_file import audio_file
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.file_utils.name_cleaners import basename, strip_extension
+from tqdm import tqdm
 
 
 def get_files(data_dir, extension):
@@ -28,6 +28,7 @@ class exemplar(object):
     """
     Create an exemplar class to pair one audio file with one transcript file
     """
+
     audio_file = None
     transcript_file = None
 
@@ -50,9 +51,9 @@ class exemplar(object):
         # Audio and transcript filename must match
         # Audio file must not be empty
         # Transcript file must not be empty
-        valid = audio_filename == transcript_filename \
-                and os.path.getsize(self.audio_file.location) \
-                and os.path.getsize(self.transcript_file.location)
+        valid = (audio_filename == transcript_filename
+                 and os.path.getsize(self.audio_file.location)
+                 and os.path.getsize(self.transcript_file.location))
 
         return valid
 
@@ -67,6 +68,7 @@ class corpus(object):
     """
     Create a corpus object for storing information about where files are and how many
     """
+
     location = None
     exemplars = []
 
@@ -85,14 +87,14 @@ class corpus(object):
         if not self.exemplars:
             # instantiate exemplars for this object to override static class variable
             self.exemplars = []
-            
+
             audio_extensions_to_try = ["sph", "wav", "mp3"][::-1]
             self.exemplars += [
                 exemplar({
-                    'audio_file':
+                    "audio_file":
                     audio_file(fl),
-                    'transcript_file':
-                    time_aligned_text(strip_extension(fl) + ".stm")
+                    "transcript_file":
+                    time_aligned_text(strip_extension(fl) + ".stm"),
                 }) for audio_extension in audio_extensions_to_try
                 for fl in (get_files(self.location, audio_extension) if self.
                            location else [])
@@ -102,11 +104,11 @@ class corpus(object):
             # gather all exemplars from /stm and /sph subdirectories if present
             self.exemplars += [
                 exemplar({
-                    'audio_file':
+                    "audio_file":
                     audio_file(fl),
-                    'transcript_file':
+                    "transcript_file":
                     time_aligned_text(self.location + "/stm/" +
-                                      basename(strip_extension(fl)) + ".stm")
+                                      basename(strip_extension(fl)) + ".stm"),
                 }) for audio_extension in audio_extensions_to_try for fl in
                 (get_files(self.location +
                            "/sph/", audio_extension) if self.location else [])
@@ -128,10 +130,10 @@ class corpus(object):
         """
         return {
             _.hash(): {
-                'audio_file': _.audio_file.location,
-                'audio_file_hash': _.audio_file.hash(),
-                'transcript_file': _.transcript_file.location,
-                'transcript_file_hash': _.transcript_file.hash()
+                "audio_file": _.audio_file.location,
+                "audio_file_hash": _.audio_file.hash(),
+                "transcript_file": _.transcript_file.location,
+                "transcript_file_hash": _.transcript_file.hash(),
             }
             for _ in self.exemplars
         }
@@ -142,7 +144,10 @@ class corpus(object):
         """
         return sum(len(eg.transcript_file.segments) for eg in self.exemplars)
 
-    def prepare_for_training(self, target=None, nested=False, sample_rate=16000):
+    def prepare_for_training(self,
+                             target=None,
+                             nested=False,
+                             sample_rate=16000):
         """
         Run validation and audio file preparation steps
         """
@@ -157,10 +162,10 @@ class corpus(object):
             executor.submit(
                 partial(
                     _.audio_file.prepare_for_training,
-                    file_name=target + ("/sph/" if nested else "/") + basename(_.audio_file.location),
-                    sample_rate=sample_rate
-                )
-            ) for _ in self.exemplars
+                    file_name=target + ("/sph/" if nested else "/") +
+                    basename(_.audio_file.location),
+                    sample_rate=sample_rate,
+                )) for _ in self.exemplars
         ]
 
         # trigger conversion and gather results
@@ -203,7 +208,7 @@ class corpus(object):
             "location":
             None,
             "exemplars":
-            [_ for _ in self.exemplars if _ not in other.exemplars]
+            [_ for _ in self.exemplars if _ not in other.exemplars],
         })
 
     def __isub__(self, other):
@@ -219,5 +224,5 @@ class corpus(object):
             "location":
             self.location,
             "exemplars": [self.exemplars[given]]
-            if not isinstance(given, slice) else self.exemplars[given]
+            if not isinstance(given, slice) else self.exemplars[given],
         })

@@ -6,18 +6,19 @@ Parses all spreadsheets in an input folder, extracts text,
 and formats it into a target corpus folder for language model training
 """
 
+import argparse
 import os
+from glob import glob
+
 import pandas as pd
 from asrtoolkit.clean_formatting import clean_up
-from asrtoolkit.file_utils.name_cleaners import basename, strip_extension, sanitize
-from glob import glob
-import argparse
+from asrtoolkit.file_utils.name_cleaners import basename, sanitize, strip_extension
 
 
 def clean_line(line):
     "clean up a line and test for empty values"
     return clean_up(" ".join(
-        map(lambda val: str(val) if not pd.isnull(val) else '', line)))
+        map(lambda val: str(val) if not pd.isnull(val) else "", line)))
 
 
 def dump_sheet(output_file, sheet):
@@ -33,8 +34,8 @@ def extract_xlsx(filename, target_folder):
     working_excel_data_structure = pd.ExcelFile(filename)
     raw_name = sanitize(strip_extension(basename(filename)))
 
-    with open(''.join([target_folder, '/', raw_name, ".txt"]),
-              'a+') as output_file:
+    with open("".join([target_folder, "/", raw_name, ".txt"]),
+              "a+") as output_file:
         for sheet in working_excel_data_structure.sheet_names:
             dump_sheet(output_file,
                        working_excel_data_structure.parse(sheet).values)
@@ -54,16 +55,19 @@ def proc_input_dir_to_corpus(input_dir, output_dir):
 def main():
     parser = argparse.ArgumentParser(
         description=
-        'convert a folder of excel spreadsheets to a corpus of text files')
+        "convert a folder of excel spreadsheets to a corpus of text files")
     parser.add_argument(
-        '--input-folder',
-        default='./',
+        "--input-folder",
+        default="./",
         type=str,
-        help='input folder of excel spreadsheets ending in .xls or .xlsx')
-    parser.add_argument('--output-corpus',
-                        default='corpus',
-                        type=str,
-                        help='output folder for storing text corpus')
+        help="input folder of excel spreadsheets ending in .xls or .xlsx",
+    )
+    parser.add_argument(
+        "--output-corpus",
+        default="corpus",
+        type=str,
+        help="output folder for storing text corpus",
+    )
     args = parser.parse_args()
     proc_input_dir_to_corpus(args.input_folder, args.output_corpus)
 

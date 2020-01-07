@@ -35,8 +35,8 @@ def clean_float(input_float):
     """
     Return float in seconds (even if it was a timestamp originally)
   """
-    return timestamp_to_seconds(input_float) if ":" in str(
-        input_float) else std_float(input_float)
+    return (timestamp_to_seconds(input_float)
+            if ":" in str(input_float) else std_float(input_float))
 
 
 class segment(object):
@@ -103,10 +103,9 @@ class segment(object):
         """
       Checks for common failure cases for if a line is valid or not
     """
-        valid = self.speaker != "inter_segment_gap" and \
-          self.text and \
-          self.text != "ignore_time_segment_in_scoring" and \
-          self.label in ["<o,f0,male>", "<o,f0,female>"]
+        valid = (self.speaker != "inter_segment_gap" and self.text
+                 and self.text != "ignore_time_segment_in_scoring"
+                 and self.label in ["<o,f0,male>", "<o,f0,female>"])
 
         try:
             self.start = clean_float(self.start)
@@ -118,7 +117,8 @@ class segment(object):
         if not valid:  # TODO log instead of print
             print(
                 "Skipping segment due to validation error. \nPlease note that this invalidates WER calculations based on the entire file.\nSegment: ",
-                json.dumps(self.__dict__))
+                json.dumps(self.__dict__),
+            )
 
         if "-" in self.filename:
             self.filename = self.filename.replace("-", "_")
@@ -130,4 +130,5 @@ class segment(object):
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod(raise_on_error=True, verbose=True)

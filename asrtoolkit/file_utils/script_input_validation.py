@@ -4,6 +4,7 @@ Simple wrapper for validating script inputs
 """
 
 from os.path import isfile
+
 from asrtoolkit.file_utils.name_cleaners import get_extension
 
 VALID_EXTENSIONS = ["json", "srt", "stm", "vtt", "txt", "html"]
@@ -25,6 +26,7 @@ def valid_input_file(file_name, valid_extensions=[]):
 
 def assign_if_valid(file_name):
     from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
+
     " returns a time_aligned_text object if valid else None"
     return time_aligned_text(file_name) if valid_input_file(
         file_name) else None

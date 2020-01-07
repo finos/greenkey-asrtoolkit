@@ -2,8 +2,8 @@ beautifulsoup4
 editdistance
 num2words
 pytest
+regex
 termcolor
 tqdm
 webvtt-py
 xlrd
-regex
