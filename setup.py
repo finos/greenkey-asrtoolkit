@@ -12,7 +12,7 @@ with open("README.md") as f:
 
 setup(
     name="asrtoolkit",
-    version="0.1.20",
+    version="0.2.0",
     description=
     "The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.",
     long_description=long_description,
