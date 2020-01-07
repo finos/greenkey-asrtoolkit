@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Text line cleaning functions. For WER calculations, final text should be utf chars a-z and \'
+Text line cleaning functions. For WER calculations, final text should be utf letter chars and \'
 """
 
 from __future__ import print_function
-import re
+import regex as re
 import string
 from collections import OrderedDict
 import argparse
@@ -22,7 +22,7 @@ from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
 LOGGER = logging.getLogger(__name__)
 
-invalid_chars = re.compile("[^A-Za-z '<>]")
+invalid_chars = re.compile(r"[^\p{L}<> \']", re.IGNORECASE)
 
 rematch = OrderedDict([
     ("millions", (re.compile(r"\b(mln|mio|mlns)\b"), lambda m: 'million')),

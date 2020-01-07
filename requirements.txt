@@ -6,3 +6,4 @@ termcolor
 tqdm
 webvtt-py
 xlrd
+regex
