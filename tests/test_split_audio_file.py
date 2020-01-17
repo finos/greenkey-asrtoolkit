@@ -8,7 +8,9 @@ from asrtoolkit.split_audio_file import split_audio_file
 
 
 def test_split_audio_file():
-    " test audio file splitter "
+    """
+    Test audio file splitter
+    """
     split_audio_file("tests/small-test-file.mp3", "tests/small-test-file.stm",
                      "tests/split")
     assert set(os.listdir("tests/split")) == {

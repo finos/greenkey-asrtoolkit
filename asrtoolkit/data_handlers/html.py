@@ -6,10 +6,11 @@ Note that the structure may change without notice and break backwards compatibil
 This expects a segment from class derived in convert_text
 """
 
+from bs4 import BeautifulSoup
+
 # do not delete - needed in time_aligned_text
 from asrtoolkit.data_handlers.data_handlers_common import separator
 from asrtoolkit.data_structures.segment import segment
-from bs4 import BeautifulSoup
 
 
 def table_header(text, width):

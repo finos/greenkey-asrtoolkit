@@ -8,10 +8,11 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 
+from tqdm import tqdm
+
 from asrtoolkit.data_structures.audio_file import audio_file
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.file_utils.name_cleaners import basename, strip_extension
-from tqdm import tqdm
 
 
 def get_files(data_dir, extension):
@@ -56,6 +57,29 @@ class exemplar(object):
                  and os.path.getsize(self.transcript_file.location))
 
         return valid
+
+    def prepare_for_training(self, target, sample_rate=16000, nested=False):
+        """
+        Prepare one exemplar for training
+        Returning a new exemplar object with updated file locations
+        and a resampled audio_file
+        """
+
+        af = self.audio_file.prepare_for_training(
+            target + ("/sph/" if nested else "/") +
+            basename(self.audio_file.location),
+            sample_rate=sample_rate,
+        )
+
+        tf = (
+            self.transcript_file.write(target + ("/stm/" if nested else "/") +
+                                       basename(self.transcript_file.location))
+            if self.audio_file is not None else None)
+
+        return (exemplar({
+            "audio_file": af,
+            "transcript_file": tf
+        }) if af is not None and tf is not None else None)
 
     def hash(self):
         """
@@ -161,31 +185,20 @@ class corpus(object):
         futures = [
             executor.submit(
                 partial(
-                    _.audio_file.prepare_for_training,
-                    file_name=target + ("/sph/" if nested else "/") +
-                    basename(_.audio_file.location),
+                    _.prepare_for_training,
+                    target=target,
                     sample_rate=sample_rate,
+                    nested=nested,
                 )) for _ in self.exemplars
         ]
 
         # trigger conversion and gather results
-        audio_files = [future.result() for future in tqdm(futures)]
-
-        transcript_files = [
-            _.transcript_file.write(target + ("/stm/" if nested else "/") +
-                                    basename(_.transcript_file.location))
-            for _ in self.exemplars
-        ]
+        new_exemplars = [future.result() for future in tqdm(futures)]
 
         new_corpus = corpus({
             "location":
             target,
-            "exemplars": [
-                exemplar({
-                    "audio_file": af,
-                    "transcript_file": tf
-                }) for af, tf in zip(audio_files, transcript_files)
-            ],
+            "exemplars": [eg for eg in new_exemplars if eg is not None],
         })
         new_corpus.validate()
         return new_corpus.log()

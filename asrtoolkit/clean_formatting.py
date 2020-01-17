@@ -12,6 +12,7 @@ import string
 from collections import OrderedDict
 
 import regex as re
+
 from asrtoolkit.deformatting_utils import (
     digits_to_string,
     dollars_to_string,
