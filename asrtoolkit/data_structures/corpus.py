@@ -64,22 +64,28 @@ class exemplar(object):
         Returning a new exemplar object with updated file locations
         and a resampled audio_file
         """
+        if nested:
+            af_target_file = os.sep.join(target, "sph",
+                                         basename(self.audio_file.location))
+            tf_target_file = os.sep.join(
+                target, "stm", basename(self.transcript_file.location))
+        else:
+            af_target_file = os.sep.join(target,
+                                         basename(self.audio_file.location))
+            tf_target_file = os.sep.join(
+                target, basename(self.transcript_file.location))
 
         af = self.audio_file.prepare_for_training(
-            target + ("/sph/" if nested else "/") +
-            basename(self.audio_file.location),
+            af_target_file,
             sample_rate=sample_rate,
         )
 
-        tf = (
-            self.transcript_file.write(target + ("/stm/" if nested else "/") +
-                                       basename(self.transcript_file.location))
-            if self.audio_file is not None else None)
+        tf = self.transcript_file.write(tf_target_file)
 
-        return (exemplar({
+        return exemplar({
             "audio_file": af,
             "transcript_file": tf
-        }) if af is not None and tf is not None else None)
+        }) if all(af, tf) else None
 
     def hash(self):
         """
