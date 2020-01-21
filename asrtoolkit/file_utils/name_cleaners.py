@@ -25,7 +25,7 @@ def basename(file_name):
 def strip_extension(file_name):
     """
     Returns file without extension
-  """
+    """
     return ".".join(file_name.split(".")[:-1]) if file_name else ""
 
 
@@ -44,7 +44,7 @@ def sanitize(file_name, chars_to_replace="- ", silent=True):
                 "check to make sure your audio files and transcript files match"
             )
         return os.path.join(
-            file_name.split(os.sep)[:-1] +
+            *file_name.split(os.sep)[:-1] +
             [basename(file_name).replace(c, "_")])
 
     for c in chars_to_replace:
