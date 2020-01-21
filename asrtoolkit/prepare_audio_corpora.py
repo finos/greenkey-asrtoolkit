@@ -6,7 +6,8 @@ If present, train, test, dev sets will be used from the individual corpora
 """
 import argparse
 import json
-
+import logging
+LOGGER = logging.getLogger()
 from asrtoolkit.data_structures.corpus import corpus
 from asrtoolkit.file_utils.common_file_operations import make_list_of_dirs
 
@@ -14,7 +15,9 @@ data_dirs = ["test", "train", "dev"]
 
 
 def auto_split_corpora(corpora, min_size=50):
-    """ given input corpora dict of corpora, auto split if it doesn't satisfy all_ready constraint """
+    """
+    Given input corpora dict of corpora, auto split if it isn't already split
+    """
     all_ready = all(
         corpora[data_dir].validate() if data_dir in corpora else False
         for data_dir in data_dirs)
@@ -23,7 +26,7 @@ def auto_split_corpora(corpora, min_size=50):
     if "unsorted" in corpora:
         corpora["train"] += corpora["unsorted"]
     if not all_ready:
-        print(
+        LOGGER.warning(
             "Not all training corpora were prepared. Automatically shuffling into training, testing, development sets"
         )
 

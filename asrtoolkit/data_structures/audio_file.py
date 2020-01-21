@@ -4,6 +4,7 @@ Module for holding information about an audio file and doing basic conversions
 """
 
 import hashlib
+import logging
 import os
 import subprocess
 
@@ -12,6 +13,8 @@ from asrtoolkit.file_utils.name_cleaners import (
     sanitize_hyphens,
     strip_extension,
 )
+
+LOGGER = logging.getLogger()
 
 
 def cut_utterance(source_audio_file,
@@ -26,19 +29,17 @@ def cut_utterance(source_audio_file,
     end_time: float or str
     sample_rate: int, default 16000; audio sample rate in Hz
 
-    uses sox segment source_audio_file to create target_audio_file that contains audio from start_time to end_time
+    uses sox to segment source_audio_file to create target_audio_file that contains audio from start_time to end_time
         with audio sample rate set to sample_rate
     """
     subprocess.call(
-        [
-            "sox {} -r {} -b 16 -c 1 {} trim {} ={}".format(
-                source_audio_file,
-                str(sample_rate),
-                target_audio_file,
-                str(start_time),
-                str(end_time),
-            )
-        ],
+        "sox -V1 {} -r {} -b 16 -c 1 {} trim {} ={}".format(
+            source_audio_file,
+            sample_rate,
+            target_audio_file,
+            start_time,
+            end_time,
+        ),
         shell=True,
     )
 
@@ -54,20 +55,21 @@ def degrade_audio(source_audio_file, target_audio_file=None):
     # degrade to 8k
     tmp1 = ".".join(source_audio_file.split(".")[:-1]) + "_tmp1.wav"
     subprocess.call(
-        ["sox {} -r 8000 -e a-law {}".format(source_audio_file, tmp1)],
-        shell=True)
+        "sox -V1 {} -r 8000 -e a-law {}".format(source_audio_file, tmp1),
+        shell=True,
+    )
 
     # convert to u-law
     tmp2 = ".".join(source_audio_file.split(".")[:-1]) + "_tmp2.wav"
-    subprocess.call(["sox {} --rate 8000 -e u-law {}".format(tmp1, tmp2)],
-                    shell=True)
+    subprocess.call(
+        "sox -V1 {} --rate 8000 -e u-law {}".format(tmp1, tmp2),
+        shell=True,
+    )
 
     # upgrade to 16k a-law signed
     subprocess.call(
-        [
-            "sox {} --rate 16000 -e signed  -b 16 --channel 1 {}".format(
-                tmp2, target_audio_file)
-        ],
+        "sox -V1 {} --rate 16000 -e signed  -b 16 --channel 1 {}".format(
+            tmp2, target_audio_file),
         shell=True,
     )
     os.remove(tmp1)
@@ -75,15 +77,15 @@ def degrade_audio(source_audio_file, target_audio_file=None):
 
 
 def combine_audio(audio_files, output_file, gain=False):
-    # Combine audio files with possible remormalization to 0dB
+    """
+    Combine audio files with possible renormalization to 0dB
+    """
     gain_str = ""
     if gain:
         gain_str = "gain -n 0"
     subprocess.call(
-        [
-            "sox -m {} {} {}".format(" ".join(audio_files), output_file,
-                                     gain_str)
-        ],
+        "sox -V1 -m {} {} {}".format(" ".join(audio_files), output_file,
+                                     gain_str),
         shell=True,
     )
 
@@ -115,22 +117,24 @@ class audio_file(object):
     def prepare_for_training(self, file_name, sample_rate=16000):
         """
         Converts to single channel (from channel 1) audio file in SPH file format
+        Returns audio_file object on success, else None
         """
         if file_name.split(".")[-1] != "sph":
-            print("Forcing training data to use SPH file format")
+            LOGGER.warning(
+                "Forcing training data to use SPH file format for %s",
+                file_name)
             file_name = strip_extension(file_name) + ".sph"
 
         file_name = sanitize_hyphens(file_name)
-        subprocess.check_output(
-            [
-                "sox {} {} rate {} remix -".format(self.location, file_name,
-                                                   sample_rate)
-            ],
-            shell=True,
-        )
 
-        # return new object
-        return audio_file(file_name)
+        # return None if error code given, otherwise return audio_file object
+        output_file = (audio_file(file_name) if not subprocess.call(
+            "sox -V1 {} {} rate {} remix -".format(self.location, file_name,
+                                                   sample_rate),
+            shell=True,
+        ) else None)
+
+        return output_file
 
     def split(self, transcript, target_dir):
         """

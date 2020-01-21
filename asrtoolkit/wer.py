@@ -7,6 +7,7 @@ import argparse
 import re
 
 import editdistance
+
 from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.file_utils.script_input_validation import assign_if_valid

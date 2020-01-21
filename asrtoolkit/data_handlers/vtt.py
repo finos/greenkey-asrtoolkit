@@ -5,11 +5,12 @@ Module for reading/writing WEBVTT files
 This expects a segment from class derived in convert_text
 """
 
+from webvtt import WebVTT
+
 # do not delete - needed for time_aligned_text
 from asrtoolkit.data_handlers.data_handlers_common import footer, separator
 from asrtoolkit.data_handlers.webvtt_common import read_caption
 from asrtoolkit.data_structures.segment import seconds_to_timestamp
-from webvtt import WebVTT
 
 
 def header():
