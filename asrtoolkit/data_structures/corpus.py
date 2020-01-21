@@ -85,7 +85,7 @@ class exemplar(object):
         return exemplar({
             "audio_file": af,
             "transcript_file": tf
-        }) if all(af, tf) else None
+        }) if all([af, tf]) else None
 
     def hash(self):
         """
