@@ -35,10 +35,10 @@ def cut_utterance(source_audio_file,
     subprocess.call(
         "sox -V1 {} -r {} -b 16 -c 1 {} trim {} ={}".format(
             source_audio_file,
-            str(sample_rate),
+            sample_rate,
             target_audio_file,
-            str(start_time),
-            str(end_time),
+            start_time,
+            end_time,
         ),
         shell=True,
     )
