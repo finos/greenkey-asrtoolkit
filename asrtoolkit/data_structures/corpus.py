@@ -65,14 +65,14 @@ class exemplar(object):
         and a resampled audio_file
         """
         if nested:
-            af_target_file = os.sep.join(target, "sph",
-                                         basename(self.audio_file.location))
-            tf_target_file = os.sep.join(
+            af_target_file = os.path.join(target, "sph",
+                                          basename(self.audio_file.location))
+            tf_target_file = os.path.join(
                 target, "stm", basename(self.transcript_file.location))
         else:
-            af_target_file = os.sep.join(target,
-                                         basename(self.audio_file.location))
-            tf_target_file = os.sep.join(
+            af_target_file = os.path.join(target,
+                                          basename(self.audio_file.location))
+            tf_target_file = os.path.join(
                 target, basename(self.transcript_file.location))
 
         af = self.audio_file.prepare_for_training(

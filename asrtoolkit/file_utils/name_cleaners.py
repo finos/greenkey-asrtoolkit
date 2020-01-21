@@ -43,7 +43,7 @@ def sanitize(file_name, chars_to_replace="- ", silent=True):
                 format(c) +
                 "check to make sure your audio files and transcript files match"
             )
-        return os.sep.join(
+        return os.path.join(
             file_name.split(os.sep)[:-1] +
             [basename(file_name).replace(c, "_")])
 
