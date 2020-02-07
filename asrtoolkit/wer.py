@@ -41,16 +41,26 @@ def remove_nonsilence_noises(input_text):
     return re.sub(re_nonsilence_noises, "", input_text)
 
 
-def wer(ref, hyp, remove_nsns=False, return_counts=False):
+def get_wer_components(ref_string, hyp_string):
+    """
+    Helper function that takes as input a reference string and a hypothesis string.
+    Splits the strings by space, computes the WER formula numerator and denominator
+    and returns both.
+
+    >> get_wer_components("this is a cat", "this is a dog")
+    (1, 4)
+    """
+
+    WER_numerator = editdistance.eval(ref_string.split(" "), hyp_string.split(" "))
+    WER_denominator = max(1, len(ref_string.split(" ")))
+
+    return WER_numerator, WER_denominator
+
+def wer(ref, hyp, remove_nsns=False):
     """
     Calculate word error rate between two string or time_aligned_text objects
     >>> wer("this is a cat", "this is a dog")
     25.0
-    :param return_counts 
-         Enables returning of the actual WER formula numerator and denominator
-
-    >> wer("this is a cat", "this is a dog", return_counts=True)
-    (25.0, 1, 4)
     """
 
     # accept time_aligned_text objects too
@@ -73,12 +83,10 @@ def wer(ref, hyp, remove_nsns=False, return_counts=False):
     ref = clean_up(ref)
     hyp = clean_up(hyp)
 
-    # calculate WER
-    WER_numerator = editdistance.eval(ref.split(" "), hyp.split(" "))
-    WER_denominator = max(1, len(ref.split(" ")))
-    if not return_counts: return 100 * WER_numerator / WER_denominator
+    # calculate WER with helper function
+    WER_numerator, WER_denominator =  get_wer_components(ref,hyp)
 
-    return 100 * WER_numerator / WER_denominator, WER_numerator, WER_denominator
+    return 100 * WER_numerator / WER_denominator
 
 
 def cer(ref, hyp, remove_nsns=False):
