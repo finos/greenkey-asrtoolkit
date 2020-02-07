@@ -41,11 +41,16 @@ def remove_nonsilence_noises(input_text):
     return re.sub(re_nonsilence_noises, "", input_text)
 
 
-def wer(ref, hyp, remove_nsns=False):
+def wer(ref, hyp, remove_nsns=False, return_counts=False):
     """
     Calculate word error rate between two string or time_aligned_text objects
     >>> wer("this is a cat", "this is a dog")
     25.0
+    :param return_counts 
+         Enables returning of the actual WER formula numerator and denominator
+
+    >> wer("this is a cat", "this is a dog", return_counts=True)
+    (25.0, 1, 4)
     """
 
     # accept time_aligned_text objects too
@@ -69,8 +74,11 @@ def wer(ref, hyp, remove_nsns=False):
     hyp = clean_up(hyp)
 
     # calculate WER
-    return (100 * editdistance.eval(ref.split(" "), hyp.split(" ")) /
-            max(1, len(ref.split(" "))))
+    WER_numerator = editdistance.eval(ref.split(" "), hyp.split(" "))
+    WER_denominator = max(1, len(ref.split(" ")))
+    if not return_counts: return 100 * WER_numerator / WER_denominator
+
+    return 100 * WER_numerator / WER_denominator, WER_numerator, WER_denominator
 
 
 def cer(ref, hyp, remove_nsns=False):
