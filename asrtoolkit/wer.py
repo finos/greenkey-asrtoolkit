@@ -15,6 +15,9 @@ from asrtoolkit.file_utils.script_input_validation import assign_if_valid
 # defines global regex for tagged noises and silence
 re_tagged_nonspeech = re.compile(r"[\[<][A-Za-z #]*[\]>]")
 
+# define tokenization approach to handle spaces, tabs, and other space characters
+tokenization = re.compile(r"\s+")
+
 # defines global regex to remove these nsns
 nonsilence_noises = [
     "noise",
@@ -47,14 +50,54 @@ def get_wer_components(ref_string, hyp_string):
     Splits the strings by space, computes the WER formula numerator and denominator
     and returns both.
 
-    >> get_wer_components("this is a cat", "this is a dog")
+    >>> get_wer_components("this is a cat", "this is a dog")
     (1, 4)
+    >>> get_wer_components(['a','b','c'], ['a','b','d'])
+    (1, 3)
     """
 
-    WER_numerator = editdistance.eval(ref_string.split(" "), hyp_string.split(" "))
-    WER_denominator = max(1, len(ref_string.split(" ")))
+    # apply tokenization if given as a string
+    ref = tokenization.split(ref_string) if isinstance(ref_string,
+                                                       str) else ref_string
+    hyp = tokenization.split(hyp_string) if isinstance(hyp_string,
+                                                       str) else hyp_string
+
+    WER_numerator = editdistance.eval(ref, hyp)
+    WER_denominator = max(1, len(ref))
 
     return WER_numerator, WER_denominator
+
+
+def standardize_transcript(input_transcript, remove_nsns=False):
+    """
+    Given an input transcript or time_aligned_text object,
+    remove non-speech events
+    [optionally] remove non-silence noises
+
+    >>> standardize_transcript("this is a test")
+    'this is a test'
+    >>> standardize_transcript("this is um a test")
+    'this is um a test'
+    >>> standardize_transcript("this is um a test", remove_nsns=True)
+    'this is a test'
+    """
+
+    # accept time_aligned_text objects but use their output text
+    input_transcript = (input_transcript.text()
+                        if type(input_transcript) == time_aligned_text else
+                        input_transcript)
+
+    # remove tagged noises and other non-speech events
+    input_transcript = re.sub(re_tagged_nonspeech, " ", input_transcript)
+
+    if remove_nsns:
+        input_transcript = remove_nonsilence_noises(input_transcript)
+
+    # clean punctuation, etc.
+    input_transcript = clean_up(input_transcript)
+
+    return input_transcript
+
 
 def wer(ref, hyp, remove_nsns=False):
     """
@@ -63,28 +106,12 @@ def wer(ref, hyp, remove_nsns=False):
     25.0
     """
 
-    # accept time_aligned_text objects too
-    if type(ref) == time_aligned_text:
-        ref = ref.text()
-
-    if type(hyp) == time_aligned_text:
-        hyp = hyp.text()
-
-    # remove tagged noises and other nonspeech events
-    ref = re.sub(re_tagged_nonspeech, " ", ref)
-    hyp = re.sub(re_tagged_nonspeech, " ", hyp)
-
-    # optionally, remove non silence noises
-    if remove_nsns:
-        ref = remove_nonsilence_noises(ref)
-        hyp = remove_nonsilence_noises(hyp)
-
-    # clean punctuation, etc.
-    ref = clean_up(ref)
-    hyp = clean_up(hyp)
+    # standardize input string
+    ref, hyp = map(lambda t: standardize_transcript(t, remove_nsns),
+                   (ref, hyp))
 
     # calculate WER with helper function
-    WER_numerator, WER_denominator =  get_wer_components(ref,hyp)
+    WER_numerator, WER_denominator = get_wer_components(ref, hyp)
 
     return 100 * WER_numerator / WER_denominator
 
@@ -96,22 +123,19 @@ def cer(ref, hyp, remove_nsns=False):
     25.0
     """
 
-    # accept time_aligned_text objects too
-    if type(ref) == time_aligned_text:
-        ref = ref.text()
+    # standardize and convert string to a list of characters
+    ref, hyp = map(
+        list,
+        map(
+            lambda transcript: standardize_transcript(transcript, remove_nsns),
+            (ref, hyp),
+        ),
+    )
 
-    if type(hyp) == time_aligned_text:
-        hyp = hyp.text()
+    # calculate CER with helper function
+    CER_numerator, CER_denominator = get_wer_components(ref, hyp)
 
-    if remove_nsns:
-        ref = remove_nonsilence_noises(ref)
-        hyp = remove_nonsilence_noises(hyp)
-
-    ref = clean_up(ref)
-    hyp = clean_up(hyp)
-
-    # calculate per line CER
-    return 100 * editdistance.eval(ref, hyp) / max(1, len(ref))
+    return 100 * CER_numerator / CER_denominator
 
 
 def main():
