@@ -8,11 +8,9 @@ import logging
 import os
 import subprocess
 
-from asrtoolkit.file_utils.name_cleaners import (
-    generate_segmented_file_name,
-    sanitize_hyphens,
-    strip_extension,
-)
+from asrtoolkit.file_utils.name_cleaners import (generate_segmented_file_name,
+                                                 sanitize_hyphens,
+                                                 strip_extension)
 
 LOGGER = logging.getLogger()
 
@@ -29,7 +27,8 @@ def cut_utterance(source_audio_file,
     end_time: float or str
     sample_rate: int, default 16000; audio sample rate in Hz
 
-    uses sox to segment source_audio_file to create target_audio_file that contains audio from start_time to end_time
+    uses sox to segment source_audio_file to create target_audio_file that
+    contains audio from start_time to end_time
         with audio sample rate set to sample_rate
     """
     subprocess.call(
@@ -46,7 +45,8 @@ def cut_utterance(source_audio_file,
 
 def degrade_audio(source_audio_file, target_audio_file=None):
     """
-    Degrades audio to typical G711 level. Useful if models need to target this audio quality.
+    Degrades audio to typical G711 level.
+    Useful if models need to target this audio quality.
     """
 
     target_audio_file = (source_audio_file
@@ -92,7 +92,11 @@ def combine_audio(audio_files, output_file, gain=False):
 
 class audio_file(object):
     """
-    Create a corpus object for storing information about where files are and how many
+    Create a audio_file object for
+    - storing location
+    - retrieving a unique hash
+    - resampling for training
+    - splitting into segments given an STM file
     """
     def __init__(self, location=""):
         """
@@ -116,7 +120,8 @@ class audio_file(object):
 
     def prepare_for_training(self, file_name, sample_rate=16000):
         """
-        Converts to single channel (from channel 1) audio file in SPH file format
+        Converts to single channel (from channel 1) audio file
+        in SPH file format
         Returns audio_file object on success, else None
         """
         if file_name.split(".")[-1] != "sph":
@@ -138,7 +143,8 @@ class audio_file(object):
 
     def split(self, transcript, target_dir):
         """
-        Split audio file and transcript into many pieces based on valid segments of transcript
+        Split audio file and transcript into many pieces based on
+        valid segments of transcript
         """
 
         os.makedirs(target_dir, exist_ok=True)

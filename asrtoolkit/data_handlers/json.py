@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 """
-Module for reading/writing JSON files
-
-This expects a segment from class derived in convert_text
+Module for reading/writing gk JSON files
 """
 
 import json
@@ -31,12 +29,6 @@ def format_segment(seg):
 
     :param: seg: segment object
     :return: dict: key/val pairs contain 'segment'-level information
-      values of output segment-dict are values of corresponding input segment attributes
-
-        output_dict['startTimeSec'] = segment.start          (converse of parse_segment)
-
-    the segment dict structure generated is the output of all microservices and input to most
-      each segment-dict contains a fragment of text (+ additional information)
     """
     output_dict = {}
     output_dict["speakerInfo"] = seg.speaker
@@ -56,13 +48,10 @@ def format_segment(seg):
 
 def parse_segment(input_seg):
     """
-    Creates a segment object from an input GreenKey segment
-    :param: input_seg: dict  (segment-level dict: input_data['segments'][i]['segment'])
-        -> dict with keys 'channel', 'startTimeSec' etc mapping to segment object attributes
-
-    :return: segment object; attribute values are set to those of corresponding segment-dict keys
-
-        segment.start = segment_dict['startTimeSec']         (reverse mapping from format_segment)
+    Creates an asrtoolkit segment object from an input gk segment
+    :param: input_seg: dict (segment-level dict: input_data['segments'][i]
+      -> dict with keys 'channel', 'startTimeSec' etc mapping to attributes
+    :return: asrtoolkit segment object
     """
     extracted_dict = {}
 
@@ -71,13 +60,16 @@ def parse_segment(input_seg):
                           interior_key=None,
                           proc_val=lambda val: val):
         """
-        :param value: type?
-        :param dict_key:
-        :param interior_key:
-        :param proc_val:
-        :return: type?
+        This transforms gk segment data into a dictionary for input
+        into the asrtoolkit segment object
 
         Assigns value to extracted_dict object if present in input_seg
+
+        :param value:         key from the inside of gk segment
+        :param dict_key:      key to which value should be assigned
+        :param interior_key:  sometimes values are nested under this
+        :param proc_val:      function formatting the value
+
         """
         dict_key = value if dict_key is None else dict_key
 
@@ -115,15 +107,14 @@ def read_in_memory(input_data):
     Reads input json objects
 
     :param: input_data: dict with key 'segments'
-      input_data['segments']: List[Dict]; each dict has key 'segment' with a dict as the value (segment_dict)
-      - segment_dicts contain key/val pairs that map to `segment` object attributes
-      - labels of mapped key-attribute pairs may differ: segment['startTimeSec'] -> segment.start
+      input_data['segments']: List[Dict];
+      - segment_dicts contain key/val pairs that map to `segment` attributes
+        NB that labels of mapped key-attribute pairs may differ
+          for example, segment['startTimeSec'] -> segment.start
 
     :return: list of segment objects
-      applies parse_segment function to each dict in input_data['segments']
-       - func creates a `segment` object for each segment_dict, mapping corresponding attributes
+      applies `parse_segment` function to each dict in input_data['segments']
 
-    input_data['segments'][i]['segment'] --> mapped to ith segment object (with 'start', 'stop' etc'
     """
     segments = [
         _ for _ in map(parse_segment, input_data["segments"]) if _ is not None

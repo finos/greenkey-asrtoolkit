@@ -1,17 +1,14 @@
 #!/usr/bin/env python
 """
 Class for holding time_aligned text
-
 """
 
 import hashlib
 import importlib
 import os
 
-from asrtoolkit.file_utils.name_cleaners import (
-    generate_segmented_file_name,
-    sanitize_hyphens,
-)
+from asrtoolkit.file_utils.name_cleaners import (generate_segmented_file_name,
+                                                 sanitize_hyphens)
 
 
 class time_aligned_text(object):
@@ -25,7 +22,8 @@ class time_aligned_text(object):
 
     def __init__(self, input_data=None):
         """
-        Instantiates a time_aligned text object from a file (if input_var is a string)
+        Instantiates a time_aligned text object
+        If 'input_data' is a string, it tries to find the appropriate file.
 
         >>> transcript = time_aligned_text()
         """
@@ -68,6 +66,7 @@ class time_aligned_text(object):
         Set the location after adding if you want to save this!
         """
         new_segments = self.segments + other.segments
+
         # Sort the segments by their start time then stop time
         new_segments.sort(key=lambda s: (float(s.start), float(s.stop)))
 
@@ -93,7 +92,9 @@ class time_aligned_text(object):
         self.segments = data_handler.read_file(file_name)
 
     def write(self, file_name):
-        """ Output to file using segment-specific __str__ function """
+        """
+        Output to file using segment-specific __str__ function
+        """
         file_extension = file_name.split(
             ".")[-1] if "." in file_name else "stm"
 
