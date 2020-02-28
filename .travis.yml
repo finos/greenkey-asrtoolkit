@@ -15,9 +15,9 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y sox libsox-fmt-mp3
 install:
+  - python3 setup.py build
+  - python3 setup.py install
   - pip install -r requirements.txt
-  - pip install numpy
-  - pip install -e .[dev]
 # command to run tests
 script:
   - python -m pytest -v --doctest-modules
