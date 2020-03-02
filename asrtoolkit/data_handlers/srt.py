@@ -10,7 +10,7 @@ from webvtt import WebVTT
 # do not delete - needed in time_aligned_text
 from asrtoolkit.data_handlers.data_handlers_common import footer, header, separator
 from asrtoolkit.data_handlers.webvtt_common import read_caption
-from asrtoolkit.data_structures.segment import seconds_to_timestamp
+from asrtoolkit.data_structures.formatting import seconds_to_timestamp
 
 
 def format_segment(seg):

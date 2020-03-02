@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Module for organizing SPH, STM files from a corpus
+Module for organizing SPH/MP3/WAV & STM files from a corpus
 """
 
 import glob
@@ -43,7 +43,10 @@ class exemplar(object):
             setattr(self, key, kwargs[key])
 
     def validate(self):
-        " validate exemplar object by constraining that the filenames before the extension are the same "
+        """
+        Validates exemplar object by constraining that the filenames before the
+        extension are the same
+        """
 
         audio_filename = basename(strip_extension(self.audio_file.location))
         transcript_filename = basename(
@@ -82,10 +85,10 @@ class exemplar(object):
 
         tf = self.transcript_file.write(tf_target_file)
 
-        return exemplar({
+        return (exemplar({
             "audio_file": af,
             "transcript_file": tf
-        }) if all([af, tf]) else None
+        }) if all([af, tf]) else None)
 
     def hash(self):
         """
@@ -96,7 +99,8 @@ class exemplar(object):
 
 class corpus(object):
     """
-    Create a corpus object for storing information about where files are and how many
+    Create a corpus object for storing information about
+    the location and count of files in a corpus
     """
 
     location = None
@@ -104,7 +108,9 @@ class corpus(object):
 
     def __init__(self, *args, **kwargs):
         """
-        Initialize from location and populate list of SPH, WAV, or MP3 audio files and STM files into segments
+        Initialize from location and populate list of
+        SPH, WAV, or MP3 audio files
+        and STM files into segments
         """
         for dictionary in args:
             if isinstance(dictionary, dict):
@@ -113,9 +119,11 @@ class corpus(object):
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
-        # only if not defined above should we search for exemplars based on location
+        # only if not defined above should we search for exemplars
+        # based on location
         if not self.exemplars:
-            # instantiate exemplars for this object to override static class variable
+            # instantiate exemplars for this object to override
+            # static class variable
             self.exemplars = []
 
             audio_extensions_to_try = ["sph", "wav", "mp3"][::-1]
@@ -148,7 +156,8 @@ class corpus(object):
 
     def validate(self):
         """
-        Check to and validate each example after sorting by audio file hash since stm hash may change
+        Check to and validate each example after sorting by audio file hash
+        since stm hash may change
         """
         dict_of_examples = {_.audio_file.hash(): _ for _ in self.exemplars}
         self.exemplars = [dict_of_examples[_] for _ in set(dict_of_examples)]
