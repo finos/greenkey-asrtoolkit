@@ -130,9 +130,31 @@ optional arguments:
                         output folder for storing text corpus
 ```
 
+
+### align_json
+This aligns a gk hypothesis `json` file with a reference text file for creating forced alignment `STM` files for training new ASR models.
+Note that this function requires the installation a few extra packages
+```shell
+python3 -m pip install spacy textacy https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz#egg=en_core_web_sm
+```
+
+```text
+usage: align_json.py [-h] input_json ref output_filename
+
+align a gk json file against a reference text file
+
+positional arguments:
+  input_json       input gk json file
+  ref              reference text file
+  output_filename  output_filename
+
+optional arguments:
+  -h, --help       show this help message and exit
+```
+
 ### Requirements
 
-- Python >= 3.5 with `pip`
+- Python >= 3.6.1 with `pip`
 
 ## Contributing
 

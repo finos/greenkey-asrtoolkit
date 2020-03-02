@@ -2,7 +2,7 @@ FROM debian:buster-slim
 LABEL maintainer="Matthew Goldey <mgoldey@greenkeytech.com>" \
       organization="Green Key Technologies <transcription@greenkeytech.com>"
 
-# APK INSTALLS
+# APT INSTALLS
 RUN apt update && \
     apt install -y python3-dev libsox-fmt-mp3 wget curl build-essential && \
     apt-get clean autoclean && \
@@ -11,9 +11,11 @@ RUN apt update && \
     curl https://bootstrap.pypa.io/get-pip.py | python3 && \
     wget https://storage.googleapis.com/gkt-external/sample_audio_files.tar.gz && tar -xvzf sample_audio_files.tar.gz
 
-COPY . /
+WORKDIR /asrtoolkit
+COPY . /asrtoolkit
 
 RUN \
   python3 setup.py build && \
   python3 setup.py install && \
+  python3 -m pip install .[dev] && \
   python3 -m pip install "requests>=2.18.4"

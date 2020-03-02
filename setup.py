@@ -43,6 +43,7 @@ def install_deps():
 
 
 pkgs, new_links = install_deps()
+dev_pkgs = open("requirements-dev.txt",'r').readlines()
 
 setup(
     name="asrtoolkit",
@@ -55,6 +56,7 @@ setup(
     author="Matthew Goldey",
     author_email="mgoldey@greenkeytech.com",
     install_requires=pkgs,
+    extras_require={"dev": dev_pkgs},
     dependency_links=new_links,
     keywords="asr speech recognition greenkey gk word error rate",
     entry_points={
