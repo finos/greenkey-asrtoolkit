@@ -1,30 +1,21 @@
-FROM alpine:edge
+FROM debian:buster-slim
 LABEL maintainer="Matthew Goldey <mgoldey@greenkeytech.com>"
 LABEL organization="Green Key Technologies <transcription@greenkeytech.com>"
 
 # APK INSTALLS
-RUN apk update && \
-  apk --no-cache add -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
-    build-base \
-    gcc \
-    g++ \
-    libc-dev \
-    libstdc++ \
-    linux-headers \
-    make \
-    py3-pip \
-    python3 \
-    python3-dev\
-    py3-pandas \
-    sox \
-    wget && \
-  rm -rf /var/cache/apk/*
+RUN apt update && \
+    apt install -y python3-dev libsox-fmt-mp3 wget curl && \
+    apt-get clean autoclean && \
+    apt-get autoremove -y && \
+    rm -rf /usr/share/doc /var/lib/apt/lists/*
 
+
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3
 COPY . /
 
 RUN \
-  pip3 install -e .[dev] && \
-  pip3 install "requests>=2.18.4"
+  python3 -m pip install -e .[dev] && \
+  python3 -m pip install "requests>=2.18.4"
 
 RUN wget https://storage.googleapis.com/gkt-external/sample_audio_files.tar.gz && tar -xvzf sample_audio_files.tar.gz
 
