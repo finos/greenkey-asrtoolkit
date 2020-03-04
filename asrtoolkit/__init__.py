@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
+import logging
+LOGGER = logging.getLogger(__name__)
 
-from asrtoolkit.align_json import align_json
+try:
+    from asrtoolkit.align_json import align_json
+except ImportError:
+    LOGGER.info(
+        "Unable to import alignment utilities due to missing development package requirements"
+    )
+
 from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.convert_transcript import convert
 from asrtoolkit.data_structures.audio_file import audio_file, combine_audio
