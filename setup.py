@@ -43,11 +43,10 @@ def install_deps():
 
 
 pkgs, new_links = install_deps()
-dev_pkgs = open("requirements-dev.txt",'r').readlines()
 
 setup(
     name="asrtoolkit",
-    version="0.2.1",
+    version="0.2.2",
     description=
     "The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.",
     long_description=long_description,
@@ -56,7 +55,16 @@ setup(
     author="Matthew Goldey",
     author_email="mgoldey@greenkeytech.com",
     install_requires=pkgs,
-    extras_require={"dev": dev_pkgs},
+    extras_require={
+        "dev": [
+            "numpy>=1.17.0",
+            "pandas",
+            "spacy",
+            "textacy",
+            "srsly<2.0.0,>=0.1.0",
+            "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz#egg=en_core_web_sm",
+        ]
+    },
     dependency_links=new_links,
     keywords="asr speech recognition greenkey gk word error rate",
     entry_points={
