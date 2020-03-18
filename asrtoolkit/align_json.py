@@ -55,7 +55,7 @@ def main():
                         help="output_filename")
 
     args = parser.parse_args()
-    align_gk_json(args.ref, args.input_json, args.output_filename)
+    align_json(args.ref, args.input_json, args.output_filename)
 
 
 if __name__ == "__main__":
