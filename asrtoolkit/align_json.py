@@ -21,6 +21,10 @@ def align_json(ref_txt, json_file, filename=None):
     Using a reference txt file and a hypothesis gk json 
         file, this time-aligns the reference txt file 
         and outputs an STM file
+    Input
+      ref_txt, str - reference text file containing ground truth
+      json_file, str - hypothesis gk JSON file
+      filename, str - output STM filename
     """
 
     ref_tokens = preprocess_txt.parse_transcript(ref_txt)
