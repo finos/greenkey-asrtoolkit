@@ -69,15 +69,15 @@ setup(
     keywords="asr speech recognition greenkey gk word error rate",
     entry_points={
         "console_scripts": [
-            "align_json=asrtoolkit.align_json:main",
-            "clean_formatting=asrtoolkit.clean_formatting:main",
+            "align_json=asrtoolkit.align_json:cli",
+            "clean_formatting=asrtoolkit.clean_formatting:cli",
             "combine_audio_files=asrtoolkit.combine_audio_files:main",
-            "convert_transcript = asrtoolkit.convert_transcript:main",
-            "degrade_audio_file=asrtoolkit.degrade_audio_file:main",
+            "convert_transcript = asrtoolkit.convert_transcript:cli",
+            "degrade_audio_file=asrtoolkit.degrade_audio_file:cli",
             "extract_excel_spreadsheets=asrtoolkit.extract_excel_spreadsheets:main",
-            "prepare_audio_corpora=asrtoolkit.prepare_audio_corpora:main",
-            "split_audio_file=asrtoolkit.split_audio_file:main",
-            "wer=asrtoolkit.wer:main",
+            "prepare_audio_corpora=asrtoolkit.prepare_audio_corpora:cli",
+            "split_audio_file=asrtoolkit.split_audio_file:cli",
+            "wer=asrtoolkit.wer:cli",
         ]
     },
     license="Apache v2",

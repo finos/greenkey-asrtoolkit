@@ -3,18 +3,28 @@
 Forced alignment tools CLI
 """
 
-import argparse
+from fire import Fire
 
 from asrtoolkit.alignment import preprocess_gk_json, preprocess_txt
 from asrtoolkit.alignment.align import align
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
-from asrtoolkit.file_utils.name_cleaners import basename, sanitize, strip_extension
+from asrtoolkit.file_utils.name_cleaners import (
+    basename,
+    sanitize,
+    strip_extension,
+)
 
 
 def align_json(ref_txt, json_file, filename=None):
     """
-    Wraps alignment tools to allow for forced alignment of a gk json hypothesis against a reference text file
-    Produces a time-aligned stm file named filename using the correct transcript where alignments were detected
+    CLI for forced alignment tools
+    Using a reference txt file and a hypothesis gk json 
+        file, this time-aligns the reference txt file 
+        and outputs an STM file
+    Input
+      ref_txt, str - reference text file containing ground truth
+      json_file, str - hypothesis gk JSON file
+      filename, str - output STM filename
     """
 
     ref_tokens = preprocess_txt.parse_transcript(ref_txt)
@@ -34,29 +44,9 @@ def align_json(ref_txt, json_file, filename=None):
     output.write(filename)
 
 
-def main():
-    """
-    CLI for forced alignment tools
-    """
-    parser = argparse.ArgumentParser(
-        description="align a gk json file against a reference text file")
-    parser.add_argument("input_json",
-                        metavar="input_json",
-                        type=str,
-                        help="input gk json file")
-    parser.add_argument("ref",
-                        metavar="ref",
-                        type=str,
-                        help="reference text file")
-    parser.add_argument("output_filename",
-                        metavar="output_filename",
-                        type=str,
-                        default=None,
-                        help="output_filename")
-
-    args = parser.parse_args()
-    align_json(args.ref, args.input_json, args.output_filename)
+def cli():
+    Fire(align_json)
 
 
 if __name__ == "__main__":
-    main()
+    cli()

@@ -16,7 +16,12 @@ install:
   - python3 setup.py build
   - python3 setup.py install
   - python3 -m pip install .[dev]
-  - pip install -r requirements.txt
+  - python3 -m pip install -r requirements.txt
+  - python3 -m pip install flake8
 # command to run tests
 script:
+  # run test suite
   - python -m pytest -v --doctest-modules
+  # check for undefined variables (F821 is an excellent error for a linter to catch)
+  # add errors to ignore here as desired
+  - python3 -m flake8 --ignore=E501,W504,W503,W291,F401,E741,E302,E126,E402,E251 .

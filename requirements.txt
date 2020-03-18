@@ -1,5 +1,6 @@
 beautifulsoup4
 editdistance
+fire
 num2words
 pytest
 regex

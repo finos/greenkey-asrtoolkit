@@ -4,12 +4,15 @@ Test to ensure that alignment can work
 """
 import hashlib
 
-from asrtoolkit.align_json import align_json
+from asrtoolkit import align_json
 
 
 def test_simple_alignment():
-    align_json("samples/BillGatesTEDTalk.txt", "samples/BillGatesTEDTalk.json",
-               "tests/BillGatesTEDTalk_aligned.stm")
+    align_json(
+        "samples/BillGatesTEDTalk.txt",
+        "samples/BillGatesTEDTalk.json",
+        "tests/BillGatesTEDTalk_aligned.stm",
+    )
     new_sha = hashlib.sha1(
         open("tests/BillGatesTEDTalk_aligned.stm", "r",
              encoding="utf8").read().encode()).hexdigest()

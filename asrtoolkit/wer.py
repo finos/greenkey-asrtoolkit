@@ -3,10 +3,10 @@
 Python function for computing word error rates metric for Automatic Speech Recognition files
 """
 
-import argparse
 import re
 
 import editdistance
+from fire import Fire
 
 from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
@@ -83,9 +83,8 @@ def standardize_transcript(input_transcript, remove_nsns=False):
     """
 
     # accept time_aligned_text objects but use their output text
-    input_transcript = (input_transcript.text()
-                        if type(input_transcript) == time_aligned_text else
-                        input_transcript)
+    input_transcript = (input_transcript.text() if isinstance(
+        input_transcript, time_aligned_text) else input_transcript)
 
     # remove tagged noises and other non-speech events
     input_transcript = re.sub(re_tagged_nonspeech, " ", input_transcript)
@@ -138,50 +137,33 @@ def cer(ref, hyp, remove_nsns=False):
     return 100 * CER_numerator / CER_denominator
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description=
-        "Compares a reference and transcript file and calculates word error rate (WER) between these two files"
-    )
-    parser.add_argument(
-        "reference_file",
-        metavar="reference_file",
-        type=str,
-        help='reference "truth" file',
-    )
-    parser.add_argument(
-        "transcript_file",
-        metavar="transcript_file",
-        type=str,
-        help="transcript possibly containing errors",
-    )
-    parser.add_argument(
-        "--char-level",
-        help="calculate character error rate instead of word error rate",
-        action="store_true",
-    )
-    parser.add_argument(
-        "--ignore-nsns",
-        help="ignore non silence noises like um, uh, etc.",
-        action="store_true",
-    )
-
-    # parse arguments
-    args = parser.parse_args()
+def compute_wer(reference_file,
+                transcript_file,
+                char_level=False,
+                ignore_nsns=False):
+    """
+    Compares a reference and transcript file and calculates word error rate (WER) between these two files
+    If --char-level is given, compute CER instead
+    If --ignore-nsns is given, ignore non silence noises
+    """
 
     # read files from arguments
-    ref = assign_if_valid(args.reference_file)
-    hyp = assign_if_valid(args.transcript_file)
+    ref = assign_if_valid(reference_file)
+    hyp = assign_if_valid(transcript_file)
 
     if ref is None or hyp is None:
         print(
             "Error with an input file. Please check all files exist and are accepted by ASRToolkit"
         )
-    elif args.char_level:
-        print("CER: {:5.3f}%".format(cer(ref, hyp, args.ignore_nsns)))
+    elif char_level:
+        print("CER: {:5.3f}%".format(cer(ref, hyp, ignore_nsns)))
     else:
-        print("WER: {:5.3f}%".format(wer(ref, hyp, args.ignore_nsns)))
+        print("WER: {:5.3f}%".format(wer(ref, hyp, ignore_nsns)))
+
+
+def cli():
+    Fire(compute_wer)
 
 
 if __name__ == "__main__":
-    main()
+    cli()

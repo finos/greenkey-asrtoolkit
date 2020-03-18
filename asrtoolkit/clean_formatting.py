@@ -4,14 +4,12 @@
 Text line cleaning functions. For WER calculations, final text should be utf letter chars and \'
 """
 
-from __future__ import print_function
-
-import argparse
 import logging
 import string
 from collections import OrderedDict
 
 import regex as re
+from fire import Fire
 
 from asrtoolkit.deformatting_utils import (
     digits_to_string,
@@ -29,7 +27,7 @@ invalid_chars = re.compile(r"[^\p{L}<> \']", re.IGNORECASE)
 
 spaces = re.compile(r"\s+")
 
-rematch = OrderedDict([
+KNOWN_REPLACEMENTS = OrderedDict([
     ("millions", (re.compile(r"\b(mln|mio|mlns)\b"), lambda m: "million")),
     ("pleases", (re.compile(r"\b(plz|pls)\b"), lambda m: "please")),
     ("thanks", (re.compile(r"\b(thks|thx)\b"), lambda m: "thanks")),
@@ -135,18 +133,19 @@ def remove_double_spaces(line):
     return spaces.sub(" ", line)
 
 
-def apply_all_regex_and_replacements(input_line, rematch):
+def apply_all_regex_and_replacements(input_line):
     """
     For a line and list of paired regex and replacements, 
       apply all replacements for all regex on the line
     """
 
-    for pat in rematch:
+    for pat in KNOWN_REPLACEMENTS:
         try:
-            input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
+            input_line = re.sub(KNOWN_REPLACEMENTS[pat][0],
+                                KNOWN_REPLACEMENTS[pat][1], input_line)
         except Exception as exc:
-            LOGGER.exception("Exception {} with line {} for pattern {}".format(
-                exc, input_line, pat))
+            LOGGER.exception("Exception %s with line %s for pattern %s", exc,
+                             input_line, pat)
 
     return input_line
 
@@ -194,7 +193,7 @@ def clean_up(input_line):
 
         input_line = remove_special_chars(input_line, ",*&!?")
 
-        input_line = apply_all_regex_and_replacements(input_line, rematch)
+        input_line = apply_all_regex_and_replacements(input_line)
 
         input_line = remove_all_special_chars(input_line)
 
@@ -206,49 +205,41 @@ def clean_up(input_line):
     return input_line.strip()
 
 
-def clean_text_file(input_text_file):
+def clean_one_file(input_text_file):
     """
-    Clean a text file
+    Cleans a single file
     """
-
     with open(input_text_file, "r", encoding="utf-8") as f:
         lines = f.read().splitlines()
 
-    cleaned = []
-    for line in lines:
-        cleaned.append(clean_up(line))
+    cleaned = map(clean_up, lines)
 
     with open(input_text_file.replace(".txt", "") + "_cleaned.txt",
               "w",
               encoding="utf-8") as f:
         f.write(" ".join(cleaned))
 
-    print("File output: " + input_text_file.replace(".txt", "") +
-          "_cleaned.txt")
 
-
-def main():
+def clean_text_file(*input_text_files):
     """
-    Either run tests or clean formatting for files, depending on # of arguments
+    Cleans input *.txt files and outputs *_cleaned.txt
     """
-
-    parser = argparse.ArgumentParser(
-        description="cleans input *.txt files and outputs *_cleaned.txt")
-    parser.add_argument("files",
-                        type=str,
-                        nargs="+",
-                        help="list of input files")
-
-    args = parser.parse_args()
-    for file_name in args.files:
-        if not valid_input_file(file_name, valid_extensions=["txt"]):
+    for input_text_file in input_text_files:
+        if not valid_input_file(input_text_file, valid_extensions=["txt"]):
             LOGGER.error(
                 "File %s does not end in .txt - please only use this for cleaning txt files",
-                file_name,
+                input_text_file,
             )
             continue
-        clean_text_file(file_name)
+        clean_one_file(input_text_file)
+
+        LOGGER.info("File output: %s",
+                    input_text_file.replace(".txt", "_cleaned.txt"))
+
+
+def cli():
+    Fire(clean_text_file)
 
 
 if __name__ == "__main__":
-    main()
+    cli()

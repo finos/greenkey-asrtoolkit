@@ -4,12 +4,15 @@ Script for preparing SPH, STM files into training, testing, and development sets
 
 If present, train, test, dev sets will be used from the individual corpora
 """
-import argparse
 import json
 import logging
-LOGGER = logging.getLogger()
+
+from fire import Fire
+
 from asrtoolkit.data_structures.corpus import corpus
 from asrtoolkit.file_utils.common_file_operations import make_list_of_dirs
+
+LOGGER = logging.getLogger()
 
 data_dirs = ["test", "train", "dev"]
 
@@ -97,47 +100,33 @@ def gather_all_corpora(corpora_dirs):
     return corpora
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description=
-        "Copy and organize specified corpora into a target directory. "
-        "Training, testing, and development sets will be created automatically if not already defined."
-    )
-    parser.add_argument(
-        "--target-dir",
-        default="input-data",
-        required=False,
-        help="Path to target directory",
-    )
-    parser.add_argument(
-        "--nested",
-        action="store_true",
-        default=False,
-        required=False,
-        help="if present, store output in stm and sph subdirectories",
-    )
-    parser.add_argument(
-        "corpora",
-        nargs="+",
-        help="Name of one or more directories in directory this script is run",
-    )
+def prepare_audio_corpora(*corpora, target_dir="input-data", nested=False):
+    """
+    Copy and organize specified corpora into a target directory.
+    Training, testing, and development sets will be created automatically if not already defined.
 
-    args = parser.parse_args()
+    Input
+        corpora, strs - name of one or more directories to combine into `target-dir` 
+        target-dir, str - target directory where corpora should be organized
+        nested, bool (default False)- if present/True, store in stm and sph subdirectories
+    """
 
     make_list_of_dirs([
-        args.target_dir + "/" + data_dir + subdirectory
-        for data_dir in data_dirs
-        for subdirectory in (["/stm/", "/sph/"] if args.nested else ["/"])
+        target_dir + "/" + data_dir + subdirectory for data_dir in data_dirs
+        for subdirectory in (["/stm/", "/sph/"] if nested else ["/"])
     ])
 
-    corpora = gather_all_corpora(args.corpora)
-
+    corpora = gather_all_corpora(corpora)
     corpora = auto_split_corpora(corpora)
 
-    log = prep_all_for_training(corpora, args.target_dir, args.nested)
-    with open(args.target_dir + "/corpora.json", "w") as f:
+    log = prep_all_for_training(corpora, target_dir, nested)
+    with open(target_dir + "/corpora.json", "w") as f:
         f.write(json.dumps(log))
 
 
+def cli():
+    Fire(prepare_audio_corpora)
+
+
 if __name__ == "__main__":
-    main()
+    cli()
