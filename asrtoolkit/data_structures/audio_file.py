@@ -8,10 +8,12 @@ import logging
 import os
 import subprocess
 
-from asrtoolkit.file_utils.name_cleaners import (generate_segmented_file_name,
-                                                 sanitize_hyphens,
-                                                 strip_extension)
-
+from asrtoolkit.file_utils.name_cleaners import (
+    generate_segmented_file_name,
+    sanitize_hyphens,
+    strip_extension,
+)
+from asrtoolkit.file_utils.script_input_validation import valid_input_file
 LOGGER = logging.getLogger()
 
 
@@ -48,6 +50,8 @@ def degrade_audio(source_audio_file, target_audio_file=None):
     Degrades audio to typical G711 level.
     Useful if models need to target this audio quality.
     """
+
+    valid_input_file(source_audio_file, ["mp3", "sph", "wav", "au", "raw"])
 
     target_audio_file = (source_audio_file
                          if target_audio_file is None else target_audio_file)

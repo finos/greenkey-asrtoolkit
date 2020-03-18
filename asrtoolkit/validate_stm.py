@@ -3,24 +3,24 @@
 Python class for validating STM files used in Automatic Speech Recognition
 """
 
-import argparse
+from fire import Fire
 
 from asrtoolkit.convert_transcript import convert
 
 
-def validate():
-    parser = argparse.ArgumentParser(
-        description="convert between text file formats")
-    parser.add_argument("input_file",
-                        metavar="input_file",
-                        type=str,
-                        help="input file")
-    args = parser.parse_args()
+def validate(input_file):
+    """
+    Overwrites an STM file, leaving only valid input lines
+    """
 
     # after reading in, only valid lines will remain
     # so write it back in place
-    convert(args.input_file, args.input_file)
+    convert(input_file, input_file)
+
+
+def cli():
+    Fire(validate)
 
 
 if __name__ == "__main__":
-    validate()
+    cli()

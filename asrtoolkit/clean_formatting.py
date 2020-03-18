@@ -4,14 +4,12 @@
 Text line cleaning functions. For WER calculations, final text should be utf letter chars and \'
 """
 
-from __future__ import print_function
-
-import argparse
 import logging
 import string
 from collections import OrderedDict
 
 import regex as re
+from fire import Fire
 
 from asrtoolkit.deformatting_utils import (
     digits_to_string,
@@ -206,49 +204,36 @@ def clean_up(input_line):
     return input_line.strip()
 
 
-def clean_text_file(input_text_file):
+def clean_text_file(*input_text_files):
     """
-    Clean a text file
+    Cleans input *.txt files and outputs *_cleaned.txt
     """
-
-    with open(input_text_file, "r", encoding="utf-8") as f:
-        lines = f.read().splitlines()
-
-    cleaned = []
-    for line in lines:
-        cleaned.append(clean_up(line))
-
-    with open(input_text_file.replace(".txt", "") + "_cleaned.txt",
-              "w",
-              encoding="utf-8") as f:
-        f.write(" ".join(cleaned))
-
-    print("File output: " + input_text_file.replace(".txt", "") +
-          "_cleaned.txt")
-
-
-def main():
-    """
-    Either run tests or clean formatting for files, depending on # of arguments
-    """
-
-    parser = argparse.ArgumentParser(
-        description="cleans input *.txt files and outputs *_cleaned.txt")
-    parser.add_argument("files",
-                        type=str,
-                        nargs="+",
-                        help="list of input files")
-
-    args = parser.parse_args()
-    for file_name in args.files:
-        if not valid_input_file(file_name, valid_extensions=["txt"]):
+    for input_text_file in input_text_files:
+        if not valid_input_file(input_text_file, valid_extensions=["txt"]):
             LOGGER.error(
                 "File %s does not end in .txt - please only use this for cleaning txt files",
-                file_name,
+                input_text_file,
             )
             continue
-        clean_text_file(file_name)
+
+        with open(input_text_file, "r", encoding="utf-8") as f:
+            lines = f.read().splitlines()
+
+        cleaned = []
+        for line in lines:
+            cleaned.append(clean_up(line))
+
+        with open(input_text_file.replace(".txt", "") + "_cleaned.txt",
+                  "w",
+                  encoding="utf-8") as f:
+            f.write(" ".join(cleaned))
+
+        LOGGER.info("File output: " + input_text_file.replace(".txt", "") +
+                    "_cleaned.txt")
+
+def cli():
+    Fire(clean_text_file)
 
 
 if __name__ == "__main__":
-    main()
+    cli()

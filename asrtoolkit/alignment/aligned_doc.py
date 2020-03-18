@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-from collections import defaultdict, deque
-from toolz import merge, merge_sorted
-import spacy
 import logging
+from collections import defaultdict, deque
+
+import spacy
+from toolz import merge, merge_sorted
+
 from asrtoolkit.alignment.align_utils import find_matched_intervals, is_sorted
 
 LOGGER = logging.getLogger(__name__)
@@ -87,8 +89,8 @@ class AlignedDoc:
             match for match in matched_segments
             if match not in self.matched_intervals
         ]
-        LOGGER.debug("Number of non-unique matched_segments: {}".format(
-            len(matched_segments) - len(unique_new_spans)))
+        LOGGER.debug("Number of non-unique matched_segments: %s",
+                     len(matched_segments) - len(unique_new_spans))
         return unique_new_spans
 
     def find_unmatched_segments(self, interval, matched_segments):
@@ -141,7 +143,7 @@ class AlignedDoc:
     def find_alignments(self, extract_id):
         all_matched_segments, all_unmatched_segments = [], []
 
-        for interval_id, interval in enumerate(self.unmatched_intervals):
+        for interval in self.unmatched_intervals:
             matched_segments = find_matched_intervals(
                 interval=interval, extractor=self.extractors[extract_id])
 
@@ -191,7 +193,7 @@ class AlignedDoc:
             m2_tokens = self.get_token_idxs(ref_match)
             for hyp_tok, ref_tok in zip(m1_tokens, m2_tokens):
                 matched = (hyp_tok, ref_tok)
-                if not matched in token_matches and is_sorted(token_matches +
+                if matched not in token_matches and is_sorted(token_matches +
                                                               [matched]):
                     token_matches.append(matched)
         return token_matches
