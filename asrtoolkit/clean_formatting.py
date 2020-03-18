@@ -27,7 +27,7 @@ invalid_chars = re.compile(r"[^\p{L}<> \']", re.IGNORECASE)
 
 spaces = re.compile(r"\s+")
 
-rematch = OrderedDict([
+KNOWN_REPLACEMENTS = OrderedDict([
     ("millions", (re.compile(r"\b(mln|mio|mlns)\b"), lambda m: "million")),
     ("pleases", (re.compile(r"\b(plz|pls)\b"), lambda m: "please")),
     ("thanks", (re.compile(r"\b(thks|thx)\b"), lambda m: "thanks")),
@@ -133,18 +133,19 @@ def remove_double_spaces(line):
     return spaces.sub(" ", line)
 
 
-def apply_all_regex_and_replacements(input_line, rematch):
+def apply_all_regex_and_replacements(input_line):
     """
     For a line and list of paired regex and replacements, 
       apply all replacements for all regex on the line
     """
 
-    for pat in rematch:
+    for pat in KNOWN_REPLACEMENTS:
         try:
-            input_line = re.sub(rematch[pat][0], rematch[pat][1], input_line)
+            input_line = re.sub(KNOWN_REPLACEMENTS[pat][0],
+                                KNOWN_REPLACEMENTS[pat][1], input_line)
         except Exception as exc:
-            LOGGER.exception("Exception {} with line {} for pattern {}".format(
-                exc, input_line, pat))
+            LOGGER.exception("Exception %s with line %s for pattern %s", exc,
+                             input_line, pat)
 
     return input_line
 
@@ -192,7 +193,7 @@ def clean_up(input_line):
 
         input_line = remove_special_chars(input_line, ",*&!?")
 
-        input_line = apply_all_regex_and_replacements(input_line, rematch)
+        input_line = apply_all_regex_and_replacements(input_line)
 
         input_line = remove_all_special_chars(input_line)
 
@@ -202,6 +203,21 @@ def clean_up(input_line):
     input_line = remove_double_spaces(input_line)
 
     return input_line.strip()
+
+
+def clean_one_file(input_text_file):
+    """
+    Cleans a single file
+    """
+    with open(input_text_file, "r", encoding="utf-8") as f:
+        lines = f.read().splitlines()
+
+    cleaned = map(clean_up, lines)
+
+    with open(input_text_file.replace(".txt", "") + "_cleaned.txt",
+              "w",
+              encoding="utf-8") as f:
+        f.write(" ".join(cleaned))
 
 
 def clean_text_file(*input_text_files):
@@ -215,21 +231,11 @@ def clean_text_file(*input_text_files):
                 input_text_file,
             )
             continue
+        clean_one_file(input_text_file)
 
-        with open(input_text_file, "r", encoding="utf-8") as f:
-            lines = f.read().splitlines()
+        LOGGER.info("File output: %s",
+                    input_text_file.replace(".txt", "_cleaned.txt"))
 
-        cleaned = []
-        for line in lines:
-            cleaned.append(clean_up(line))
-
-        with open(input_text_file.replace(".txt", "") + "_cleaned.txt",
-                  "w",
-                  encoding="utf-8") as f:
-            f.write(" ".join(cleaned))
-
-        LOGGER.info("File output: " + input_text_file.replace(".txt", "") +
-                    "_cleaned.txt")
 
 def cli():
     Fire(clean_text_file)
