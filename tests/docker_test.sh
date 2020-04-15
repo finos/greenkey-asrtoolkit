@@ -4,6 +4,7 @@ files_to_cleanup="corpus split-corpus split file_conversion_test.txt file_conver
 
 docker run --rm -it -w /work \
   --user $(id -u):$(id -g) --userns=host \
+  -e LOG_LEVEL=${LOG_LEVEL:-DEBUG} \
   -v $PWD:/work asrtoolkit:${TAG:-latest} \
   bash -c 'tests/run_tests.sh'
 (cd tests/ && rm -r $files_to_cleanup)

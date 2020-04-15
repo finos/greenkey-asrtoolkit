@@ -11,94 +11,63 @@ from random import seed, randrange
 
 from fire import Fire
 
-from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.data_structures.corpus import corpus
 
 LOGGER = logging.getLogger(__name__)
 
-def count_words(exemplar):
-    """ Count words in a exemplar after cleaning it """
-    return len(clean_up(exemplar.transcript_file.text()).split())
+
+def log_corpus_creation(corpus, name):
+    """ had to make this function to satisfy code climate """
+    LOGGER.info(
+        'Created %s split with %d words using %d files',
+        corpus.location,
+        sum(map(lambda x: x.n_words, corpus.exemplars)),
+        len(corpus.exemplars)
+    )
 
 
-def generate_data_split(exemplars, words):
-    """ Select exemplars to create data split with specified number of words """
-    split_words = 0
-    exemplars_in_split = []
-    while split_words <= words:
-        exemplars_in_split += [exemplars.pop(randrange(len(exemplars)))]
-        split_words += exemplars_in_split[-1].n_words
-    return exemplars_in_split, exemplars
+def create_new_split(corpus, target):
+    return leftover_corpus
 
 
-def make_data_split(exemplars, out_dir):
-   """ Move exemplars to a dev and test directory for corpus """
-   for e in exemplars:
-       os.rename(
-           e.transcript_file.location,
-           os.path.join(out_dir, os.path.basename(e.transcript_file.location))
-       )
-       os.rename(
-           e.audio_file.location,
-           os.path.join(out_dir, os.path.basename(e.audio_file.location))
-       )
-
-
-def split_corpus(in_dir, dev_dir='dev', dev_words=1000, tst_dir='test', test_words=1000, rand_seed=None, override=False):
+def split_corpus(in_dir, split_dir, split_name='split', split_words=1000, leftover_data_split_name='orig', rand_seed=None):
     """
-    Splits an ASR corpus directory based on number of words. At least 1000 words is recommended for each split.
-    This means WER calculations are significant to about a tenth of a percent.
+    Splits an ASR corpus directory based on number of words outputting splits in split_dir.
+    At least 1000 words is recommended for dev or tests splits to make WER calculations significant ~0.1%
     Invalid files, such as empty files, will not be included in data splits.
-    Set rand_seed for reproducible splits
 
-    If you want more than 50% of the input data in dev and tests splits set override=True
+    Set rand_seed for reproducible splits
     """
     seed(rand_seed)
-    # Look in directory for all valid pairs of stm and audio file
+
     c = corpus({"location": in_dir})
     LOGGER.debug("%d exemplars before validating them", len(c.exemplars))
     valid_exemplars = [_ for _ in c.exemplars if _.validate()]
+    c.exemplars = valid_exemplars
     LOGGER.debug("%d exemplars after validating them", len(valid_exemplars))
-    # Count text from all valid stm files
   
     total_words = 0
     for e in valid_exemplars:
-        e.n_words = count_words(e)
+        e.n_words = e.count_words()
         total_words += e.n_words
 
-    if dev_words + test_words > total_words:
+    if split_words > total_words:
         LOGGER.error(
-            'Not enough words in corpus, %d, to split into groups %d and %d. Reduce words in data splits.',
+            'Not enough words in corpus, %d, to make a split with %d words. Reduce words in data split.',
             total_words,
-            dev_words,
-            test_words,
-        )
-        sys.exit(1)
-    elif override or dev_words + test_words > 0.5 * total_words:
-        LOGGER.error(
-            "More than 50% of corpus words, %d, are being put into dev and tests splits (%d and %d). Set override=true if you still want to split",
-            total_words,
-            dev_words,
-            test_words,
+            split_words,
         )
         sys.exit(1)
 
-    # Sample files to get enough words for corpus
-    dev_exemplars, valid_exemplars = generate_data_split(valid_exemplars, dev_words)
-    test_exemplars, _ = generate_data_split(valid_exemplars, test_words)
+    
+    leftover_corpus, new_corpus = c.split(split_words)
 
-    LOGGER.info(
-        'Making dev split with %d words using %d files',
-        sum(map(lambda x: x.n_words, dev_exemplars)),
-        len(dev_exemplars)
-    )
-    make_data_split(dev_exemplars, dev_dir)
-    LOGGER.info(
-        'Making test split with %d words using %d files',
-        sum(map(lambda x: x.n_words, test_exemplars)),
-        len(test_exemplars)
-    )
-    make_data_split(test_exemplars, tst_dir)
+    new_corpus.prepare_for_training(os.path.join(split_dir, split_name))
+    log_corpus_creation(new_corpus, split_name)
+
+    leftover_corpus.prepare_for_training(os.path.join(split_dir, leftover_data_split_name))
+    log_corpus_creation(leftover_corpus, leftover_data_split_name)
+
 
 def cli():
     Fire(split_corpus)
