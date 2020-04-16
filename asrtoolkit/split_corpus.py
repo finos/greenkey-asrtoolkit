@@ -35,7 +35,6 @@ def split_corpus(in_dir, split_dir, split_name='split', split_words=1000, leftov
     Set rand_seed for reproducible splits
     """
     seed(rand_seed)
-    split_name
 
     c = corpus({"location": in_dir})
     LOGGER.debug("%d exemplars before validating them", len(c.exemplars))
