@@ -26,10 +26,6 @@ def log_corpus_creation(corpus, name):
     )
 
 
-def create_new_split(corpus, target):
-    return leftover_corpus
-
-
 def split_corpus(in_dir, split_dir, split_name='split', split_words=1000, leftover_data_split_name='orig', rand_seed=None):
     """
     Splits an ASR corpus directory based on number of words outputting splits in split_dir.
@@ -39,13 +35,14 @@ def split_corpus(in_dir, split_dir, split_name='split', split_words=1000, leftov
     Set rand_seed for reproducible splits
     """
     seed(rand_seed)
+    split_name
 
     c = corpus({"location": in_dir})
     LOGGER.debug("%d exemplars before validating them", len(c.exemplars))
     valid_exemplars = [_ for _ in c.exemplars if _.validate()]
     c.exemplars = valid_exemplars
     LOGGER.debug("%d exemplars after validating them", len(valid_exemplars))
-  
+
     total_words = 0
     for e in valid_exemplars:
         e.n_words = e.count_words()
@@ -59,7 +56,6 @@ def split_corpus(in_dir, split_dir, split_name='split', split_words=1000, leftov
         )
         sys.exit(1)
 
-    
     leftover_corpus, new_corpus = c.split(split_words)
 
     new_corpus.prepare_for_training(os.path.join(split_dir, split_name))

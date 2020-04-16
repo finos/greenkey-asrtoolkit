@@ -171,17 +171,25 @@ class corpus(object):
         self.exemplars = [dict_of_examples[_] for _ in set(dict_of_examples)]
         return sum(_.validate() for _ in self.exemplars)
 
+    def count_exemplar_words(self):
+        """
+        Count the number of words in valid corpus exemplars
+        adds attribute n_words to exemplars
+        """
+        valid_exemplars = [_ for _ in self.exemplars if _.validate()]
+
+        total_words = 0
+        for eg in valid_exemplars:
+            eg.n_words = eg.count_words()
+            total_words += eg.n_words
+        return valid_exemplars, total_words
+
     def split(self, split_words):
         """
         Select exemplars to create data split with specified number of words
         Returns the new splits as separate corpora
         """
-        valid_exemplars = [_ for _ in self.exemplars if _.validate()]
-  
-        total_words = 0
-        for eg in valid_exemplars:
-            eg.n_words = eg.count_words()
-            total_words += eg.n_words
+        valid_exemplars, total_words = self.count_exemplar_words()
 
         # Raise error if we inputs are invalid to avoid infinite loop
         if split_words < 0 or split_words > total_words:
@@ -189,7 +197,7 @@ class corpus(object):
 
         exemplars_in_split = []
         while split_words >= 0:
-            exemplars_in_split += [valid_exemplars.pop(random.randrange(len(self.exemplars)))]
+            exemplars_in_split += [valid_exemplars.pop(random.randrange(len(valid_exemplars)))]
             split_words -= exemplars_in_split[-1].n_words
 
         new_corpus = corpus({
@@ -201,7 +209,6 @@ class corpus(object):
         remaining_corpus.location = self.location
 
         return remaining_corpus, new_corpus
-
 
     def log(self):
         """
