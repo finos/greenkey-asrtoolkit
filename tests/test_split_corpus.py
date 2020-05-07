@@ -46,6 +46,7 @@ def test_split_corpus():
         split_dir=split_dir,
         split_name="dev",
         split_words=19,
+        min_split_segs=1,
         leftover_data_split_name="train",
         rand_seed=1337,
     )

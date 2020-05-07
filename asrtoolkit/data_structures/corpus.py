@@ -184,9 +184,9 @@ class corpus(object):
             total_words += eg.n_words
         return valid_exemplars, total_words
 
-    def split(self, split_words):
+    def split(self, split_words, min_segments=10):
         """
-        Select exemplars to create data split with specified number of words
+        Select exemplars to create data split with specified number of words and minimum number of segments
         Returns the new splits as separate corpora
         """
         valid_exemplars, total_words = self.count_exemplar_words()
@@ -196,9 +196,11 @@ class corpus(object):
             raise ValueError("cannot split corpus with {} words into split with {} words".format(total_words, split_words))
 
         exemplars_in_split = []
-        while split_words >= 0:
+        word_counter, seg_counter = 0, 0
+        while word_counter <= split_words or seg_counter <= min_segments:
             exemplars_in_split += [valid_exemplars.pop(random.randrange(len(valid_exemplars)))]
-            split_words -= exemplars_in_split[-1].n_words
+            word_counter += exemplars_in_split[-1].n_words
+            seg_counter += len(exemplars_in_split[-1].transcript_file.segments)
 
         new_corpus = corpus({
             "location": self.location,
