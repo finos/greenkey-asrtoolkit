@@ -27,6 +27,16 @@ def log_corpus_creation(corp, name):
     )
 
 
+def perform_split(corpus_to_split, split_dir, split_name, split_words, min_split_segs, leftover_data_split_name):
+    leftover_corpus, new_corpus = corpus_to_split.split(split_words, min_split_segs)
+
+    new_corpus.prepare_for_training(os.path.join(split_dir, split_name))
+    log_corpus_creation(new_corpus, split_name)
+
+    leftover_corpus.prepare_for_training(os.path.join(split_dir, leftover_data_split_name))
+    log_corpus_creation(leftover_corpus, leftover_data_split_name)
+
+
 def split_corpus(in_dir, split_dir, split_name='split', split_words=1000, min_split_segs=10, leftover_data_split_name='orig', rand_seed=None):
     """
     Splits an ASR corpus directory based on number of words outputting splits in split_dir.
@@ -64,13 +74,7 @@ def split_corpus(in_dir, split_dir, split_name='split', split_words=1000, min_sp
         )
         sys.exit(1)
 
-    leftover_corpus, new_corpus = c.split(split_words, min_split_segs)
-
-    new_corpus.prepare_for_training(os.path.join(split_dir, split_name))
-    log_corpus_creation(new_corpus, split_name)
-
-    leftover_corpus.prepare_for_training(os.path.join(split_dir, leftover_data_split_name))
-    log_corpus_creation(leftover_corpus, leftover_data_split_name)
+    perform_split(c, split_dir, split_name, split_words, min_split_segs, leftover_data_split_name)
 
 
 def cli():
