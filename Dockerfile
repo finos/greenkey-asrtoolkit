@@ -4,7 +4,7 @@ LABEL maintainer="Matthew Goldey <mgoldey@greenkeytech.com>" \
 
 # APT INSTALLS
 RUN apt update && \
-    apt install -y python3-dev libsox-fmt-mp3 wget curl build-essential && \
+    apt install -y python3-dev libsox-fmt-mp3 wget curl build-essential sox && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /usr/share/doc /var/lib/apt/lists/* && \

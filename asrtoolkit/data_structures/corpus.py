@@ -5,11 +5,13 @@ Module for organizing SPH/MP3/WAV & STM files from a corpus
 
 import glob
 import os
+import random
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 
 from tqdm import tqdm
 
+from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.data_structures.audio_file import audio_file
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.file_utils.name_cleaners import basename, strip_extension
@@ -58,8 +60,14 @@ class exemplar(object):
         valid = (audio_filename == transcript_filename
                  and os.path.getsize(self.audio_file.location)
                  and os.path.getsize(self.transcript_file.location))
+        # This returns an integer corresponding to the output of the last condition, not a boolean.
+        # Thats just how `and` works in python
 
-        return valid
+        return bool(valid)
+
+    def count_words(self, clean_func=clean_up):
+        """ Count words in a exemplar after cleaning it """
+        return len(clean_func(self.transcript_file.text()).split()) if self.validate() else 0
 
     def prepare_for_training(self, target, sample_rate=16000, nested=False):
         """
@@ -156,12 +164,53 @@ class corpus(object):
 
     def validate(self):
         """
-        Check to and validate each example after sorting by audio file hash
+        Check and validate each example after sorting by audio file hash
         since stm hash may change
         """
         dict_of_examples = {_.audio_file.hash(): _ for _ in self.exemplars}
         self.exemplars = [dict_of_examples[_] for _ in set(dict_of_examples)]
         return sum(_.validate() for _ in self.exemplars)
+
+    def count_exemplar_words(self):
+        """
+        Count the number of words in valid corpus exemplars
+        adds attribute n_words to exemplars
+        """
+        valid_exemplars = [_ for _ in self.exemplars if _.validate()]
+
+        total_words = 0
+        for eg in valid_exemplars:
+            eg.n_words = eg.count_words()
+            total_words += eg.n_words
+        return valid_exemplars, total_words
+
+    def split(self, split_words, min_segments=10):
+        """
+        Select exemplars to create data split with specified number of words and minimum number of segments
+        Returns the new splits as separate corpora
+        """
+        valid_exemplars, total_words = self.count_exemplar_words()
+
+        # Raise error if we inputs are invalid to avoid infinite loop
+        if split_words < 0 or split_words > total_words:
+            raise ValueError("cannot split corpus with {} words into split with {} words".format(total_words, split_words))
+
+        exemplars_in_split = []
+        word_counter, seg_counter = 0, 0
+        while word_counter <= split_words or seg_counter <= min_segments:
+            exemplars_in_split += [valid_exemplars.pop(random.randrange(len(valid_exemplars)))]
+            word_counter += exemplars_in_split[-1].n_words
+            seg_counter += len(exemplars_in_split[-1].transcript_file.segments)
+
+        new_corpus = corpus({
+            "location": self.location,
+            "exemplars": exemplars_in_split,
+        })
+
+        remaining_corpus = self - new_corpus
+        remaining_corpus.location = self.location
+
+        return remaining_corpus, new_corpus
 
     def log(self):
         """
