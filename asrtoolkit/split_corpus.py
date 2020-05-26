@@ -49,7 +49,7 @@ def split_corpus(in_dir, split_dir, split_name='split', split_words=1000, min_sp
 
     c = corpus({"location": in_dir})
     LOGGER.debug("%d exemplars before validating them", len(c.exemplars))
-    valid_exemplars, total_words = c.count_exemplars()
+    valid_exemplars, total_words = c.count_exemplar_words()
     c.exemplars = valid_exemplars
     LOGGER.debug("%d exemplars after validating them", len(valid_exemplars))
 
