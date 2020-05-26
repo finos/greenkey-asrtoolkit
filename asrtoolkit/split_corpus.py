@@ -49,22 +49,9 @@ def split_corpus(in_dir, split_dir, split_name='split', split_words=1000, min_sp
 
     c = corpus({"location": in_dir})
     LOGGER.debug("%d exemplars before validating them", len(c.exemplars))
-    valid_exemplars = [_ for _ in c.exemplars if _.validate()]
+    valid_exemplars, total_words = c.count_exemplars()
     c.exemplars = valid_exemplars
     LOGGER.debug("%d exemplars after validating them", len(valid_exemplars))
-
-    total_words = 0
-    for e in valid_exemplars:
-        e.n_words = e.count_words()
-        total_words += e.n_words
-
-    if split_words > total_words:
-        LOGGER.error(
-            'Not enough words in corpus, %d, to make a split with %d words. Reduce words in data split.',
-            total_words,
-            split_words,
-        )
-        sys.exit(1)
 
     if min_split_segs > c.calculate_number_of_segments():
         LOGGER.error(
