@@ -14,7 +14,7 @@ def format_segment(seg):
     """
     Formats a segment assuming it's an instance of class segment with text element
     """
-    return seg.formatted_text if hasattr(seg, "formatted_text") and seg.formatted_text else seg.text
+    return seg.formatted_text if getattr(seg, "formatted_text") else seg.text
 
 
 def read_in_memory(input_data):
