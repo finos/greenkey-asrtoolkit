@@ -21,7 +21,7 @@ def check_input_file_validity(input_file):
 
 def convert(input_file, output_file):
     """
-    Convert between text file formats (supported formats are stm, json, srt, vtt, and html)
+    Convert between text file formats (supported formats are stm, json, srt, vtt, txt, and html)
     """
     check_input_file_validity(input_file)
     input_file = assign_if_valid(input_file)
