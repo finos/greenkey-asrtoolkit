@@ -15,7 +15,5 @@ WORKDIR /asrtoolkit
 COPY . /asrtoolkit
 
 RUN \
-  python3 setup.py build && \
-  python3 setup.py install && \
   python3 -m pip install .[dev] && \
   python3 -m pip install "requests>=2.18.4"
