@@ -61,8 +61,8 @@ def test_split_corpus():
 
     # Make sure correct number of words present in data split
     dev_corpus = corpus({'location': dev_dir})
-    assert dev_corpus.validate()
     assert sum(e.count_words() for e in dev_corpus.exemplars) == 20
+    assert dev_corpus.validate()
 
 
 if __name__ == "__main__":
