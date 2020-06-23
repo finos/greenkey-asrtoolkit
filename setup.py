@@ -59,7 +59,7 @@ setup(
         "dev": [
             "numpy>=1.17.0",
             "pandas",
-            "spacy",
+            "spacy==2.2.0",
             "textacy",
             "srsly<2.0.0,>=0.1.0",
             "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz#egg=en_core_web_sm",
