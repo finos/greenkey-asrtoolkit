@@ -106,7 +106,7 @@ def prepare_audio_corpora(*corpora, target_dir="input-data", nested=False):
     Training, testing, and development sets will be created automatically if not already defined.
 
     Input
-        corpora, strs - name of one or more directories to combine into `target-dir` 
+        corpora, strs - name of one or more directories to combine into `target-dir`
         target-dir, str - target directory where corpora should be organized
         nested, bool (default False)- if present/True, store in stm and sph subdirectories
     """
