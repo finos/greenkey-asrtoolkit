@@ -21,11 +21,11 @@ def format_segment(seg):
       Formats a segment assuming it's an instance of class segment with elements
       filename, channel, speaker, start and stop times, label, and text
     """
+    # clean_up used to unformat stm file text
     return " ".join([
         str(getattr(seg, _))
         for _ in ("filename", "channel", "speaker", "start", "stop", "label")
-    ] + [clean_up(seg.text)]  # clean_up used to unformat stm file text
-                    )
+    ] + [clean_up(seg.text)])
 
 
 def parse_line(line):
