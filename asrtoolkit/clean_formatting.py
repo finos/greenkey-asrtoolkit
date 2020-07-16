@@ -23,7 +23,7 @@ from asrtoolkit.file_utils.script_input_validation import valid_input_file
 LOGGER = logging.getLogger(__name__)
 
 # preserve any unicode letters
-invalid_chars = re.compile(r"[^\p{L}<> \']", re.IGNORECASE)
+invalid_chars = re.compile(r"[^\p{L}<\[\]> \']", re.IGNORECASE)
 
 spaces = re.compile(r"\s+")
 
