@@ -187,6 +187,8 @@ def clean_up(input_line):
     'i heard mr mcdonald has six dollars and twenty three cents'
     >>> clean_up(" for client X (hide name pls), plz giv $1 mln shs thx")
     'for client x hide name please please giv one million dollars shs thanks'
+    >>> clean_up("[laughter]")
+    '[laughter]'
     """
 
     if check_for_formatted_chars(input_line):
