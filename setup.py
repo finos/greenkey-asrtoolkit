@@ -46,7 +46,7 @@ pkgs, new_links = install_deps()
 
 setup(
     name="asrtoolkit",
-    version="0.2.2",
+    version="0.2.3",
     description=
     "The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.",
     long_description=long_description,
