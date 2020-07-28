@@ -100,7 +100,7 @@ def gather_all_corpora(corpora_dirs):
     return corpora
 
 
-def prepare_audio_corpora(*corpora, target_dir="input-data", nested=False):
+def prepare_audio_corpora(*corpora, target_dir="input-data", nested=False, min_train_dev_segments=50):
     """
     Copy and organize specified corpora into a target directory.
     Training, testing, and development sets will be created automatically if not already defined.
@@ -108,7 +108,8 @@ def prepare_audio_corpora(*corpora, target_dir="input-data", nested=False):
     Input
         corpora, strs - name of one or more directories to combine into `target-dir`
         target-dir, str - target directory where corpora should be organized
-        nested, bool (default False)- if present/True, store in stm and sph subdirectories
+        nested, bool (default False) - if present/True, store in stm and sph subdirectories
+        min_train_dev_segments int - enforces a minimum number of speech segments in train and dev splits
     """
 
     make_list_of_dirs([
@@ -117,7 +118,7 @@ def prepare_audio_corpora(*corpora, target_dir="input-data", nested=False):
     ])
 
     corpora = gather_all_corpora(corpora)
-    corpora = auto_split_corpora(corpora)
+    corpora = auto_split_corpora(corpora, min_size=min_train_dev_segments)
 
     log = prep_all_for_training(corpora, target_dir, nested)
     with open(target_dir + "/corpora.json", "w") as f:
