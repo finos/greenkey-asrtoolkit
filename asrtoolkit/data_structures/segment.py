@@ -81,7 +81,7 @@ class segment(object):
         """
         valid = (self.speaker != "inter_segment_gap" and self.text
                  and self.text != "ignore_time_segment_in_scoring"
-                 and self.label in ["<o,f0,male>", "<o,f0,female>"])
+                 and self.label in ["<o,f0,male>", "<o,f0,female>", "<o,f0,mixed>"])
 
         try:
             self.start = clean_float(self.start)

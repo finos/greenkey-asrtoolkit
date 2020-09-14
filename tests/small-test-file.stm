@@ -1,2 +1,2 @@
-small-test-file 1 gk_speaker 0.765 2.881 <o,f0,male> one two three four five
-small-test-file 1 gk_speaker 5.008 6.966 <o,f0,male> six seven eight nine ten
+small-test-file 1 gk_speaker 0.765 2.881 <o,f0,mixed> one two three four five
+small-test-file 1 gk_speaker 5.008 6.966 <o,f0,female> six seven eight nine ten
