@@ -86,6 +86,7 @@ class segment(object):
         try:
             self.start = clean_float(self.start)
             self.stop = clean_float(self.stop)
+            valid = valid and float(self.start) < float(self.stop)
         except Exception as exc:
             valid = False
             print(exc)
