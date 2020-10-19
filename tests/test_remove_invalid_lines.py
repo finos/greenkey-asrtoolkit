@@ -44,7 +44,7 @@ def test_stm_to_vtt():
 
 
 def test_stm_to_html():
-    " Test stm to gk json validation "
+    " Test stm to html validation "
     validate_sample('.html', EXPECTED_FORMATTED_TRANSCRIPTS, 3)
 
 
