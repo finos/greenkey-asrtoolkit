@@ -39,7 +39,7 @@ def test_stm_to_json():
 
 
 def test_stm_to_vtt():
-    " Test stm to gk json validation "
+    " Test stm to vtt validation "
     validate_sample('.vtt', EXPECTED_FORMATTED_TRANSCRIPTS, 3)
 
 
