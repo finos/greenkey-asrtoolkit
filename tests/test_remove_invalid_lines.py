@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Test wer calculation
+Test invalid line removal
 """
 
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
