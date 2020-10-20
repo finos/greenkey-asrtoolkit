@@ -1,0 +1,13 @@
+Valid
+unknown 1 UnknownSpeaker 0.00 3.20 <o,f0,male> testing testing one two three or maybe 10 4
+unknown chan UnknownSpeaker 0.00 3.20 <o,f0,male> testing testing one two three
+unknown 2 UnknownSpeaker 0.00 3.20 <o,f0,male> testing testing, one two three!
+
+Invalid
+wpdofin aposifn209r8n3- 938r1n-30912n- -asdf- -13r12412mmv.
+unknown 1 UnknownSpeaker 0.00 3.20 31 <o,f0,male> testing testing one two three
+unknown 1 UnknownSpeaker 0.00 3.20 <o,f0,male,garbage> testing testing one two three
+unknown 1 typo UnknownSpeaker 0.00 3.20 <o,f0,male,garbage> testing testing one two three
+unknown 2 UnknownSpeaker 0.00 3.20 <o,f0,alien> testing testing one two three
+unknown 2 UnknownSpeaker 0.00 3.20 <new_letter,f0,alien> testing testing one two three
+unknown 2 UnknownSpeaker 9.00 3.20 <o,f0,female> testing testing one two three

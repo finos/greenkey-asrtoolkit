@@ -22,6 +22,9 @@ def check_input_file_validity(input_file):
 def convert(input_file, output_file):
     """
     Convert between text file formats (supported formats are stm, json, srt, vtt, txt, and html)
+
+    Validates lines of transcript before writing new file.
+    STM files are unformatted (eg 10 -> ten)
     """
     check_input_file_validity(input_file)
     input_file = assign_if_valid(input_file)
