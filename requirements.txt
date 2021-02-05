@@ -7,4 +7,4 @@ regex
 termcolor
 tqdm
 webvtt-py
-xlrd
+xlrd<=1.2.0
