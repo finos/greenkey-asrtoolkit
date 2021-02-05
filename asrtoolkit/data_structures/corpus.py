@@ -113,6 +113,7 @@ class corpus(object):
 
     location = None
     exemplars = []
+    n_words = 0
 
     def __init__(self, *args, **kwargs):
         """
