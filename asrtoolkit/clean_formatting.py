@@ -11,10 +11,13 @@ from collections import OrderedDict
 import regex as re
 from fire import Fire
 
-from asrtoolkit.deformatting_utils import (digits_to_string, dollars_to_string,
-                                           fraction_to_string,
-                                           ordinal_to_string,
-                                           plural_numbers_to_string)
+from asrtoolkit.deformatting_utils import (
+    digits_to_string,
+    dollars_to_string,
+    fraction_to_string,
+    ordinal_to_string,
+    plural_numbers_to_string,
+)
 from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
 LOGGER = logging.getLogger(__name__)

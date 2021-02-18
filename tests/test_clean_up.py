@@ -114,7 +114,7 @@ def test_clean_up():
         ("125.", "one hundred and twenty five"),
         ("140.", "one hundred and forty"),
         ("1000.", "one thousand"),
-        (u"1 2 3 4 5 6 7 8 9 10.", u"one two three four five six seven eight nine ten"),
+        ("1 2 3 4 5 6 7 8 9 10.", "one two three four five six seven eight nine ten"),
         (
             "his license plate is a. c, f seven...five ! zero",
             "his license plate is a c f seven five zero",

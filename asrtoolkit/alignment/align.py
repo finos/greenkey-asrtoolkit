@@ -3,13 +3,17 @@
 import logging
 
 import en_core_web_sm
+
 # Third Party
 from spacy.tokens import Doc as spacy_doc
 from textacy.extract import ngrams, noun_chunks
 from toolz.sandbox.core import pluck
 
-from asrtoolkit.alignment.align_utils import (Extractor, dict_to_segments,
-                                              word_lattice_to_lines)
+from asrtoolkit.alignment.align_utils import (
+    Extractor,
+    dict_to_segments,
+    word_lattice_to_lines,
+)
 from asrtoolkit.alignment.aligned_doc import AlignedDoc
 
 LOGGER = logging.getLogger(__name__)

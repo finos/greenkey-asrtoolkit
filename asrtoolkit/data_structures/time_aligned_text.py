@@ -7,8 +7,10 @@ import hashlib
 import importlib
 import os
 
-from asrtoolkit.file_utils.name_cleaners import (generate_segmented_file_name,
-                                                 sanitize_hyphens)
+from asrtoolkit.file_utils.name_cleaners import (
+    generate_segmented_file_name,
+    sanitize_hyphens,
+)
 
 
 class time_aligned_text(object):
