@@ -23,7 +23,8 @@ def auto_split_corpora(corpora, min_size=50):
     """
     all_ready = all(
         corpora[data_dir].validate() if data_dir in corpora else False
-        for data_dir in data_dirs)
+        for data_dir in data_dirs
+    )
 
     # dump extra data into training data by default
     if "unsorted" in corpora:
@@ -37,10 +38,11 @@ def auto_split_corpora(corpora, min_size=50):
         corpora["train"] += corpora["dev"] + corpora["test"]
 
         # pick a file from training set to be dev set such that it contains min_size segments
-        corpora["dev"], corpora["train"] = corpora["train"][:1], corpora[
-            "train"][1:]
-        while (corpora["dev"].calculate_number_of_segments() < min_size
-               and corpora["train"].validate() > 0):
+        corpora["dev"], corpora["train"] = corpora["train"][:1], corpora["train"][1:]
+        while (
+            corpora["dev"].calculate_number_of_segments() < min_size
+            and corpora["train"].validate() > 0
+        ):
             corpora["dev"], corpora["train"] = (
                 (corpora["dev"] + corpora["train"][:1]),
                 corpora["train"][1:],
@@ -56,12 +58,13 @@ def auto_split_corpora(corpora, min_size=50):
         corpora["test"] -= corpora["dev"]
         corpora["train"] -= corpora["dev"]
 
-    if (corpora["dev"].calculate_number_of_segments() < min_size
-            or corpora["train"].calculate_number_of_segments() < min_size):
+    if (
+        corpora["dev"].calculate_number_of_segments() < min_size
+        or corpora["train"].calculate_number_of_segments() < min_size
+    ):
 
         # throw error
-        raise (Exception(
-            "Error - insufficient data - please add more and try again"))
+        raise (Exception("Error - insufficient data - please add more and try again"))
 
     else:
         return corpora
@@ -77,9 +80,9 @@ def prep_all_for_training(corpora, target_dir, nested, sample_rate=16000):
     prepare all corpora for training and return logs of what was where
     """
     return {
-        data_dir:
-        corpora[data_dir].prepare_for_training(target_dir + "/" + data_dir,
-                                               nested, sample_rate)
+        data_dir: corpora[data_dir].prepare_for_training(
+            target_dir + "/" + data_dir, nested, sample_rate
+        )
         for data_dir in data_dirs
     }
 
@@ -91,7 +94,8 @@ def gather_all_corpora(corpora_dirs):
 
     corpora = {
         data_dir: get_corpus(corpus_dir + "/" + data_dir)
-        for corpus_dir in corpora_dirs for data_dir in data_dirs
+        for corpus_dir in corpora_dirs
+        for data_dir in data_dirs
     }
 
     corpora["unsorted"] = corpus()
@@ -100,7 +104,9 @@ def gather_all_corpora(corpora_dirs):
     return corpora
 
 
-def prepare_audio_corpora(*corpora, target_dir="input-data", nested=False, min_train_dev_segments=50):
+def prepare_audio_corpora(
+    *corpora, target_dir="input-data", nested=False, min_train_dev_segments=50
+):
     """
     Copy and organize specified corpora into a target directory.
     Training, testing, and development sets will be created automatically if not already defined.
@@ -112,10 +118,13 @@ def prepare_audio_corpora(*corpora, target_dir="input-data", nested=False, min_t
         min_train_dev_segments int - enforces a minimum number of speech segments in train and dev splits
     """
 
-    make_list_of_dirs([
-        target_dir + "/" + data_dir + subdirectory for data_dir in data_dirs
-        for subdirectory in (["/stm/", "/sph/"] if nested else ["/"])
-    ])
+    make_list_of_dirs(
+        [
+            target_dir + "/" + data_dir + subdirectory
+            for data_dir in data_dirs
+            for subdirectory in (["/stm/", "/sph/"] if nested else ["/"])
+        ]
+    )
 
     corpora = gather_all_corpora(corpora)
     corpora = auto_split_corpora(corpora, min_size=min_train_dev_segments)

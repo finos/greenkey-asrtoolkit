@@ -3,17 +3,13 @@
 import logging
 
 import en_core_web_sm
-
 # Third Party
 from spacy.tokens import Doc as spacy_doc
 from textacy.extract import ngrams, noun_chunks
 from toolz.sandbox.core import pluck
 
-from asrtoolkit.alignment.align_utils import (
-    Extractor,
-    dict_to_segments,
-    word_lattice_to_lines,
-)
+from asrtoolkit.alignment.align_utils import (Extractor, dict_to_segments,
+                                              word_lattice_to_lines)
 from asrtoolkit.alignment.aligned_doc import AlignedDoc
 
 LOGGER = logging.getLogger(__name__)
@@ -27,15 +23,14 @@ class WhitespaceTokenizer:
       returned spacy Doc tokens same as initial word list
       equivalent to splitting on white space
     """
+
     def __init__(self, NLP):
         """NLP: loaded Spacy model"""
         self.vocab = NLP.vocab
 
     def __call__(self, word_list):
         """word_list: list of words; returns Doc"""
-        return spacy_doc(self.vocab,
-                         words=word_list,
-                         spaces=[True] * len(word_list))
+        return spacy_doc(self.vocab, words=word_list, spaces=[True] * len(word_list))
 
 
 def init_spacy_document(
@@ -64,7 +59,8 @@ def init_spacy_document(
     assert len(doc) == len(
         word_list
     ), "document has different number of tokens {} from word_list {}".format(
-        len(doc), len(word_list))
+        len(doc), len(word_list)
+    )
     return doc
 
 
@@ -75,15 +71,20 @@ def select_extractors(use_unigrams=False):
     note: ngram extractors below filter out stopwords and number words/symbols
     """
     noun_chunk_extractor = Extractor(
-        lambda doc: list(filter(lambda x: len(x) > 3, list(noun_chunks(doc)))))
+        lambda doc: list(filter(lambda x: len(x) > 3, list(noun_chunks(doc))))
+    )
     tetragram_extractor = Extractor(
-        lambda doc: list(ngrams(doc, 4, filter_stops=True, filter_nums=True)))
+        lambda doc: list(ngrams(doc, 4, filter_stops=True, filter_nums=True))
+    )
     trigram_extractor = Extractor(
-        lambda doc: list(ngrams(doc, 3, filter_stops=True, filter_nums=True)))
-    bigram_extractor = Extractor(lambda doc: list(
-        ngrams(doc, 2, filter_stops=False, filter_nums=False)))
-    unigram_extractor = Extractor(lambda doc: list(
-        ngrams(doc, 1, filter_stops=False, filter_nums=False)))
+        lambda doc: list(ngrams(doc, 3, filter_stops=True, filter_nums=True))
+    )
+    bigram_extractor = Extractor(
+        lambda doc: list(ngrams(doc, 2, filter_stops=False, filter_nums=False))
+    )
+    unigram_extractor = Extractor(
+        lambda doc: list(ngrams(doc, 1, filter_stops=False, filter_nums=False))
+    )
 
     extractor_list = [
         noun_chunk_extractor,
@@ -115,8 +116,7 @@ def lattices_to_aligned_doc(
       methods to retrieve matches with and without token-level metadata
     """
     # Create Spacy Docs from List of Tokens + Metadata
-    hyp = init_spacy_document(lattice=time_annotated_tokens,
-                              token_key="gk_token")
+    hyp = init_spacy_document(lattice=time_annotated_tokens, token_key="gk_token")
     ref = init_spacy_document(lattice=reference_tokens, token_key="token")
     return AlignedDoc(hyp, ref, extractors, num_extractions)
 
@@ -136,11 +136,12 @@ def get_segments_from_alignments(
     :return: segments: List[Segment],
       each Segment object contains data for one STM Line
     """
-    line_dict = word_lattice_to_lines(word_lattice=aligned_token_lattice,
-                                      MAX_DURATION=max_duration)
-    segments = dict_to_segments(line_dict=line_dict,
-                                doc=reference_doc,
-                                token_idx=token_idx)
+    line_dict = word_lattice_to_lines(
+        word_lattice=aligned_token_lattice, MAX_DURATION=max_duration
+    )
+    segments = dict_to_segments(
+        line_dict=line_dict, doc=reference_doc, token_idx=token_idx
+    )
 
     return line_dict, segments
 
@@ -179,8 +180,6 @@ def align(
     )
 
     min_duration = 3.0
-    segments = [
-        seg for seg in all_segments if seg.stop - seg.start > min_duration
-    ]
+    segments = [seg for seg in all_segments if seg.stop - seg.start > min_duration]
 
     return segments

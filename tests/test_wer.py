@@ -12,11 +12,14 @@ def test_conversion_wer():
 
     reference_file = time_aligned_text("samples/BillGatesTEDTalk.stm")
     transcript_file = time_aligned_text(
-        "samples/BillGatesTEDTalk_intentionally_poor_transcription.txt")
+        "samples/BillGatesTEDTalk_intentionally_poor_transcription.txt"
+    )
 
     # test fixed precision output of wer calculation
-    assert ("{:5.3f}".format(
-        wer(reference_file.text(), transcript_file.text(), True)) == "3.332")
+    assert (
+        "{:5.3f}".format(wer(reference_file.text(), transcript_file.text(), True))
+        == "3.332"
+    )
 
 
 def test_non_ascii():
@@ -38,6 +41,7 @@ def test_non_ascii():
 
 if __name__ == "__main__":
     import sys
+
     import pytest
 
     pytest.main(sys.argv)

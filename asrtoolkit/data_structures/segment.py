@@ -70,8 +70,7 @@ class segment(object):
         >>> print(seg)
         this is a test
         """
-        ret_str = data_handler.format_segment(
-            self) if data_handler else self.text
+        ret_str = data_handler.format_segment(self) if data_handler else self.text
 
         return ret_str
 
@@ -79,9 +78,12 @@ class segment(object):
         """
         Checks for common failure cases for if a line is valid or not
         """
-        valid = (self.speaker != "inter_segment_gap" and self.text
-                 and self.text != "ignore_time_segment_in_scoring"
-                 and self.label in ["<o,f0,male>", "<o,f0,female>", "<o,f0,mixed>"])
+        valid = (
+            self.speaker != "inter_segment_gap"
+            and self.text
+            and self.text != "ignore_time_segment_in_scoring"
+            and self.label in ["<o,f0,male>", "<o,f0,female>", "<o,f0,mixed>"]
+        )
 
         try:
             self.start = clean_float(self.start)
@@ -101,8 +103,7 @@ Segment: %s""",
 
         if "-" in self.filename:
             self.filename = self.filename.replace("-", "_")
-            print(
-                "Please rename audio file to replace hyphens with underscores")
+            print("Please rename audio file to replace hyphens with underscores")
 
         return valid
 

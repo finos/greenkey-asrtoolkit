@@ -15,9 +15,7 @@ from asrtoolkit.file_utils.script_input_validation import valid_input_file
 LOGGER = logging.getLogger(__name__)
 
 
-def split_audio_file(source_audio_file,
-                     source_transcript,
-                     target_directory="split"):
+def split_audio_file(source_audio_file, source_transcript, target_directory="split"):
     """
     Split source audio file into segments denoted by transcript file
     into target_directory
@@ -38,8 +36,7 @@ def validate_transcript(transcript):
 
 
 def validate_audio_file(source_audio_file):
-    if not valid_input_file(source_audio_file,
-                            ["mp3", "sph", "wav", "au", "raw"]):
+    if not valid_input_file(source_audio_file, ["mp3", "sph", "wav", "au", "raw"]):
         LOGGER.error("Invalid audio file %s", source_audio_file)
         sys.exit(1)
 

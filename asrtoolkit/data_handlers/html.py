@@ -28,10 +28,16 @@ def header():
 
     widths = [10, 8, 82]
 
-    return ("<table>\n<tr>" + "".join(
-        table_header(t, w)
-        for t, w in zip(["[Start time - End time]", "Speaker", "Transcript"],
-                        widths)) + "</tr>\n")
+    return (
+        "<table>\n<tr>"
+        + "".join(
+            table_header(t, w)
+            for t, w in zip(
+                ["[Start time - End time]", "Speaker", "Transcript"], widths
+            )
+        )
+        + "</tr>\n"
+    )
 
 
 def footer():
@@ -45,12 +51,18 @@ def format_segment(seg):
     filename, channel, speaker, start and stop times, label, and text
     """
 
-    return ("<tr>" + "".join(
-        table_delimiter(t) for t in [
-            "[{:} - {:}]".format(seg.start, seg.stop),
-            seg.speaker,
-            seg.formatted_text if seg.formatted_text else seg.text,
-        ]) + "</tr>\n")
+    return (
+        "<tr>"
+        + "".join(
+            table_delimiter(t)
+            for t in [
+                "[{:} - {:}]".format(seg.start, seg.stop),
+                seg.speaker,
+                seg.formatted_text if seg.formatted_text else seg.text,
+            ]
+        )
+        + "</tr>\n"
+    )
 
 
 def parse_line(line):
@@ -58,15 +70,9 @@ def parse_line(line):
     cols = line.findAll("td")
     seg = None
     if cols:
-        start_stop, speaker, text = [[val for val in col.children][0]
-                                     for col in cols]
+        start_stop, speaker, text = [[val for val in col.children][0] for col in cols]
         start, stop = start_stop[1:-1].split(" - ")
-        seg = segment({
-            "speaker": speaker,
-            "start": start,
-            "stop": stop,
-            "text": text
-        })
+        seg = segment({"speaker": speaker, "start": start, "stop": stop, "text": text})
         seg = seg if seg.validate() else None
     return seg
 

@@ -8,20 +8,17 @@ import logging
 import os
 import subprocess
 
-from asrtoolkit.file_utils.name_cleaners import (
-    generate_segmented_file_name,
-    sanitize_hyphens,
-    strip_extension,
-)
+from asrtoolkit.file_utils.name_cleaners import (generate_segmented_file_name,
+                                                 sanitize_hyphens,
+                                                 strip_extension)
 from asrtoolkit.file_utils.script_input_validation import valid_input_file
+
 LOGGER = logging.getLogger()
 
 
-def cut_utterance(source_audio_file,
-                  target_audio_file,
-                  start_time,
-                  end_time,
-                  sample_rate=16000):
+def cut_utterance(
+    source_audio_file, target_audio_file, start_time, end_time, sample_rate=16000
+):
     """
     source_audio_file: str, path to file
     target_audio_file: str, path to file
@@ -53,8 +50,9 @@ def degrade_audio(source_audio_file, target_audio_file=None):
 
     valid_input_file(source_audio_file, ["mp3", "sph", "wav", "au", "raw"])
 
-    target_audio_file = (source_audio_file
-                         if target_audio_file is None else target_audio_file)
+    target_audio_file = (
+        source_audio_file if target_audio_file is None else target_audio_file
+    )
 
     # degrade to 8k
     tmp1 = ".".join(source_audio_file.split(".")[:-1]) + "_tmp1.wav"
@@ -73,7 +71,8 @@ def degrade_audio(source_audio_file, target_audio_file=None):
     # upgrade to 16k a-law signed
     subprocess.call(
         "sox -V1 {} --rate 16000 -e signed  -b 16 --channel 1 {}".format(
-            tmp2, target_audio_file),
+            tmp2, target_audio_file
+        ),
         shell=True,
     )
     os.remove(tmp1)
@@ -88,8 +87,7 @@ def combine_audio(audio_files, output_file, gain=False):
     if gain:
         gain_str = "gain -n 0"
     subprocess.call(
-        "sox -V1 -m {} {} {}".format(" ".join(audio_files), output_file,
-                                     gain_str),
+        "sox -V1 -m {} {} {}".format(" ".join(audio_files), output_file, gain_str),
         shell=True,
     )
 
@@ -102,14 +100,14 @@ class audio_file(object):
     - resampling for training
     - splitting into segments given an STM file
     """
+
     def __init__(self, location=""):
         """
         Populate file location info
         """
         self.location = None
         if not os.path.exists(location):
-            raise FileNotFoundError(
-                'Could not find file at "{}"'.format(location))
+            raise FileNotFoundError('Could not find file at "{}"'.format(location))
         self.location = location
 
     def hash(self):
@@ -130,18 +128,23 @@ class audio_file(object):
         """
         if file_name.split(".")[-1] != "sph":
             LOGGER.warning(
-                "Forcing training data to use SPH file format for %s",
-                file_name)
+                "Forcing training data to use SPH file format for %s", file_name
+            )
             file_name = strip_extension(file_name) + ".sph"
 
         file_name = sanitize_hyphens(file_name)
 
         # return None if error code given, otherwise return audio_file object
-        output_file = (audio_file(file_name) if not subprocess.call(
-            "sox -V1 {} {} rate {} remix -".format(self.location, file_name,
-                                                   sample_rate),
-            shell=True,
-        ) else None)
+        output_file = (
+            audio_file(file_name)
+            if not subprocess.call(
+                "sox -V1 {} {} rate {} remix -".format(
+                    self.location, file_name, sample_rate
+                ),
+                shell=True,
+            )
+            else None
+        )
 
         return output_file
 

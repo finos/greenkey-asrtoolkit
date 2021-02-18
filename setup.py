@@ -47,8 +47,7 @@ pkgs, new_links = install_deps()
 setup(
     name="asrtoolkit",
     version="0.2.3",
-    description=
-    "The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.",
+    description="The GreenKey ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="http://github.com/finos-voice/greenkey-asrtoolkit",
@@ -57,12 +56,16 @@ setup(
     install_requires=pkgs,
     extras_require={
         "dev": [
+            "black==20.8b1",
+            "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz#egg=en_core_web_sm",
+            "flake8",
+            "isort==5.7.0",
             "numpy>=1.17.0",
             "pandas",
+            "pytest",
             "spacy==2.2.0",
-            "textacy",
             "srsly<2.0.0,>=0.1.0",
-            "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz#egg=en_core_web_sm",
+            "textacy",
         ]
     },
     dependency_links=new_links,

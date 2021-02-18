@@ -24,12 +24,12 @@ def format_segment(seg):
     filename, channel, speaker, start and stop times, label, and text
     """
 
-    ret_str = "{:} --> {:}".format(seconds_to_timestamp(seg.start),
-                                   seconds_to_timestamp(seg.stop))
+    ret_str = "{:} --> {:}".format(
+        seconds_to_timestamp(seg.start), seconds_to_timestamp(seg.stop)
+    )
     ret_str += " <v Channel {:}>".format(seg.channel)
     ret_str += " <v Speaker {:}>".format(seg.speaker)
-    ret_str += "\n{:}\n".format(
-        seg.formatted_text if seg.formatted_text else seg.text)
+    ret_str += "\n{:}\n".format(seg.formatted_text if seg.formatted_text else seg.text)
 
     return ret_str
 

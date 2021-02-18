@@ -4,10 +4,10 @@ import itertools
 import logging
 from collections import defaultdict
 
-from asrtoolkit.data_structures.segment import segment as Segment
 from toolz import merge
 
 from asrtoolkit.alignment.initialize_logger import initialize_logger
+from asrtoolkit.data_structures.segment import segment as Segment
 
 initialize_logger()
 LOGGER = logging.getLogger(__name__)
@@ -29,7 +29,8 @@ class Extractor:
             but sorted(set(gk_shared))==sorted(set(stm_shared))   # where sorted uses text of each span
         """
         shared = set(x.text for x in extract1).intersection(
-            set(x.text for x in extract2))
+            set(x.text for x in extract2)
+        )
         extract1_shared = [x for x in extract1 if x.text in shared]
         extract2_shared = [x for x in extract2 if x.text in shared]
         return extract1_shared, extract2_shared
@@ -69,8 +70,7 @@ def find_matched_intervals(interval, extractor):
         return matched_list
 
     try:
-        shared_extractions = extractor.shared_extractions(
-            interval[0], interval[1])
+        shared_extractions = extractor.shared_extractions(interval[0], interval[1])
     except TypeError as exc:
         LOGGER.info("Error with %s: %s", interval, exc)
         return
@@ -87,8 +87,7 @@ def is_sorted(token_matches):
     # verify in order
     hyp_tokens = list(pluck(0, token_matches))
     ref_tokens = list(pluck(1, token_matches))
-    return sorted(hyp_tokens) == hyp_tokens and sorted(
-        ref_tokens) == ref_tokens
+    return sorted(hyp_tokens) == hyp_tokens and sorted(ref_tokens) == ref_tokens
 
 
 def overlap_tokens(doc, other_doc):
@@ -142,8 +141,10 @@ def sequence_match(gk_shared, stm_shared):  # -> List[Tuple[Span, Span]]
                 prev_gk, prev_stm = matches_list[-1]  # get previous match
 
                 # add to matches if token position of current matched gk & stm spans later than last
-                if (prev_gk[0].idx < gk_item[0].idx
-                        and prev_stm[0].idx < stm_item[0].idx):
+                if (
+                    prev_gk[0].idx < gk_item[0].idx
+                    and prev_stm[0].idx < stm_item[0].idx
+                ):
                     matches_list.append([gk_item, stm_item])
                     gk_taken_list.append(gk_item)
 
@@ -193,12 +194,13 @@ def word_lattice_to_lines(word_lattice, MAX_DURATION=15):
     """
     line_dict = defaultdict(list)
     line_no = 0
-    start_time, speaker_id = word_lattice[0]["start"], word_lattice[0][
-        "speaker"]
+    start_time, speaker_id = word_lattice[0]["start"], word_lattice[0]["speaker"]
     line_dict[line_no].append(word_lattice[0])
     for word_dict in word_lattice[1:]:
-        if (word_dict["speaker"] != speaker_id
-                or word_dict["end"] - start_time > MAX_DURATION):
+        if (
+            word_dict["speaker"] != speaker_id
+            or word_dict["end"] - start_time > MAX_DURATION
+        ):
             # start new line with new speaker and start time
             line_no += 1
             speaker_id, start_time = word_dict["speaker"], word_dict["start"]
@@ -214,9 +216,8 @@ def dict_to_segments(line_dict, doc, token_idx="token_idx"):
     for group_key, group in line_dict.items():
         d = group[0]
 
-        first_token_idx, last_token_idx = group[0][token_idx], group[-1][
-            token_idx]
-        text = doc[first_token_idx:last_token_idx + 1].text
+        first_token_idx, last_token_idx = group[0][token_idx], group[-1][token_idx]
+        text = doc[first_token_idx : last_token_idx + 1].text
 
         # fallback logic around speaker gender
         gender = d["gender"]
@@ -230,6 +231,7 @@ def dict_to_segments(line_dict, doc, token_idx="token_idx"):
                 stop=group[-1]["end"],
                 label=stm_label(gender),
                 text=text,
-            ))
+            )
+        )
         segments.append(segment)
     return segments

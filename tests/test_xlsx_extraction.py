@@ -17,6 +17,7 @@ def test_excel_conversion():
 
 if __name__ == "__main__":
     import sys
+
     import pytest
 
     pytest.main(sys.argv)

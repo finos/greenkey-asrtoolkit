@@ -6,7 +6,8 @@ This expects a segment from class derived in convert_text
 """
 
 # do not delete - needed in time_aligned_text
-from asrtoolkit.data_handlers.data_handlers_common import footer, header, separator
+from asrtoolkit.data_handlers.data_handlers_common import (footer, header,
+                                                           separator)
 from asrtoolkit.data_structures.segment import segment
 
 
