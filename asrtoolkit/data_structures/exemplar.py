@@ -5,6 +5,8 @@ Stores exemplar class for corpus management
 """
 
 from asrtoolkit.data_structures.audio_file import audio_file
+
+
 class exemplar(object):
     """
     Create an exemplar class to pair one audio file with one transcript file

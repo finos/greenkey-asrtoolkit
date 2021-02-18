@@ -28,8 +28,6 @@ def get_files(data_dir, extension):
     return files
 
 
-
-
 class corpus(object):
     """
     Create a corpus object for storing information about
