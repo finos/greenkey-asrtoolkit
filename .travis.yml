@@ -23,6 +23,6 @@ script:
   - python3 -m isort --check-only .
   # check for undefined variables (F821 is an excellent error for a linter to catch)
   # add errors to ignore here as desired
-  - python3 -m flake8 --ignore=E501,W503,E203 .
+  - python3 -m flake8 .
   # run test suite
   - python -m pytest -v --doctest-modules
