@@ -3,8 +3,10 @@
 """
 Stores exemplar class for corpus management
 """
+import os
 
-from asrtoolkit.data_structures.audio_file import audio_file
+from asrtoolkit.clean_formatting import clean_up
+from asrtoolkit.file_utils.name_cleaners import basename, strip_extension
 
 
 class exemplar(object):

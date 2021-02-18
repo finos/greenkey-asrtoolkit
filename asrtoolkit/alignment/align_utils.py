@@ -5,14 +5,13 @@ import logging
 from collections import defaultdict
 
 from toolz import merge
+from toolz.sandbox.core import pluck
 
 from asrtoolkit.alignment.initialize_logger import initialize_logger
 from asrtoolkit.data_structures.segment import segment as Segment
 
 initialize_logger()
 LOGGER = logging.getLogger(__name__)
-
-from toolz.sandbox.core import pluck
 
 
 class Extractor:

@@ -112,11 +112,11 @@ class AlignedDoc:
             m1_next, m2_next = matched_segments[i + 1]
             slot1 = hyp_segment[m1.end + 1 : m1_next.start]
             slot2 = ref_segment[m2.end + 1 : m2_next.end]
-            l = [slot1, slot2]
-            LOGGER.debug(i, ":", l)
+            indices = [slot1, slot2]
+            LOGGER.debug(i, ":", indices)
 
             if len(slot1) > 1 and len(slot2) > 1:
-                unmatched_segments.append(l)
+                unmatched_segments.append(indices)
 
         # special cases
         # --> segment btw interval start and first match & last match and interval end
@@ -128,10 +128,10 @@ class AlignedDoc:
         if m1_first.start != hyp_start and m2_first.start != ref_start:
             slot1_first = hyp_segment[: m1_first.start]
             slot2_first = ref_segment[: m2_first.start]
-            l = [slot1_first, slot2_first]
+            indices = [slot1_first, slot2_first]
 
             if len(slot1_first) > 1 and len(slot2_first) > 1:
-                unmatched_segments.insert(0, l)
+                unmatched_segments.insert(0, indices)
 
         m1_last, m2_last = matched_segments[-1]
         if m1_last.end != hyp_end and m2_last.end != ref_end:
@@ -139,7 +139,7 @@ class AlignedDoc:
             slot2_last = ref_segment[m2_last.end + 1 :]
 
             if len(slot1_last) > 1 and len(slot2_last) > 1:
-                unmatched_segments.append(l)
+                unmatched_segments.append(indices)
 
         return unmatched_segments
 

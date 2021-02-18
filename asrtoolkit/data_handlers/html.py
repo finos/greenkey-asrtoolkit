@@ -87,3 +87,6 @@ def read_file(file_name):
     segments = [_ for _ in map(parse_line, table.findAll("tr")) if _]
 
     return segments
+
+
+__all__ = [header, footer, separator]

@@ -11,7 +11,6 @@ from functools import partial
 
 from tqdm import tqdm
 
-from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.data_structures.audio_file import audio_file
 from asrtoolkit.data_structures.exemplar import exemplar
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text

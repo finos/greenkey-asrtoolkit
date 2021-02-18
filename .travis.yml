@@ -3,11 +3,11 @@ language: python
 dist: xenial
 python:
   - "3.6"
-  - "3.6-dev"  # 3.6 development branch
+  - "3.6-dev" # 3.6 development branch
   - "3.7"
-  - "3.7-dev"  # 3.7 development branch
+  - "3.7-dev" # 3.7 development branch
   - "3.8"
-  - "3.8-dev"  # 3.8 development branch
+  - "3.8-dev" # 3.8 development branch
 # command to install dependencies
 before_install:
   - sudo apt-get update
@@ -20,9 +20,9 @@ script:
   # validate black formatting
   - python3 -m black --check .
   # validate imports are sorted
-  - python3 -m isort --check-only .  
+  - python3 -m isort --check-only .
   # check for undefined variables (F821 is an excellent error for a linter to catch)
   # add errors to ignore here as desired
-  - python3 -m flake8 --ignore=E501,W504,W503,W291,F401,E741,E302,E126,E402,E251 .
+  - python3 -m flake8 --ignore=E501,W503,E203 .
   # run test suite
   - python -m pytest -v --doctest-modules

@@ -40,3 +40,6 @@ def read_file(file_name):
             segments.append(seg)
 
     return segments
+
+
+__all__ = [header, footer, separator]

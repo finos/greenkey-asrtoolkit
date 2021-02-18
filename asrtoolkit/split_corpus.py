@@ -7,7 +7,7 @@ Create train, dev, and test splits a folder of ASR data
 import logging
 import os
 import sys
-from random import randrange, seed
+from random import seed
 
 from fire import Fire
 

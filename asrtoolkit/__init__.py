@@ -1,15 +1,7 @@
 #!/usr/bin/env python3
 import logging
 
-LOGGER = logging.getLogger(__name__)
-
-try:
-    from asrtoolkit.align_json import align_json
-except ImportError:
-    LOGGER.info(
-        "Unable to import alignment utilities due to missing development package requirements"
-    )
-
+from num2words import base
 from pkg_resources import get_distribution
 
 from asrtoolkit.clean_formatting import clean_up
@@ -25,4 +17,30 @@ from asrtoolkit.file_utils.name_cleaners import (
 )
 from asrtoolkit.wer import cer, wer
 
+LOGGER = logging.getLogger(__name__)
+
+try:
+    from asrtoolkit.align_json import align_json
+except ImportError:
+    LOGGER.info(
+        "Unable to import alignment utilities due to missing development package requirements"
+    )
+
+
 __version__ = get_distribution("asrtoolkit").version
+__all__ = [
+    align_json,
+    audio_file,
+    base,
+    basename,
+    cer,
+    clean_up,
+    combine_audio,
+    convert,
+    corpus,
+    get_extension,
+    sanitize,
+    strip_extension,
+    time_aligned_text,
+    wer,
+]
