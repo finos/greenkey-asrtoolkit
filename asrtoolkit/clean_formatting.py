@@ -27,88 +27,89 @@ invalid_chars = re.compile(r"[^\p{L}<\[\]> \']", re.IGNORECASE)
 
 spaces = re.compile(r"\s+")
 
-KNOWN_REPLACEMENTS = OrderedDict([
-    ("millions", (re.compile(r"\b(mln|mio|mlns)\b"), lambda m: "million")),
-    ("pleases", (re.compile(r"\b(plz|pls)\b"), lambda m: "please")),
-    ("thanks", (re.compile(r"\b(thks|thx)\b"), lambda m: "thanks")),
-    ("otc", (re.compile(r"\b(otc)\b"), lambda m: "o t c")),
-    ("ellipses", (re.compile(r"\.{2,}"), lambda m: " ")),
-    (
-        "websites",
+KNOWN_REPLACEMENTS = OrderedDict(
+    [
+        ("millions", (re.compile(r"\b(mln|mio|mlns)\b"), lambda m: "million")),
+        ("pleases", (re.compile(r"\b(plz|pls)\b"), lambda m: "please")),
+        ("thanks", (re.compile(r"\b(thks|thx)\b"), lambda m: "thanks")),
+        ("otc", (re.compile(r"\b(otc)\b"), lambda m: "o t c")),
+        ("ellipses", (re.compile(r"\.{2,}"), lambda m: " ")),
         (
-            re.compile(r"[.](net|org|com|gov)\b"),
-            lambda m: " dot " + m.group().lower().replace(".", ""),
-        ),
-    ),
-    (
-        "phone_numbers",
-        (
-            re.compile(
-                r"\b((1|44)[ -.]?)?([\(]?([0-9]{1,}[\)]?[ -.]?){2,5})[0-9]{4}\b"
+            "websites",
+            (
+                re.compile(r"[.](net|org|com|gov)\b"),
+                lambda m: " dot " + m.group().lower().replace(".", ""),
             ),
-            lambda m: " ".join(
-                digits_to_string(_) for _ in m.group() if _.isdigit()),
         ),
-    ),
-    (
-        "acronyms",
         (
-            re.compile(r"\b(([A-Z]){1,}[.]?){2,}\b"),
-            lambda m: " ".join(m.group().lower().replace(".", "")),
+            "phone_numbers",
+            (
+                re.compile(
+                    r"\b((1|44)[ -.]?)?([\(]?([0-9]{1,}[\)]?[ -.]?){2,5})[0-9]{4}\b"
+                ),
+                lambda m: " ".join(
+                    digits_to_string(_) for _ in m.group() if _.isdigit()
+                ),
+            ),
         ),
-    ),
-    ("dashes", (re.compile(r"\-[0-9]\b"),
-                lambda m: "negative " + m.group()[1:])),
-    ("negatives", (re.compile(r" \- "), lambda m: "")),
-    ("positives", (re.compile(r"\+"), lambda m: " plus ")),
-    (
-        "ordinals",
         (
-            re.compile(r"[0-9]{1,}(st|nd|rd|th)"),
-            lambda m: ordinal_to_string(m.group()),
+            "acronyms",
+            (
+                re.compile(r"\b(([A-Z]){1,}[.]?){2,}\b"),
+                lambda m: " ".join(m.group().lower().replace(".", "")),
+            ),
         ),
-    ),
-    (
-        "many_dollars",
+        ("dashes", (re.compile(r"\-[0-9]\b"), lambda m: "negative " + m.group()[1:])),
+        ("negatives", (re.compile(r" \- "), lambda m: "")),
+        ("positives", (re.compile(r"\+"), lambda m: " plus ")),
         (
-            re.compile(
-                r"\$([0-9]{1,}\.?[0-9]{0,})\s(billion|million|trillion)"),
-            lambda m: " ".join(
-                [digits_to_string(m.groups()[0]),
-                 m.groups()[1], "dollars"]),
+            "ordinals",
+            (
+                re.compile(r"[0-9]{1,}(st|nd|rd|th)"),
+                lambda m: ordinal_to_string(m.group()),
+            ),
         ),
-    ),
-    (
-        "dollars",
         (
-            re.compile(r"\$[0-9]{1,}\.?[0-9]{0,}[mbkMBK]?"),
-            lambda m: dollars_to_string(m.group()),
+            "many_dollars",
+            (
+                re.compile(r"\$([0-9]{1,}\.?[0-9]{0,})\s(billion|million|trillion)"),
+                lambda m: " ".join(
+                    [digits_to_string(m.groups()[0]), m.groups()[1], "dollars"]
+                ),
+            ),
         ),
-    ),
-    ("percent", (re.compile(r"\%"), lambda m: " percent")),
-    (
-        "fractions",
         (
-            re.compile(r"\b[0-9]\s?\/\s?[0-9]\b"),
-            lambda m: fraction_to_string(m.group()),
+            "dollars",
+            (
+                re.compile(r"\$[0-9]{1,}\.?[0-9]{0,}[mbkMBK]?"),
+                lambda m: dollars_to_string(m.group()),
+            ),
         ),
-    ),
-    (
-        "plural_numbers",
+        ("percent", (re.compile(r"\%"), lambda m: " percent")),
         (
-            re.compile(r"\b[0-9]{1,}s\b"),
-            lambda m: plural_numbers_to_string(m.group()),
+            "fractions",
+            (
+                re.compile(r"\b[0-9]\s?\/\s?[0-9]\b"),
+                lambda m: fraction_to_string(m.group()),
+            ),
         ),
-    ),
-    (
-        "numbers",
         (
-            re.compile(r"[0-9\.]{1,}"),
-            lambda m: " " + digits_to_string(m.group()) + " ",
+            "plural_numbers",
+            (
+                re.compile(r"\b[0-9]{1,}s\b"),
+                lambda m: plural_numbers_to_string(m.group()),
+            ),
         ),
-    ),
-    ("apostrophes", (re.compile(r"\'"), lambda m: " '")),
-])
+        (
+            "numbers",
+            (
+                re.compile(r"[0-9\.]{1,}"),
+                lambda m: " " + digits_to_string(m.group()) + " ",
+            ),
+        ),
+        ("apostrophes", (re.compile(r"\'"), lambda m: " '")),
+    ]
+)
 
 
 def remove_special_chars(line, chars_to_replace):
@@ -120,7 +121,7 @@ def remove_special_chars(line, chars_to_replace):
 
 def remove_all_special_chars(line):
     """
-    Only allow unicode letter characters, spaces, apostrophes, 
+    Only allow unicode letter characters, spaces, apostrophes,
     and angle brackets (for noises) to be output
     """
     return invalid_chars.sub(" ", line)
@@ -135,17 +136,19 @@ def remove_double_spaces(line):
 
 def apply_all_regex_and_replacements(input_line):
     """
-    For a line and list of paired regex and replacements, 
+    For a line and list of paired regex and replacements,
       apply all replacements for all regex on the line
     """
 
     for pat in KNOWN_REPLACEMENTS:
         try:
-            input_line = re.sub(KNOWN_REPLACEMENTS[pat][0],
-                                KNOWN_REPLACEMENTS[pat][1], input_line)
+            input_line = re.sub(
+                KNOWN_REPLACEMENTS[pat][0], KNOWN_REPLACEMENTS[pat][1], input_line
+            )
         except Exception as exc:
-            LOGGER.exception("Exception %s with line %s for pattern %s", exc,
-                             input_line, pat)
+            LOGGER.exception(
+                "Exception %s with line %s for pattern %s", exc, input_line, pat
+            )
 
     return input_line
 
@@ -216,9 +219,9 @@ def clean_one_file(input_text_file):
 
     cleaned = map(clean_up, lines)
 
-    with open(input_text_file.replace(".txt", "") + "_cleaned.txt",
-              "w",
-              encoding="utf-8") as f:
+    with open(
+        input_text_file.replace(".txt", "") + "_cleaned.txt", "w", encoding="utf-8"
+    ) as f:
         f.write(" ".join(cleaned))
 
 
@@ -235,8 +238,7 @@ def clean_text_file(*input_text_files):
             continue
         clean_one_file(input_text_file)
 
-        LOGGER.info("File output: %s",
-                    input_text_file.replace(".txt", "_cleaned.txt"))
+        LOGGER.info("File output: %s", input_text_file.replace(".txt", "_cleaned.txt"))
 
 
 def cli():

@@ -20,6 +20,7 @@ class AlignedDoc:
     ref - reference document; content is accurate
 
     """
+
     def __init__(self, hyp, ref, extractors, num_extractions=2):
         self.hyp = hyp
         self.ref = ref
@@ -51,13 +52,13 @@ class AlignedDoc:
         Span or Token part of self.hyp and self.ref
         """
 
-        if isinstance(hyp, spacy.tokens.Doc) and isinstance(
-                ref, spacy.tokens.Doc):
+        if isinstance(hyp, spacy.tokens.Doc) and isinstance(ref, spacy.tokens.Doc):
             hyp_start, hyp_end = hyp[0].i, hyp[-1].i
             ref_start, ref_end = ref[0].i, ref[-1].i
 
         elif isinstance(hyp, spacy.tokens.Token) and isinstance(
-                ref, spacy.tokens.Token):
+            ref, spacy.tokens.Token
+        ):
             hyp_start, hyp_end = hyp.i, hyp.i
             ref_start, ref_end = ref.i, ref.i
         else:
@@ -86,11 +87,12 @@ class AlignedDoc:
         """
         assert isinstance(matched_segments, list)
         unique_new_spans = [
-            match for match in matched_segments
-            if match not in self.matched_intervals
+            match for match in matched_segments if match not in self.matched_intervals
         ]
-        LOGGER.debug("Number of non-unique matched_segments: %s",
-                     len(matched_segments) - len(unique_new_spans))
+        LOGGER.debug(
+            "Number of non-unique matched_segments: %s",
+            len(matched_segments) - len(unique_new_spans),
+        )
         return unique_new_spans
 
     def find_unmatched_segments(self, interval, matched_segments):
@@ -108,35 +110,36 @@ class AlignedDoc:
         for i in range(len(matched_segments[:-1])):
             m1, m2 = matched_segments[i]
             m1_next, m2_next = matched_segments[i + 1]
-            slot1 = hyp_segment[m1.end + 1:m1_next.start]
-            slot2 = ref_segment[m2.end + 1:m2_next.end]
-            l = [slot1, slot2]
-            LOGGER.debug(i, ":", l)
+            slot1 = hyp_segment[m1.end + 1 : m1_next.start]
+            slot2 = ref_segment[m2.end + 1 : m2_next.end]
+            indices = [slot1, slot2]
+            LOGGER.debug(i, ":", indices)
 
             if len(slot1) > 1 and len(slot2) > 1:
-                unmatched_segments.append(l)
+                unmatched_segments.append(indices)
 
         # special cases
         # --> segment btw interval start and first match & last match and interval end
         hyp_start, hyp_end, ref_start, ref_end = self.start_and_end_token(
-            hyp=hyp_segment, ref=ref_segment)
+            hyp=hyp_segment, ref=ref_segment
+        )
 
         m1_first, m2_first = matched_segments[0]
         if m1_first.start != hyp_start and m2_first.start != ref_start:
-            slot1_first = hyp_segment[:m1_first.start]
-            slot2_first = ref_segment[:m2_first.start]
-            l = [slot1_first, slot2_first]
+            slot1_first = hyp_segment[: m1_first.start]
+            slot2_first = ref_segment[: m2_first.start]
+            indices = [slot1_first, slot2_first]
 
             if len(slot1_first) > 1 and len(slot2_first) > 1:
-                unmatched_segments.insert(0, l)
+                unmatched_segments.insert(0, indices)
 
         m1_last, m2_last = matched_segments[-1]
         if m1_last.end != hyp_end and m2_last.end != ref_end:
-            slot1_last = hyp_segment[m1_last.end + 1:]
-            slot2_last = ref_segment[m2_last.end + 1:]
+            slot1_last = hyp_segment[m1_last.end + 1 :]
+            slot2_last = ref_segment[m2_last.end + 1 :]
 
             if len(slot1_last) > 1 and len(slot2_last) > 1:
-                unmatched_segments.append(l)
+                unmatched_segments.append(indices)
 
         return unmatched_segments
 
@@ -145,19 +148,23 @@ class AlignedDoc:
 
         for interval in self.unmatched_intervals:
             matched_segments = find_matched_intervals(
-                interval=interval, extractor=self.extractors[extract_id])
+                interval=interval, extractor=self.extractors[extract_id]
+            )
 
             if matched_segments:
                 all_matched_segments.extend(matched_segments)
 
                 unmatched_segments = self.find_unmatched_segments(
-                    interval=interval, matched_segments=matched_segments)
-                for segment in (unmatched_segments
-                                if unmatched_segments is not None else []):
+                    interval=interval, matched_segments=matched_segments
+                )
+                for segment in (
+                    unmatched_segments if unmatched_segments is not None else []
+                ):
                     all_unmatched_segments.append(segment)
             else:
                 all_unmatched_segments.extend(
-                    interval if hasattr(interval, "__iter__") else [interval])
+                    interval if hasattr(interval, "__iter__") else [interval]
+                )
 
         if all_matched_segments:
             # unmatched segments
@@ -193,8 +200,9 @@ class AlignedDoc:
             m2_tokens = self.get_token_idxs(ref_match)
             for hyp_tok, ref_tok in zip(m1_tokens, m2_tokens):
                 matched = (hyp_tok, ref_tok)
-                if matched not in token_matches and is_sorted(token_matches +
-                                                              [matched]):
+                if matched not in token_matches and is_sorted(
+                    token_matches + [matched]
+                ):
                     token_matches.append(matched)
         return token_matches
 
@@ -208,9 +216,9 @@ class AlignedDoc:
         token_matches = self.get_token_matches()
 
         for tok1, tok2 in sorted(token_matches):
-            if tok1 not in token_mapper or abs(tok1 -
-                                               token_mapper[tok1]) > abs(tok1 -
-                                                                         tok2):
+            if tok1 not in token_mapper or abs(tok1 - token_mapper[tok1]) > abs(
+                tok1 - tok2
+            ):
                 token_mapper[tok1] = tok2
         return token_mapper
 

@@ -22,10 +22,13 @@ def format_segment(seg):
       filename, channel, speaker, start and stop times, label, and text
     """
     # clean_up used to unformat stm file text
-    return " ".join([
-        str(getattr(seg, _))
-        for _ in ("filename", "channel", "speaker", "start", "stop", "label")
-    ] + [clean_up(seg.text)])
+    return " ".join(
+        [
+            str(getattr(seg, _))
+            for _ in ("filename", "channel", "speaker", "start", "stop", "label")
+        ]
+        + [clean_up(seg.text)]
+    )
 
 
 def parse_line(line):
@@ -39,15 +42,17 @@ def parse_line(line):
     if len(data) > 6:
         filename, channel, speaker, start, stop, label = data[:6]
         text = " ".join(data[6:])
-        seg = segment({
-            "filename": filename,
-            "channel": channel,
-            "speaker": speaker,
-            "start": start,
-            "stop": stop,
-            "label": label,
-            "text": text,
-        })
+        seg = segment(
+            {
+                "filename": filename,
+                "channel": channel,
+                "speaker": speaker,
+                "start": start,
+                "stop": stop,
+                "label": label,
+                "text": text,
+            }
+        )
     return seg if (seg is not None) and seg.validate() else None
 
 
@@ -63,3 +68,6 @@ def read_file(file_name):
             if seg is not None:
                 segments.append(seg)
     return segments
+
+
+__all__ = [header, footer, separator]

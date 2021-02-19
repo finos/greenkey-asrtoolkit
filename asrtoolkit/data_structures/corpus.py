@@ -11,8 +11,8 @@ from functools import partial
 
 from tqdm import tqdm
 
-from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.data_structures.audio_file import audio_file
+from asrtoolkit.data_structures.exemplar import exemplar
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.file_utils.name_cleaners import basename, strip_extension
 
@@ -25,84 +25,6 @@ def get_files(data_dir, extension):
     if data_dir and os.path.exists(data_dir):
         files = glob.glob(data_dir + "/*." + extension)
     return files
-
-
-class exemplar(object):
-    """
-    Create an exemplar class to pair one audio file with one transcript file
-    """
-
-    audio_file = None
-    transcript_file = None
-
-    def __init__(self, *args, **kwargs):
-        " Instantiate using input args and kwargs "
-        for dictionary in args:
-            if isinstance(dictionary, dict):
-                for key in dictionary:
-                    setattr(self, key, dictionary[key])
-        for key in kwargs:
-            setattr(self, key, kwargs[key])
-
-    def validate(self):
-        """
-        Validates exemplar object by constraining that the filenames before the
-        extension are the same
-        """
-
-        audio_filename = basename(strip_extension(self.audio_file.location))
-        transcript_filename = basename(
-            strip_extension(self.transcript_file.location))
-
-        # Audio and transcript filename must match
-        # Audio file must not be empty
-        # Transcript file must not be empty
-        valid = (audio_filename == transcript_filename
-                 and os.path.getsize(self.audio_file.location)
-                 and os.path.getsize(self.transcript_file.location))
-        # This returns an integer corresponding to the output of the last condition, not a boolean.
-        # Thats just how `and` works in python
-
-        return bool(valid)
-
-    def count_words(self, clean_func=clean_up):
-        """ Count words in a exemplar after cleaning it """
-        return len(clean_func(self.transcript_file.text()).split()) if self.validate() else 0
-
-    def prepare_for_training(self, target, sample_rate=16000, nested=False):
-        """
-        Prepare one exemplar for training
-        Returning a new exemplar object with updated file locations
-        and a resampled audio_file
-        """
-        if nested:
-            af_target_file = os.path.join(target, "sph",
-                                          basename(self.audio_file.location))
-            tf_target_file = os.path.join(
-                target, "stm", basename(self.transcript_file.location))
-        else:
-            af_target_file = os.path.join(target,
-                                          basename(self.audio_file.location))
-            tf_target_file = os.path.join(
-                target, basename(self.transcript_file.location))
-
-        af = self.audio_file.prepare_for_training(
-            af_target_file,
-            sample_rate=sample_rate,
-        )
-
-        tf = self.transcript_file.write(tf_target_file)
-
-        return (exemplar({
-            "audio_file": af,
-            "transcript_file": tf
-        }) if all([af, tf]) else None)
-
-    def hash(self):
-        """
-        Returns combined hash of two files
-        """
-        return self.audio_file.hash() + self.transcript_file.hash()
 
 
 class corpus(object):
@@ -137,30 +59,45 @@ class corpus(object):
 
             audio_extensions_to_try = ["sph", "wav", "mp3"][::-1]
             self.exemplars += [
-                exemplar({
-                    "audio_file":
-                    audio_file(fl),
-                    "transcript_file":
-                    time_aligned_text(strip_extension(fl) + ".stm"),
-                }) for audio_extension in audio_extensions_to_try
-                for fl in (get_files(self.location, audio_extension) if self.
-                           location else [])
+                exemplar(
+                    {
+                        "audio_file": audio_file(fl),
+                        "transcript_file": time_aligned_text(
+                            strip_extension(fl) + ".stm"
+                        ),
+                    }
+                )
+                for audio_extension in audio_extensions_to_try
+                for fl in (
+                    get_files(self.location, audio_extension) if self.location else []
+                )
                 if (os.path.exists(strip_extension(fl) + ".stm"))
             ]
 
             # gather all exemplars from /stm and /sph subdirectories if present
             self.exemplars += [
-                exemplar({
-                    "audio_file":
-                    audio_file(fl),
-                    "transcript_file":
-                    time_aligned_text(self.location + "/stm/" +
-                                      basename(strip_extension(fl)) + ".stm"),
-                }) for audio_extension in audio_extensions_to_try for fl in
-                (get_files(self.location +
-                           "/sph/", audio_extension) if self.location else [])
-                if (os.path.exists(self.location + "/stm/" +
-                                   basename(strip_extension(fl)) + ".stm"))
+                exemplar(
+                    {
+                        "audio_file": audio_file(fl),
+                        "transcript_file": time_aligned_text(
+                            self.location
+                            + "/stm/"
+                            + basename(strip_extension(fl))
+                            + ".stm"
+                        ),
+                    }
+                )
+                for audio_extension in audio_extensions_to_try
+                for fl in (
+                    get_files(self.location + "/sph/", audio_extension)
+                    if self.location
+                    else []
+                )
+                if (
+                    os.path.exists(
+                        self.location + "/stm/" + basename(strip_extension(fl)) + ".stm"
+                    )
+                )
             ]
 
     def validate(self):
@@ -194,19 +131,27 @@ class corpus(object):
 
         # Raise error if we inputs are invalid to avoid infinite loop
         if split_words < 0 or split_words > total_words:
-            raise ValueError("cannot split corpus with {} words into split with {} words".format(total_words, split_words))
+            raise ValueError(
+                "cannot split corpus with {} words into split with {} words".format(
+                    total_words, split_words
+                )
+            )
 
         exemplars_in_split = []
         word_counter, seg_counter = 0, 0
         while word_counter <= split_words or seg_counter <= min_segments:
-            exemplars_in_split += [valid_exemplars.pop(random.randrange(len(valid_exemplars)))]
+            exemplars_in_split += [
+                valid_exemplars.pop(random.randrange(len(valid_exemplars)))
+            ]
             word_counter += exemplars_in_split[-1].n_words
             seg_counter += len(exemplars_in_split[-1].transcript_file.segments)
 
-        new_corpus = corpus({
-            "location": self.location,
-            "exemplars": exemplars_in_split,
-        })
+        new_corpus = corpus(
+            {
+                "location": self.location,
+                "exemplars": exemplars_in_split,
+            }
+        )
 
         remaining_corpus = self - new_corpus
         remaining_corpus.location = self.location
@@ -233,10 +178,7 @@ class corpus(object):
         """
         return sum(len(eg.transcript_file.segments) for eg in self.exemplars)
 
-    def prepare_for_training(self,
-                             target=None,
-                             nested=False,
-                             sample_rate=16000):
+    def prepare_for_training(self, target=None, nested=False, sample_rate=16000):
         """
         Run validation and audio file preparation steps
         """
@@ -254,26 +196,26 @@ class corpus(object):
                     target=target,
                     sample_rate=sample_rate,
                     nested=nested,
-                )) for _ in self.exemplars
+                )
+            )
+            for _ in self.exemplars
         ]
 
         # trigger conversion and gather results
         new_exemplars = [future.result() for future in tqdm(futures)]
 
-        new_corpus = corpus({
-            "location":
-            target,
-            "exemplars": [eg for eg in new_exemplars if eg is not None],
-        })
+        new_corpus = corpus(
+            {
+                "location": target,
+                "exemplars": [eg for eg in new_exemplars if eg is not None],
+            }
+        )
         new_corpus.validate()
         return new_corpus.log()
 
     def __add__(self, other):
         """ Allow addition of corpora via + operator """
-        return corpus({
-            "location": None,
-            "exemplars": self.exemplars + other.exemplars
-        })
+        return corpus({"location": None, "exemplars": self.exemplars + other.exemplars})
 
     def __iadd__(self, other):
         """ Allow addition of corpora via += operator """
@@ -282,25 +224,25 @@ class corpus(object):
 
     def __sub__(self, other):
         """ Allow addition of corpora via - operator """
-        return corpus({
-            "location":
-            None,
-            "exemplars":
-            [_ for _ in self.exemplars if _ not in other.exemplars],
-        })
+        return corpus(
+            {
+                "location": None,
+                "exemplars": [_ for _ in self.exemplars if _ not in other.exemplars],
+            }
+        )
 
     def __isub__(self, other):
         """ Allow subtraction of corpora via -= operator """
-        self.exemplars = [
-            _ for _ in self.exemplars if _ not in other.exemplars
-        ]
+        self.exemplars = [_ for _ in self.exemplars if _ not in other.exemplars]
         return self
 
     def __getitem__(self, given):
         """ Allow slicing of corpora via [] """
-        return corpus({
-            "location":
-            self.location,
-            "exemplars": [self.exemplars[given]]
-            if not isinstance(given, slice) else self.exemplars[given],
-        })
+        return corpus(
+            {
+                "location": self.location,
+                "exemplars": [self.exemplars[given]]
+                if not isinstance(given, slice)
+                else self.exemplars[given],
+            }
+        )

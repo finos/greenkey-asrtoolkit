@@ -33,8 +33,7 @@ nonsilence_noises = [
     "huh",
     "hmm",
 ]
-re_nonsilence_noises = re.compile(r"\b({})\b".format(
-    "|".join(nonsilence_noises)))
+re_nonsilence_noises = re.compile(r"\b({})\b".format("|".join(nonsilence_noises)))
 
 
 def remove_nonsilence_noises(input_text):
@@ -57,10 +56,8 @@ def get_wer_components(ref_string, hyp_string):
     """
 
     # apply tokenization if given as a string
-    ref = tokenization.split(ref_string) if isinstance(ref_string,
-                                                       str) else ref_string
-    hyp = tokenization.split(hyp_string) if isinstance(hyp_string,
-                                                       str) else hyp_string
+    ref = tokenization.split(ref_string) if isinstance(ref_string, str) else ref_string
+    hyp = tokenization.split(hyp_string) if isinstance(hyp_string, str) else hyp_string
 
     WER_numerator = editdistance.eval(ref, hyp)
     WER_denominator = max(1, len(ref))
@@ -83,8 +80,11 @@ def standardize_transcript(input_transcript, remove_nsns=False):
     """
 
     # accept time_aligned_text objects but use their output text
-    input_transcript = (input_transcript.text() if isinstance(
-        input_transcript, time_aligned_text) else input_transcript)
+    input_transcript = (
+        input_transcript.text()
+        if isinstance(input_transcript, time_aligned_text)
+        else input_transcript
+    )
 
     # remove tagged noises and other non-speech events
     input_transcript = re.sub(re_tagged_nonspeech, " ", input_transcript)
@@ -106,8 +106,7 @@ def wer(ref, hyp, remove_nsns=False):
     """
 
     # standardize input string
-    ref, hyp = map(lambda t: standardize_transcript(t, remove_nsns),
-                   (ref, hyp))
+    ref, hyp = map(lambda t: standardize_transcript(t, remove_nsns), (ref, hyp))
 
     # calculate WER with helper function
     WER_numerator, WER_denominator = get_wer_components(ref, hyp)
@@ -137,10 +136,7 @@ def cer(ref, hyp, remove_nsns=False):
     return 100 * CER_numerator / CER_denominator
 
 
-def compute_wer(reference_file,
-                transcript_file,
-                char_level=False,
-                ignore_nsns=False):
+def compute_wer(reference_file, transcript_file, char_level=False, ignore_nsns=False):
     """
     Compares a reference and transcript file and calculates word error rate (WER) between these two files
     If --char-level is given, compute CER instead

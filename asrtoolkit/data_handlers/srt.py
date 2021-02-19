@@ -19,11 +19,10 @@ def format_segment(seg):
     filename, channel, speaker, start and stop times, label, and text
     """
 
-    ret_str = "1\n{:} --> {:}\n".format(seconds_to_timestamp(seg.start),
-                                        seconds_to_timestamp(
-                                            seg.stop)).replace(".", ",")
-    ret_str += "{:}\n\n".format(
-        seg.formatted_text if seg.formatted_text else seg.text)
+    ret_str = "1\n{:} --> {:}\n".format(
+        seconds_to_timestamp(seg.start), seconds_to_timestamp(seg.stop)
+    ).replace(".", ",")
+    ret_str += "{:}\n\n".format(seg.formatted_text if seg.formatted_text else seg.text)
 
     return ret_str
 
@@ -41,3 +40,6 @@ def read_file(file_name):
             segments.append(seg)
 
     return segments
+
+
+__all__ = [header, footer, separator]

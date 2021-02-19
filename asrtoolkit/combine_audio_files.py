@@ -36,8 +36,10 @@ def check_audio_file(audio_file_name):
 def check_transcript_segment(segment):
     if not hasattr(segment, "start"):
         LOGGER.error(
-            "Transcript segment doesn't include the start time, segment: {}".
-            format(segment))
+            "Transcript segment doesn't include the start time, segment: {}".format(
+                segment
+            )
+        )
         sys.exit(1)
 
 
@@ -45,8 +47,8 @@ def combine_transcripts(transcripts, output_file_name):
     # Get one list of segments
     out_transcript = reduce(operator.add, transcripts)
     out_transcript.location = os.path.join(
-        strip_extension(output_file_name) + "." +
-        out_transcript.file_extension)
+        strip_extension(output_file_name) + "." + out_transcript.file_extension
+    )
     out_transcript.write(out_transcript.location)
 
 
@@ -55,16 +57,15 @@ def main():
     Combine audio files using their transcript files
     """
     parser = argparse.ArgumentParser(
-        description=
-        """Combine audio files using segments from their transcript files. For this utility, transcript files must contain start/stop times.
+        description="""Combine audio files using segments from their transcript files. For this utility, transcript files must contain start/stop times.
            Lists of transcripts and audio files must be ordered identically, meaning the first audio file's
            transcript is the first transcript.
            Note: transcripts from each file are not checked for overlapping time intervals when they are combined and sorted.
-        """)
-    parser.add_argument("--output_file",
-                        default="output.wav",
-                        required=True,
-                        help="Name of output file")
+        """
+    )
+    parser.add_argument(
+        "--output_file", default="output.wav", required=True, help="Name of output file"
+    )
     parser.add_argument(
         "--audio_files",
         metavar="audio_files",
@@ -85,23 +86,25 @@ def main():
         "--renormalize",
         default=False,
         action="store_true",
-        help=
-        "Renormalize files to undo sox normalizing by 1/num_audio_files. Useful when combined audio has little overlap",
+        help="Renormalize files to undo sox normalizing by 1/num_audio_files. Useful when combined audio has little overlap",
     )
     # Sending audio through tanh could be helpful if there are significant transient audio signals
 
     args = parser.parse_args()
     if len(args.audio_files) != len(args.transcripts):
         LOGGER.error(
-            "The number of audio files, {}, must be equal to the number of transcripts, {}"
-            .format(len(args.audio_files), len(args.transcripts)))
+            "The number of audio files, {}, must be equal to the number of transcripts, {}".format(
+                len(args.audio_files), len(args.transcripts)
+            )
+        )
         sys.exit(1)
 
     [check_audio_file(_) for _ in args.audio_files]
     transcripts = [check_transcript(_) for _ in args.transcripts]
 
     [
-        check_transcript_segment(_) for transcript in transcripts
+        check_transcript_segment(_)
+        for transcript in transcripts
         for _ in transcript.segments
     ]
 

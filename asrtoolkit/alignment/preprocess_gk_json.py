@@ -11,12 +11,11 @@ def preprocess_transcript(input_file):
     Return a list of tokenized word objects
     """
     data = json.load(open(input_file, "r+", encoding="utf-8"))
-    segment_times = [(segment["startTimeSec"], segment["endTimeSec"])
-                     for segment in data["segments"]]
-    lattice_segments = [segment["words"] for segment in data["segments"]]
-    transcript_segments = [
-        segment["transcript"] for segment in data["segments"]
+    segment_times = [
+        (segment["startTimeSec"], segment["endTimeSec"]) for segment in data["segments"]
     ]
+    lattice_segments = [segment["words"] for segment in data["segments"]]
+    transcript_segments = [segment["transcript"] for segment in data["segments"]]
 
     # start token count (increment for included tokens)
     token_idx = 0
@@ -35,8 +34,7 @@ def preprocess_transcript(input_file):
                     changed.append([seg_id, i, token, clean_token])
 
                 # times (audio-aligned)
-                start, duration = start_time + word_dict["start"], word_dict[
-                    "length"]
+                start, duration = start_time + word_dict["start"], word_dict["length"]
                 end = start + duration
 
                 # generate token-level dict for each cleaned token retained

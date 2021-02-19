@@ -24,8 +24,7 @@ def read_caption(caption):
         start = caption.start_in_seconds
         stop = caption.end_in_seconds
 
-        text = re.sub(non_transcript_marks, lambda v: "",
-                      caption.text.strip()).strip()
+        text = re.sub(non_transcript_marks, lambda v: "", caption.text.strip()).strip()
 
         seg = segment({"start": start, "stop": stop, "text": text})
     except Exception as exc:

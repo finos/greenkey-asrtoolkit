@@ -34,9 +34,7 @@ def format_segment(seg):
     output_dict["speakerInfo"] = seg.speaker
     output_dict["startTimeSec"] = float(seg.start)
     output_dict["endTimeSec"] = float(seg.stop)
-    output_dict["genderInfo"] = {
-        "gender": seg.label.split(",")[-1].replace(">", "")
-    }
+    output_dict["genderInfo"] = {"gender": seg.label.split(",")[-1].replace(">", "")}
     output_dict["transcript"] = seg.text
     output_dict["confidence"] = seg.confidence
 
@@ -55,10 +53,9 @@ def parse_segment(input_seg):
     """
     extracted_dict = {}
 
-    def assign_if_present(value,
-                          dict_key=None,
-                          interior_key=None,
-                          proc_val=lambda val: val):
+    def assign_if_present(
+        value, dict_key=None, interior_key=None, proc_val=lambda val: val
+    ):
         """
         This transforms gk segment data into a dictionary for input
         into the asrtoolkit segment object
@@ -73,8 +70,7 @@ def parse_segment(input_seg):
         """
         dict_key = value if dict_key is None else dict_key
 
-        if value in input_seg and interior_key and interior_key in input_seg[
-                value]:
+        if value in input_seg and interior_key and interior_key in input_seg[value]:
             extracted_dict[dict_key] = proc_val(input_seg[value][interior_key])
         elif value in input_seg and not interior_key:
             extracted_dict[dict_key] = proc_val(input_seg[value])
@@ -90,8 +86,9 @@ def parse_segment(input_seg):
         assign_if_present("formatted_transcript", "formatted_text")
         assign_if_present("punctuated_transcript", "formatted_text")
         assign_if_present("speakerInfo", "speaker", "ID")
-        assign_if_present("genderInfo", "label", "gender",
-                          lambda gender: "<o,f0,{:}>".format(gender))
+        assign_if_present(
+            "genderInfo", "label", "gender", lambda gender: "<o,f0,{:}>".format(gender)
+        )
         assign_if_present("confidence", "confidence")
 
         seg = segment(extracted_dict)
@@ -116,9 +113,7 @@ def read_in_memory(input_data):
       applies `parse_segment` function to each dict in input_data['segments']
 
     """
-    segments = [
-        _ for _ in map(parse_segment, input_data["segments"]) if _ is not None
-    ]
+    segments = [_ for _ in map(parse_segment, input_data["segments"]) if _ is not None]
     return segments
 
 

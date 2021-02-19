@@ -35,3 +35,6 @@ def read_file(file_name):
     with open(file_name, encoding="utf-8") as f:
         segments = read_in_memory(f.read())
     return segments
+
+
+__all__ = [header, footer, separator]

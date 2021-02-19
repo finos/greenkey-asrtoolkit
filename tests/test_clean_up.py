@@ -23,11 +23,9 @@ def test_clean_up():
             "Yeah th those are my finest percentages.",
             "yeah th those are my finest percentages",
         ),
-        ("Please press five after the tone.",
-         "please press five after the tone"),
+        ("Please press five after the tone.", "please press five after the tone"),
         ("Six distinct.", "six distinct"),
-        ("ABC trades at -3.2%.",
-         "a b c trades at negative three point two percent"),
+        ("ABC trades at -3.2%.", "a b c trades at negative three point two percent"),
         (
             "My 2017 report shows the 5th best earnings.",
             "my two thousand and seventeen report shows the fifth best earnings",
@@ -64,12 +62,10 @@ def test_clean_up():
         ("You have two choices Neo.", "you have two choices neo"),
         ("This one or that one.", "this one or that one"),
         ("7 8 9 ...", "seven eight nine"),
-        ("Two partridges in one pear tree.",
-         "two partridges in one pear tree"),
+        ("Two partridges in one pear tree.", "two partridges in one pear tree"),
         ("2s 3s 4s.", "twos threes fours"),
         ("I am -5 on the bonds.", "i am negative five on the bonds"),
-        ("This is your bus terminus seven.",
-         "this is your bus terminus seven"),
+        ("This is your bus terminus seven.", "this is your bus terminus seven"),
         ("5th of March.", "fifth of march"),
         ("Hundreds.", "hundreds"),
         ("ABC.", "a b c"),
@@ -77,10 +73,8 @@ def test_clean_up():
         ("ABC", "a b c"),
         ("A one sauce.", "a one sauce"),
         ("This is Prof. Charles Xavier.", "this is prof charles xavier"),
-        ("Welcome to the island of Dr. Moreau.",
-         "welcome to the island of dr moreau"),
-        ("7th Sept against the third of May.",
-         "seventh sept against the third of may"),
+        ("Welcome to the island of Dr. Moreau.", "welcome to the island of dr moreau"),
+        ("7th Sept against the third of May.", "seventh sept against the third of may"),
         (
             "Who is on first and what is on second.",
             "who is on first and what is on second",
@@ -120,8 +114,7 @@ def test_clean_up():
         ("125.", "one hundred and twenty five"),
         ("140.", "one hundred and forty"),
         ("1000.", "one thousand"),
-        (u"1 2 3 4 5 6 7 8 9 10.",
-         u"one two three four five six seven eight nine ten"),
+        ("1 2 3 4 5 6 7 8 9 10.", "one two three four five six seven eight nine ten"),
         (
             "his license plate is a. c, f seven...five ! zero",
             "his license plate is a c f seven five zero",
@@ -161,6 +154,7 @@ def test_clean_up():
 
 if __name__ == "__main__":
     import sys
+
     import pytest
 
     pytest.main(sys.argv)

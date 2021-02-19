@@ -17,8 +17,7 @@ def timestamp_to_seconds(timestamp):
     Convert a timestamp to seconds
     """
     parts = timestamp.split(":")
-    return std_float(
-        float(parts[0]) * 3600 + float(parts[1]) * 60 + float(parts[2]), 3)
+    return std_float(float(parts[0]) * 3600 + float(parts[1]) * 60 + float(parts[2]), 3)
 
 
 def seconds_to_timestamp(seconds):
@@ -34,5 +33,8 @@ def clean_float(input_float):
     """
     Return float in seconds (even if it was a timestamp originally)
     """
-    return (timestamp_to_seconds(input_float)
-            if ":" in str(input_float) else std_float(input_float))
+    return (
+        timestamp_to_seconds(input_float)
+        if ":" in str(input_float)
+        else std_float(input_float)
+    )
