@@ -63,7 +63,7 @@ setup(
             "numpy>=1.17.0",
             "pandas",
             "pytest",
-            "spacy==2.2.0",
+            "spacy>=2.2.0",
             "srsly<2.0.0,>=0.1.0",
             "textacy",
         ]
