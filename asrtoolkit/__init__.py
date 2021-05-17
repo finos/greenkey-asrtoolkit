@@ -40,7 +40,8 @@ try:
     from asrtoolkit.align_json import align_json
 
     __all__.append(align_json)
-except ImportError:
+except (ImportError, AttributeError):
+    # Catch attribute error to lest doctests pass
     LOGGER.info(
         "Unable to import alignment utilities due to missing development package requirements"
     )
