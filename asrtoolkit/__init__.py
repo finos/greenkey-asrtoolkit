@@ -38,6 +38,7 @@ __all__ = [
 
 try:
     from asrtoolkit.align_json import align_json
+
     __all__.append(align_json)
 except ImportError:
     LOGGER.info(
