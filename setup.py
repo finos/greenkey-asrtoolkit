@@ -65,7 +65,7 @@ setup(
             "pytest",
             "spacy==2.2.0",
             "srsly<2.0.0,>=0.1.0",
-            "textacy",
+            "textacy<0.11.0",
         ]
     },
     dependency_links=new_links,
