@@ -111,6 +111,14 @@ def test_json_to_txt_conversion():
     ).hexdigest()
     assert reference_sha == new_sha
 
+def test_json_to_rttm_conversion():
+    """
+    execute json to rttm test
+    """
+    input_file = time_aligned_text(f"{sample_dir}/simple_test.json")
+    input_file.write(f"{test_dir}/json_to_rttm_test.rttm")
+    # ensure it can load again
+    time_aligned_text(f"{test_dir}/json_to_rttm_test.rttm")
 
 if __name__ == "__main__":
     import sys
