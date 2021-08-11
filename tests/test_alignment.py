@@ -2,22 +2,23 @@
 """
 Test to ensure that alignment can work
 """
-import hashlib
 
-from asrtoolkit import align_json
+from asrtoolkit import align_json, time_aligned_text
+from utils import get_sample_dir, get_test_dir
+
+test_dir = get_test_dir(__file__)
+sample_dir = get_sample_dir(__file__)
 
 
 def test_simple_alignment():
     align_json(
-        "samples/BillGatesTEDTalk.txt",
-        "samples/BillGatesTEDTalk.json",
-        "tests/BillGatesTEDTalk_aligned.stm",
+        f"{sample_dir}/BillGatesTEDTalk.txt",
+        f"{sample_dir}/BillGatesTEDTalk.json",
+        f"{test_dir}/BillGatesTEDTalk_aligned.stm",
     )
-    new_sha = hashlib.sha1(
-        open("tests/BillGatesTEDTalk_aligned.stm", "r", encoding="utf8").read().encode()
-    ).hexdigest()
-    reference_sha = "0d4a20cf54fdc2834c69d9697c5820556139379e"
-    assert new_sha == reference_sha
+
+    aligned_transcript = time_aligned_text(f"{test_dir}/BillGatesTEDTalk_aligned.stm")
+    assert len(aligned_transcript.segments) == 104
 
 
 if __name__ == "__main__":

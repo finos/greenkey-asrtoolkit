@@ -8,6 +8,10 @@ from os.path import join as pjoin
 
 from asrtoolkit.data_structures.corpus import corpus
 from asrtoolkit.split_corpus import split_corpus
+from utils import get_sample_dir, get_test_dir
+
+test_dir = get_test_dir(__file__)
+sample_dir = get_sample_dir(__file__)
 
 
 def setup_test_corpus(orig_dir, trn_dir, dev_dir, n_exemplars):
@@ -17,10 +21,12 @@ def setup_test_corpus(orig_dir, trn_dir, dev_dir, n_exemplars):
     os.makedirs(dev_dir, exist_ok=True)
     for i in range(n_exemplars):
         shutil.copy(
-            "tests/small-test-file.mp3", pjoin(orig_dir, "file-{:02d}.mp3".format(i))
+            f"{test_dir}/small-test-file.mp3",
+            pjoin(orig_dir, "file-{:02d}.mp3".format(i)),
         )
         shutil.copy(
-            "tests/small-test-file.stm", pjoin(orig_dir, "file-{:02d}.stm".format(i))
+            f"{test_dir}/small-test-file.stm",
+            pjoin(orig_dir, "file-{:02d}.stm".format(i)),
         )
 
 
@@ -34,7 +40,7 @@ def validate_split(directory, inds):
 def test_split_corpus():
     """ Test corpus splitter """
     n_exemplars = 10
-    corpus_dir = "tests/split-corpus"
+    corpus_dir = f"{test_dir}/split-corpus"
 
     orig_dir = pjoin(corpus_dir, "orig")
     split_dir = pjoin(corpus_dir, "splits")
