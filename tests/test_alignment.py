@@ -17,7 +17,7 @@ def test_simple_alignment():
         open("tests/BillGatesTEDTalk_aligned.stm", "r", encoding="utf8").read().encode()
     ).hexdigest()
     reference_sha = "0d4a20cf54fdc2834c69d9697c5820556139379e"
-    assert reference_sha == new_sha
+    assert new_sha == reference_sha
 
 
 if __name__ == "__main__":

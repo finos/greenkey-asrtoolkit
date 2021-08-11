@@ -7,6 +7,7 @@ import json
 import logging
 
 from asrtoolkit.data_structures.segment import segment
+from asrtoolkit.file_utils.name_cleaners import sanitize
 
 LOGGER = logging.getLogger(__name__)
 separator = ",\n"
@@ -85,7 +86,7 @@ def parse_segment(input_seg):
         assign_if_present("corrected_transcript", "text")
         assign_if_present("formatted_transcript", "formatted_text")
         assign_if_present("punctuated_transcript", "formatted_text")
-        assign_if_present("speakerInfo", "speaker", "ID")
+        assign_if_present("speakerInfo", "speaker", proc_val=sanitize)
         assign_if_present(
             "genderInfo", "label", "gender", lambda gender: "<o,f0,{:}>".format(gender)
         )
