@@ -5,6 +5,9 @@ Test audio file splitter
 import os
 
 from asrtoolkit.split_audio_file import split_audio_file
+from utils import get_test_dir
+
+test_dir = get_test_dir(__file__)
 
 
 def test_split_audio_file():
@@ -12,9 +15,11 @@ def test_split_audio_file():
     Test audio file splitter
     """
     split_audio_file(
-        "tests/small-test-file.mp3", "tests/small-test-file.stm", "tests/split"
+        f"{test_dir}/small-test-file.mp3",
+        f"{test_dir}/small-test-file.stm",
+        f"{test_dir}/split",
     )
-    assert set(os.listdir("tests/split")) == {
+    assert set(os.listdir(f"{test_dir}/split")) == {
         "small_test_file_seg_00001.stm",
         "small_test_file_seg_00000.mp3",
         "small_test_file_seg_00001.mp3",

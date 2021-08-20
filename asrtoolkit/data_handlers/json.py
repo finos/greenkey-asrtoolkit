@@ -7,6 +7,7 @@ import json
 import logging
 
 from asrtoolkit.data_structures.segment import segment
+from asrtoolkit.file_utils.name_cleaners import sanitize
 
 LOGGER = logging.getLogger(__name__)
 separator = ",\n"
@@ -69,11 +70,13 @@ def parse_segment(input_seg):
 
         """
         dict_key = value if dict_key is None else dict_key
-
+        ret_val = None
         if value in input_seg and interior_key and interior_key in input_seg[value]:
-            extracted_dict[dict_key] = proc_val(input_seg[value][interior_key])
+            ret_val = proc_val(input_seg[value][interior_key])
         elif value in input_seg and not interior_key:
-            extracted_dict[dict_key] = proc_val(input_seg[value])
+            ret_val = proc_val(input_seg[value])
+        if ret_val not in {"", None}:
+            extracted_dict[dict_key] = ret_val
 
     seg = None
     try:
@@ -85,7 +88,7 @@ def parse_segment(input_seg):
         assign_if_present("corrected_transcript", "text")
         assign_if_present("formatted_transcript", "formatted_text")
         assign_if_present("punctuated_transcript", "formatted_text")
-        assign_if_present("speakerInfo", "speaker", "ID")
+        assign_if_present("speakerInfo", "speaker", proc_val=sanitize)
         assign_if_present(
             "genderInfo", "label", "gender", lambda gender: "<o,f0,{:}>".format(gender)
         )

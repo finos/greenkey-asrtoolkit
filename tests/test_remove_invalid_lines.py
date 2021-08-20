@@ -5,6 +5,11 @@ Test invalid line removal
 
 from asrtoolkit.convert_transcript import convert
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
+from utils import get_sample_dir, get_test_dir
+
+test_dir = get_test_dir(__file__)
+sample_dir = get_sample_dir(__file__)
+
 
 EXPECTED_UNFORMATTED_TRANSCRIPTS = (
     "testing testing one two three or maybe ten four",
@@ -20,8 +25,8 @@ EXPECTED_FORMATTED_TRANSCRIPTS = (
 
 
 def validate_sample(ext, expected_transcripts, out_segments):
-    base_output = "tests/good"
-    convert("samples/invalid.stm", base_output + ext)
+    base_output = f"{test_dir}/good"
+    convert(f"{sample_dir}/invalid.stm", base_output + ext)
     validated_transcript = time_aligned_text(base_output + ext)
     assert len(validated_transcript.segments) == out_segments
     for seg, expected_text in zip(validated_transcript.segments, expected_transcripts):
