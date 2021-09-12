@@ -13,6 +13,7 @@ from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.data_handlers.data_handlers_common import footer, header, separator
 from asrtoolkit.data_structures.segment import segment
 
+footer = "\n"
 
 def format_segment(seg):
     """
