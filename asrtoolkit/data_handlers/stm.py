@@ -14,6 +14,11 @@ from asrtoolkit.data_handlers.data_handlers_common import footer, header, separa
 from asrtoolkit.data_structures.segment import segment
 
 
+def footer():
+    " Returns footer with trailing line break "
+    return "\n"
+
+
 def format_segment(seg):
     """
     :param seg: segment object
