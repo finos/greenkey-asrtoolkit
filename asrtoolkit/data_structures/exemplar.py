@@ -16,6 +16,7 @@ class exemplar(object):
 
     audio_file = None
     transcript_file = None
+    n_words = 0
 
     def __init__(self, *args, **kwargs):
         " Instantiate using input args and kwargs "
