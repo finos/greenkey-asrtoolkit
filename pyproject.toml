@@ -19,6 +19,7 @@ tqdm = "*"
 webvtt-py = "*"
 rapidfuzz = "*"
 fire = "*"
+regex = "*"
 
 [tool.poetry.dev-dependencies]
 black = "*"
