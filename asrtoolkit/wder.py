@@ -158,7 +158,7 @@ def compute_wder(reference_file, transcript_file, json_format=None):
             "Error with an input file. Please check all files exist and are accepted by ASRToolkit"
         )
     else:
-        print("WDER: {:5.3f}%".format(wder(ref, hyp)))
+        return wder(ref, hyp)
 
 
 def cli():

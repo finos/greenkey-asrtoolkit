@@ -136,7 +136,13 @@ def cer(ref, hyp, remove_nsns=False):
     return 100 * CER_numerator / CER_denominator
 
 
-def compute_wer(reference_file, transcript_file, char_level=False, ignore_nsns=False):
+def compute_wer(
+    reference_file,
+    transcript_file,
+    char_level=False,
+    ignore_nsns=False,
+    json_format=None,
+):
     """
     Compares a reference and transcript file and calculates word error rate (WER) between these two files
     If --char-level is given, compute CER instead
@@ -144,17 +150,30 @@ def compute_wer(reference_file, transcript_file, char_level=False, ignore_nsns=F
     """
 
     # read files from arguments
-    ref = assign_if_valid(reference_file)
-    hyp = assign_if_valid(transcript_file)
+    ref = assign_if_valid(
+        reference_file,
+        file_format=json_format
+        if json_format and reference_file.endswith(".json")
+        else None,
+    )
+    hyp = assign_if_valid(
+        transcript_file,
+        file_format=json_format
+        if json_format and transcript_file.endswith(".json")
+        else None,
+    )
 
+    metric = None
     if ref is None or hyp is None:
         print(
             "Error with an input file. Please check all files exist and are accepted by ASRToolkit"
         )
     elif char_level:
-        print("CER: {:5.3f}%".format(cer(ref, hyp, ignore_nsns)))
+        metric = cer(ref, hyp, ignore_nsns)
     else:
-        print("WER: {:5.3f}%".format(wer(ref, hyp, ignore_nsns)))
+        metric = wer(ref, hyp, ignore_nsns)
+
+    return metric
 
 
 def cli():
