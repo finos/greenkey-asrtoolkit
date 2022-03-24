@@ -2,7 +2,6 @@
 """
 Test file conversion using samples
 """
-import hashlib
 import os
 
 from utils import get_sample_dir, get_test_dir
@@ -44,17 +43,23 @@ def test_stm_to_srt_conversion():
 def test_json_to_stm_conversion():
     "execute json to stm tests"
 
-    transcript = time_aligned_text(f"{sample_dir}/BillGatesTEDTalk.json")
+    transcript = time_aligned_text(
+        f"{sample_dir}/BillGatesTEDTalk.json", file_format="greenkey"
+    )
     convert_and_test_it_loads(transcript, f"{test_dir}/json_to_stm_test_1.stm")
 
-    transcript = time_aligned_text(f"{sample_dir}/simple_test.json")
+    transcript = time_aligned_text(
+        f"{sample_dir}/simple_test.json", file_format="greenkey"
+    )
     convert_and_test_it_loads(transcript, f"{test_dir}/json_to_stm_test_2.stm")
 
 
 def test_json_to_txt_conversion():
     "execute json to txt test"
 
-    transcript = time_aligned_text(f"{sample_dir}/simple_test.json")
+    transcript = time_aligned_text(
+        f"{sample_dir}/simple_test.json", file_format="greenkey"
+    )
     convert_and_test_it_loads(transcript, f"{test_dir}/json_to_txt_test.txt")
 
 
@@ -62,7 +67,9 @@ def test_json_to_rttm_conversion():
     """
     execute json to rttm test
     """
-    transcript = time_aligned_text(f"{sample_dir}/simple_test.json")
+    transcript = time_aligned_text(
+        f"{sample_dir}/simple_test.json", file_format="greenkey"
+    )
     convert_and_test_it_loads(transcript, f"{test_dir}/json_to_rttm_test.rttm")
 
 
@@ -70,7 +77,9 @@ def test_json_to_rttm_conversion_without_speaker():
     """
     execute json to rttm test
     """
-    transcript = time_aligned_text(f"{test_dir}/no_speaker.json")
+    transcript = time_aligned_text(
+        f"{test_dir}/no_speaker.json", file_format="greenkey"
+    )
 
     convert_and_test_it_loads(transcript, f"{test_dir}/no_speaker.rttm")
 

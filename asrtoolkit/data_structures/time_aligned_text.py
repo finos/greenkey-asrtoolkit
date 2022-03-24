@@ -104,7 +104,7 @@ class time_aligned_text(object):
         )
         self.segments = data_handler.read_file(file_name)
 
-    def write(self, file_name):
+    def write(self, file_name, file_format=None):
         """
         Output to file using segment-specific __str__ function
         """
@@ -113,7 +113,9 @@ class time_aligned_text(object):
         file_name = sanitize_hyphens(file_name)
 
         data_handler = importlib.import_module(
-            "asrtoolkit.data_handlers.{:}".format(file_extension)
+            "asrtoolkit.data_handlers.{:}".format(
+                file_format if file_format else file_extension
+            )
         )
         with open(file_name, "w", encoding="utf-8") as f:
             f.write(data_handler.header())

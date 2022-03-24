@@ -19,7 +19,7 @@ def check_input_file_validity(input_file):
         sys.exit(1)
 
 
-def convert(input_file, output_file):
+def convert(input_file, output_file, json_format=None):
     """
     Convert between text file formats (supported formats are stm, json, srt, vtt, txt, and html)
 
@@ -27,7 +27,12 @@ def convert(input_file, output_file):
     STM files are unformatted (eg 10 -> ten)
     """
     check_input_file_validity(input_file)
-    input_file = assign_if_valid(input_file)
+    input_file = assign_if_valid(
+        input_file,
+        file_format=(
+            json_format if json_format and input_file.endswith(".json") else None
+        ),
+    )
     input_file.write(output_file)
 
 

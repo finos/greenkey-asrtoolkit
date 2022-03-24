@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Module for reading/writing gk JSON files
+Module for reading/writing truleo JSON files
 """
 
 import json

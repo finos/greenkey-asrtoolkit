@@ -15,6 +15,7 @@ from asrtoolkit.file_utils.name_cleaners import (
     sanitize,
     strip_extension,
 )
+from asrtoolkit.wder import wder
 from asrtoolkit.wer import cer, wer
 
 LOGGER = logging.getLogger(__name__)
@@ -33,5 +34,6 @@ __all__ = [
     sanitize,
     strip_extension,
     time_aligned_text,
+    wder,
     wer,
 ]

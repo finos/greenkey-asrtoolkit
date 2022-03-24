@@ -6,7 +6,9 @@
 
 ### File formats supported
 
-File formats have format-specific handlers in asrtoolkit/data_handlers. The scripts `convert_transcript` and `wer` support [`stm`](http://www1.icsi.berkeley.edu/Speech/docs/sctk-1.2/infmts.htm), [`srt`](http://zuggy.wz.cz/), [`vtt`](https://w3c.github.io/webvtt/), `txt`, and [GreenKey `json`](https://transcription.greenkeytech.com/) formatted transcripts. A custom `html` format is also available, though this should not be considered a stable format for long term storage as it is subject to change without notice.
+File formats have format-specific handlers in asrtoolkit/data_handlers. The scripts `convert_transcript` and `wer` support [`stm`](http://www1.icsi.berkeley.edu/Speech/docs/sctk-1.2/infmts.htm), [`srt`](http://zuggy.wz.cz/), [`vtt`](https://w3c.github.io/webvtt/), `txt`, [GreenKey `json`](https://greenkeytech.com/) formatted transcripts, and [Truleo `json`](https://www.truleo.co/) transcripts. 
+
+A custom `html` format is also available, though this should not be considered a stable format for long term storage as it is subject to change without notice.
 
 ### convert_transcript 
 ```text

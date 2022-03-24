@@ -39,11 +39,6 @@ def test_stm_to_stm():
     validate_sample(".stm", EXPECTED_UNFORMATTED_TRANSCRIPTS, 3)
 
 
-def test_stm_to_json():
-    "Test stm to gk json validation"
-    validate_sample(".json", EXPECTED_FORMATTED_TRANSCRIPTS, 3)
-
-
 def test_stm_to_vtt():
     "Test stm to vtt validation"
     validate_sample(".vtt", EXPECTED_FORMATTED_TRANSCRIPTS, 3)

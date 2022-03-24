@@ -17,7 +17,7 @@ def test_json_initialization():
     "execute single test"
 
     input_dict = json.load(open(f"{sample_dir}/BillGatesTEDTalk.json"))
-    text_object = time_aligned_text(input_dict)
+    text_object = time_aligned_text(input_dict, file_format="greenkey")
 
     ref = (
         open(f"{sample_dir}/BillGatesTEDTalk_transcribed.stm", "r", encoding="utf8")
@@ -37,7 +37,7 @@ def test_txt_initialization():
     "execute single test"
 
     input_dict = json.load(open(f"{sample_dir}/BillGatesTEDTalk.json"))
-    text = time_aligned_text(input_dict)
+    text = time_aligned_text(input_dict, file_format="greenkey")
     text.file_extension = "txt"
 
     text_object = time_aligned_text(text.__str__())
