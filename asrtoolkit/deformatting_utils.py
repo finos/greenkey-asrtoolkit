@@ -28,7 +28,7 @@ def ordinal_to_string(input_string):
     """
 
     def has_ordinal(input_string):
-        " checks if input_string has ordinal "
+        "checks if input_string has ordinal"
         return contains_digit(input_string) and (
             input_string[-2:] == "st"
             or input_string[-2:] == "nd"
@@ -49,12 +49,12 @@ def ordinal_to_string(input_string):
 
 
 def format_dollars(dollar_string, dollars):
-    " format dollar string "
+    "format dollar string"
     return dollar_string + " dollars" if dollars and int(dollars) != 1 else "one dollar"
 
 
 def format_cents(cents_string, cents):
-    " format cent string "
+    "format cent string"
     return (
         (" and {:} cents".format(cents_string) if int(cents) != 1 else " and one cent")
         if (cents_string and cents)
@@ -63,7 +63,7 @@ def format_cents(cents_string, cents):
 
 
 def format_quantities(input_string):
-    " split off quantities and change into words"
+    "split off quantities and change into words"
 
     possible_quant = input_string[-1].upper() if input_string else ""
     quantity_dict = {"B": "billion", "M": "million", "K": "thousand"}
@@ -130,7 +130,7 @@ def dollars_to_string(input_string):
 
 
 def get_numbers_after_decicmal_point(input_string):
-    " Format every number after decimal point "
+    "Format every number after decimal point"
     ret_str = ""
     decimal = (
         input_string.split(".")[1].strip() if len(input_string.split(".")) > 1 else ""

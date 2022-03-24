@@ -27,8 +27,9 @@ conf is the confidence (probability) that the object information is correct. If 
 
 # do not delete - needed for time_aligned_text
 from asrtoolkit.data_handlers.data_handlers_common import footer, separator
-from asrtoolkit.data_structures.segment import segment
 from asrtoolkit.data_structures.formatting import clean_float
+from asrtoolkit.data_structures.segment import segment
+
 
 def header():
     "Header for rttm files is empty"
@@ -44,7 +45,7 @@ def format_segment(seg):
 
 
 def read_file(file_name):
-    """ Reads an RTTM file """
+    """Reads an RTTM file"""
 
     segments = []
     with open(file_name) as data:

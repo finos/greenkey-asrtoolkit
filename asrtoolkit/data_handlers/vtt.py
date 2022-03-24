@@ -14,7 +14,7 @@ from asrtoolkit.data_structures.formatting import seconds_to_timestamp
 
 
 def header():
-    " Returns header - see https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API for detailed use "
+    "Returns header - see https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API for detailed use"
     return "WEBVTT - This file produced by GreenKey's ASRToolkit.\n\n"
 
 
@@ -35,7 +35,7 @@ def format_segment(seg):
 
 
 def read_file(file_name):
-    """ Reads a VTT file """
+    """Reads a VTT file"""
 
     data = WebVTT.read(file_name)
     captions = data.captions

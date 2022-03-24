@@ -4,8 +4,9 @@ Test audio file splitter
 """
 import os
 
-from asrtoolkit.split_audio_file import split_audio_file
 from utils import get_test_dir
+
+from asrtoolkit.split_audio_file import split_audio_file
 
 test_dir = get_test_dir(__file__)
 

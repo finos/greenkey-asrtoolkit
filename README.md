@@ -1,8 +1,8 @@
-# GreenKey Automatic Speech Recognition (ASR) Toolkit [![Build Status](https://travis-ci.org/finos/greenkey-asrtoolkit.svg?branch=master)](https://travis-ci.org/finos/greenkey-asrtoolkit)[![FINOS - Active](https://cdn.jsdelivr.net/gh/finos/contrib-toolbox@master/images/badge-active.svg)](https://finosfoundation.atlassian.net/wiki/display/FINOS/Active)
+# Automatic Speech Recognition (ASR) Toolkit [![Build Status](https://travis-ci.org/finos/greenkey-asrtoolkit.svg?branch=master)](https://travis-ci.org/finos/greenkey-asrtoolkit)[![FINOS - Active](https://cdn.jsdelivr.net/gh/finos/contrib-toolbox@master/images/badge-active.svg)](https://finosfoundation.atlassian.net/wiki/display/FINOS/Active)
 
 ---
 
-## The GreenKey ASRToolkit provides tools for file conversion and ASR corpora organization. These are intended to simplify the workflow for building, customizing, and analyzing ASR models, useful for scientists, engineers, and other technologists in speech recognition.
+## ASRToolkit provides tools for file conversion and ASR corpora organization. These are intended to simplify the workflow for building, customizing, and analyzing ASR models, useful for scientists, engineers, and other technologists in speech recognition.
 
 ### File formats supported
 
@@ -110,49 +110,9 @@ Degrade audio files to 8 kHz format similar to G711 codec
 ```
 This script reduces audio quality of input audio files so that acoustic models can learn features from telephony with the G711 codec.
 
-### extract_excel_spreadsheets
-Note that the use of this function requires the separate installation of `pandas`. This can be done via `pip install pandas`.
-
-```text
-usage: extract_excel_spreadsheets.py [-h] [--input-folder INPUT_FOLDER]
-                                     [--output-corpus OUTPUT_CORPUS]
-
-convert a folder of excel spreadsheets to a corpus of text files
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --input-folder INPUT_FOLDER
-                        input folder of excel spreadsheets ending in .xls or
-                        .xlsx
-  --output-corpus OUTPUT_CORPUS
-                        output folder for storing text corpus
-```
-
-
-### align_json
-This aligns a gk hypothesis `json` file with a reference text file for creating forced alignment `STM` files for training new ASR models.
-Note that this function requires the installation a few extra packages
-```shell
-python3 -m pip install spacy textacy https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz#egg=en_core_web_sm
-```
-
-```text
-usage: align_json.py [-h] input_json ref output_filename
-
-align a gk json file against a reference text file
-
-positional arguments:
-  input_json       input gk json file
-  ref              reference text file
-  output_filename  output_filename
-
-optional arguments:
-  -h, --help       show this help message and exit
-```
-
 ### Requirements
 
-- Python >= 3.6.1 with `pip`
+- Python >= 3.6.2 with `pip`
 
 ## Contributing
 

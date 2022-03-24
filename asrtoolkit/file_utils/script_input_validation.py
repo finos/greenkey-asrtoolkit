@@ -15,11 +15,9 @@ def valid_input_file(file_name, valid_extensions=[]):
     tests that a file exists and that the extension is one asrtoolkit scripts can accept
     >>> import os
     >>> module_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-    >>> valid_input_file(f"{module_path}/setup.py")
+    >>> valid_input_file(f"{module_path}/pyproject.toml")
     False
-    >>> valid_input_file(f"{module_path}/setup.py", ["py"])
-    True
-    >>> valid_input_file(f"{module_path}/requirements.txt", ["txt"])
+    >>> valid_input_file(f"{module_path}/pyproject.toml", ["toml"])
     True
     """
     return isfile(file_name) and get_extension(file_name) in (

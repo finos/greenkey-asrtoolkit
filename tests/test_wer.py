@@ -3,15 +3,16 @@
 Test wer calculation
 """
 
+from utils import get_sample_dir
+
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.wer import cer, wer
-from utils import get_sample_dir
 
 sample_dir = get_sample_dir(__file__)
 
 
 def test_conversion_wer():
-    " execute single test "
+    "execute single test"
 
     reference_file = time_aligned_text(f"{sample_dir}/BillGatesTEDTalk.stm")
     transcript_file = time_aligned_text(

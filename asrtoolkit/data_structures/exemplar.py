@@ -18,7 +18,7 @@ class exemplar(object):
     transcript_file = None
 
     def __init__(self, *args, **kwargs):
-        " Instantiate using input args and kwargs "
+        "Instantiate using input args and kwargs"
         for dictionary in args:
             if isinstance(dictionary, dict):
                 for key in dictionary:
@@ -49,7 +49,7 @@ class exemplar(object):
         return bool(valid)
 
     def count_words(self, clean_func=clean_up):
-        """ Count words in a exemplar after cleaning it """
+        """Count words in a exemplar after cleaning it"""
         return (
             len(clean_func(self.transcript_file.text()).split())
             if self.validate()

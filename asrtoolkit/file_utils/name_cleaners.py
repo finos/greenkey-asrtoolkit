@@ -37,7 +37,7 @@ def sanitize(file_name, chars_to_replace="- ", silent=True):
     """
 
     def replace_char(input_char, file_name):
-        " replace specific char if present "
+        "replace specific char if present"
         if input_char in file_name and not silent:
             print(
                 "replacing '{:}'s with underscores in sph file output - ".format(c)

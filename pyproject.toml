@@ -4,12 +4,44 @@ line-length = 88
 target-version = ['py38']
 include = '\.py(x|i)?$'
 
+[tool.poetry]
+name = "asrtoolkit"
+version = "0.2.5"
+description = "ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization"
+authors = ["Matthew Goldey <https://github.com/mgoldey>","Tejas Shastry <https://github.com/tshastry>","Amy Geojo <https://github.com/ageojo>","Svyat Vergun <https://github.com/sv-github>","Ashley Shultz <https://github.com/AGiantSquid>","Colin Brochtrup <https://github.com/cbrochtrup>"]
+
+[tool.poetry.dependencies]
+python = ">=3.6.2,<4.0"
+beautifulsoup4 = "*"
+editdistance = "*"
+num2words = "*"
+tqdm = "*"
+webvtt-py = "*"
+rapidfuzz = "*"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+isort = "*"
+pylint = "*"
+flake8 = "*"
+radon = "*"
+xenon = "*"
 
 [tool.isort]
+profile = "black"
 
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-line_length = 88
+[build-system]
+requires = ["poetry-core>=1.0.0",
+  "setuptools >= 40.9.0",
+  "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.poetry.scripts]
+clean_formatting = "asrtoolkit.clean_formatting:cli"
+combine_audio_files = "asrtoolkit.combine_audio_files:main"
+convert_transcript = "asrtoolkit.convert_transcript:cli"
+degrade_audio_file = "asrtoolkit.degrade_audio_file:cli"
+prepare_audio_corpora = "asrtoolkit.prepare_audio_corpora:cli"
+split_audio_file = "asrtoolkit.split_audio_file:cli"
+wer = "asrtoolkit.wer:cli"

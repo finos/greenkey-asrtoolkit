@@ -14,12 +14,12 @@ separator = ",\n"
 
 
 def header():
-    " Returns empty header "
+    "Returns empty header"
     return '{\n"segments":['
 
 
 def footer():
-    " Returns empty footer "
+    "Returns empty footer"
     return "]}\n"
 
 

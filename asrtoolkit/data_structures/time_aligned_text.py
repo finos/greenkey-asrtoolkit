@@ -22,7 +22,7 @@ class time_aligned_text(object):
     segments = []
     file_extension = None
 
-    def __init__(self, input_data=None):
+    def __init__(self, input_data=None, file_format=None):
         """
         Instantiates a time_aligned text object
         If 'input_data' is a string, it tries to find the appropriate file.
@@ -34,11 +34,13 @@ class time_aligned_text(object):
             and isinstance(input_data, str)
             and os.path.exists(input_data)
         ):
-            self.read(input_data)
+            self.read(input_data, file_format)
         elif input_data is not None and type(input_data) in [str, dict]:
             self.file_extension = "txt" if isinstance(input_data, str) else "json"
             data_handler = importlib.import_module(
-                "asrtoolkit.data_handlers.{:}".format(self.file_extension)
+                "asrtoolkit.data_handlers.{:}".format(
+                    file_format if file_format is not None else self.file_extension
+                )
             )
             self.segments = data_handler.read_in_memory(input_data)
 
@@ -91,12 +93,14 @@ class time_aligned_text(object):
         )
         return " ".join(_.__str__(data_handler) for _ in self.segments)
 
-    def read(self, file_name):
-        """ Read a file using class-specific read function """
+    def read(self, file_name, file_format=None):
+        """Read a file using class-specific read function"""
         self.file_extension = file_name.split(".")[-1]
         self.location = file_name
         data_handler = importlib.import_module(
-            "asrtoolkit.data_handlers.{:}".format(self.file_extension)
+            "asrtoolkit.data_handlers.{:}".format(
+                file_format if file_format is not None else self.file_extension
+            )
         )
         self.segments = data_handler.read_file(file_name)
 

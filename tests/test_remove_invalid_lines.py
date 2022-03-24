@@ -3,9 +3,10 @@
 Test invalid line removal
 """
 
+from utils import get_sample_dir, get_test_dir
+
 from asrtoolkit.convert_transcript import convert
 from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
-from utils import get_sample_dir, get_test_dir
 
 test_dir = get_test_dir(__file__)
 sample_dir = get_sample_dir(__file__)
@@ -34,32 +35,32 @@ def validate_sample(ext, expected_transcripts, out_segments):
 
 
 def test_stm_to_stm():
-    " Test stm to stm validation "
+    "Test stm to stm validation"
     validate_sample(".stm", EXPECTED_UNFORMATTED_TRANSCRIPTS, 3)
 
 
 def test_stm_to_json():
-    " Test stm to gk json validation "
+    "Test stm to gk json validation"
     validate_sample(".json", EXPECTED_FORMATTED_TRANSCRIPTS, 3)
 
 
 def test_stm_to_vtt():
-    " Test stm to vtt validation "
+    "Test stm to vtt validation"
     validate_sample(".vtt", EXPECTED_FORMATTED_TRANSCRIPTS, 3)
 
 
 def test_stm_to_html():
-    " Test stm to html validation "
+    "Test stm to html validation"
     validate_sample(".html", EXPECTED_FORMATTED_TRANSCRIPTS, 3)
 
 
 def test_stm_to_srt():
-    " Test stm to gk json validation "
+    "Test stm to gk json validation"
     validate_sample(".srt", EXPECTED_FORMATTED_TRANSCRIPTS, 3)
 
 
 def test_stm_to_txt():
-    " Test stm to gk json validation "
+    "Test stm to gk json validation"
     validate_sample(".txt", EXPECTED_FORMATTED_TRANSCRIPTS, 3)
 
 

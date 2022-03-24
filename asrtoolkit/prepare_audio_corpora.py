@@ -71,7 +71,7 @@ def auto_split_corpora(corpora, min_size=50):
 
 
 def get_corpus(loc):
-    """ returns corpus for input location """
+    """returns corpus for input location"""
     return corpus({"location": loc})
 
 

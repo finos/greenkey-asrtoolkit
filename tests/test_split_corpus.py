@@ -6,16 +6,17 @@ import os
 import shutil
 from os.path import join as pjoin
 
+from utils import get_sample_dir, get_test_dir
+
 from asrtoolkit.data_structures.corpus import corpus
 from asrtoolkit.split_corpus import split_corpus
-from utils import get_sample_dir, get_test_dir
 
 test_dir = get_test_dir(__file__)
 sample_dir = get_sample_dir(__file__)
 
 
 def setup_test_corpus(orig_dir, trn_dir, dev_dir, n_exemplars):
-    """ Setup fake corpus for testing """
+    """Setup fake corpus for testing"""
     os.makedirs(orig_dir, exist_ok=True)
     os.makedirs(trn_dir, exist_ok=True)
     os.makedirs(dev_dir, exist_ok=True)
@@ -31,14 +32,14 @@ def setup_test_corpus(orig_dir, trn_dir, dev_dir, n_exemplars):
 
 
 def validate_split(directory, inds):
-    """ Validate the files were split as expected """
+    """Validate the files were split as expected"""
     assert set(os.listdir(directory)) == {
         "file-{:02d}.{}".format(i, ext) for ext in ["sph", "stm"] for i in inds
     }
 
 
 def test_split_corpus():
-    """ Test corpus splitter """
+    """Test corpus splitter"""
     n_exemplars = 10
     corpus_dir = f"{test_dir}/split-corpus"
 

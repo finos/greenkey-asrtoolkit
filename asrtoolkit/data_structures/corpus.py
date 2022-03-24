@@ -214,16 +214,16 @@ class corpus(object):
         return new_corpus.log()
 
     def __add__(self, other):
-        """ Allow addition of corpora via + operator """
+        """Allow addition of corpora via + operator"""
         return corpus({"location": None, "exemplars": self.exemplars + other.exemplars})
 
     def __iadd__(self, other):
-        """ Allow addition of corpora via += operator """
+        """Allow addition of corpora via += operator"""
         self.exemplars = self.exemplars + other.exemplars
         return self
 
     def __sub__(self, other):
-        """ Allow addition of corpora via - operator """
+        """Allow addition of corpora via - operator"""
         return corpus(
             {
                 "location": None,
@@ -232,12 +232,12 @@ class corpus(object):
         )
 
     def __isub__(self, other):
-        """ Allow subtraction of corpora via -= operator """
+        """Allow subtraction of corpora via -= operator"""
         self.exemplars = [_ for _ in self.exemplars if _ not in other.exemplars]
         return self
 
     def __getitem__(self, given):
-        """ Allow slicing of corpora via [] """
+        """Allow slicing of corpora via []"""
         return corpus(
             {
                 "location": self.location,

@@ -7,7 +7,7 @@ from asrtoolkit.clean_formatting import clean_up
 
 
 def test_clean_up():
-    " execute suite of tests "
+    "execute suite of tests"
 
     tests = [
         ("1.05", "one point zero five"),

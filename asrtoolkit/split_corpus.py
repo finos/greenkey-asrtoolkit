@@ -17,7 +17,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def log_corpus_creation(corp, name):
-    """ had to make this function to satisfy code climate """
+    """had to make this function to satisfy code climate"""
     LOGGER.info(
         "Created %s split with %d words using %d files with %d segments",
         corp.location,

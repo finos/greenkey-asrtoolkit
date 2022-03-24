@@ -32,15 +32,21 @@ def format_segment(seg):
     :return: dict: key/val pairs contain 'segment'-level information
     """
     output_dict = {}
-    output_dict["speakerInfo"] = seg.speaker
-    output_dict["startTimeSec"] = float(seg.start)
-    output_dict["endTimeSec"] = float(seg.stop)
-    output_dict["genderInfo"] = {"gender": seg.label.split(",")[-1].replace(">", "")}
-    output_dict["transcript"] = seg.text
-    output_dict["confidence"] = seg.confidence
-
-    if len(seg.formatted_text) > 0:
-        output_dict["formatted_transcript"] = seg.formatted_text
+    output_dict["speaker"] = {"label": seg.speaker, "confidence": 0.0}
+    output_dict["start"] = float(seg.start) * 1e3
+    output_dict["stop"] = float(seg.stop) * 1e3
+    output_dict["tokens"] = [
+        {
+            "token": word,
+            "asr_confidence": 0.0,
+            "label_confidence": 0.0,
+            "start": 0,
+            "stop": 0.0,
+            "label": "O",
+        }
+        for word in seg.text.split()
+    ]
+    output_dict["asr_confidence"] = seg.confidence
 
     return json.dumps(output_dict, ensure_ascii=True)
 
@@ -81,18 +87,17 @@ def parse_segment(input_seg):
     seg = None
     try:
         assign_if_present("channel")
-        assign_if_present("startTimeSec", "start")
-        assign_if_present("stopTimeSec", "stop")
-        assign_if_present("endTimeSec", "stop")
-        assign_if_present("transcript", "text")
-        assign_if_present("corrected_transcript", "text")
-        assign_if_present("formatted_transcript", "formatted_text")
-        assign_if_present("punctuated_transcript", "formatted_text")
-        assign_if_present("speakerInfo", "speaker", proc_val=sanitize)
+        assign_if_present("start", "start", proc_val=lambda val: float(val) / 1e3)
+        assign_if_present("stop", "stop", proc_val=lambda val: float(val) / 1e3)
         assign_if_present(
-            "genderInfo", "label", "gender", lambda gender: "<o,f0,{:}>".format(gender)
+            "tokens",
+            "text",
+            proc_val=lambda token_list: " ".join(
+                token["token"] for token in token_list
+            ),
         )
-        assign_if_present("confidence", "confidence")
+        assign_if_present("speaker", "speaker", "label", proc_val=sanitize)
+        assign_if_present("asr_confidence", "confidence")
 
         seg = segment(extracted_dict)
 

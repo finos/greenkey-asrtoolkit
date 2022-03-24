@@ -7,10 +7,10 @@ separator = "\n"
 
 
 def header():
-    " Returns header "
+    "Returns header"
     return ""
 
 
 def footer():
-    " Returns footer "
+    "Returns footer"
     return ""

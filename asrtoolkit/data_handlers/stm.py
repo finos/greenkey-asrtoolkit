@@ -15,7 +15,7 @@ from asrtoolkit.data_structures.segment import segment
 
 
 def footer():
-    " Returns footer with trailing line break "
+    "Returns footer with trailing line break"
     return "\n"
 
 
