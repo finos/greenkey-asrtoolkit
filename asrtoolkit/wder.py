@@ -131,7 +131,7 @@ def wder(ref, hyp):
                     s += 1
                 else:
                     s_is += 1
-    return (s_is + c_is) / (s + c)
+    return 100 * (s_is + c_is) / (s + c)
 
 
 def compute_wder(reference_file, transcript_file, json_format=None):
