@@ -33,7 +33,12 @@ def convert(input_file, output_file, json_format=None):
             json_format if json_format and input_file.endswith(".json") else None
         ),
     )
-    input_file.write(output_file)
+    input_file.write(
+        output_file,
+        file_format=json_format
+        if json_format and output_file.endswith(".json")
+        else None,
+    )
 
 
 def cli():
