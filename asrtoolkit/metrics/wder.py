@@ -90,7 +90,7 @@ def align_speaker_labels(ref, hyp):
     return speaker_mapping
 
 
-def wder(ref, hyp):
+def wder(ref, hyp, verbose=False):
     """
     Computes the word diarization error rate for two files
     See https://arxiv.org/pdf/1907.05337.pdf
@@ -131,10 +131,15 @@ def wder(ref, hyp):
                     s += 1
                 else:
                     s_is += 1
-    return 100 * (s_is + c_is) / (s + c)
+    # return a dict of results if verbose=True
+    return (
+        {"c_is": c_is, "s_is": s_is, "s": s, "c": c}
+        if verbose
+        else 100 * (s_is + c_is) / (s + c)
+    )
 
 
-def compute_wder(reference_file, transcript_file, json_format=None):
+def compute_wder(reference_file, transcript_file, json_format=None, verbose=False):
     """
     Compares a reference and transcript file and the calculates word diarization error rate (WER) between these two files
     """
@@ -158,7 +163,7 @@ def compute_wder(reference_file, transcript_file, json_format=None):
             "Error with an input file. Please check all files exist and are accepted by ASRToolkit"
         )
     else:
-        return wder(ref, hyp)
+        return wder(ref, hyp, verbose)
 
 
 def cli():
