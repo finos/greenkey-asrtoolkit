@@ -59,7 +59,10 @@ KNOWN_REPLACEMENTS = OrderedDict(
                 lambda m: " ".join(m.group().lower().replace(".", "")),
             ),
         ),
-        ("dashes", (regex.compile(r"\-[0-9]\b"), lambda m: "negative " + m.group()[1:])),
+        (
+            "dashes",
+            (regex.compile(r"\-[0-9]\b"), lambda m: "negative " + m.group()[1:]),
+        ),
         ("negatives", (regex.compile(r" \- "), lambda m: "")),
         ("positives", (regex.compile(r"\+"), lambda m: " plus ")),
         (

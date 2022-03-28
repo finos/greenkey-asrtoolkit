@@ -146,7 +146,10 @@ class Corpus:
             seg_counter += len(exemplars_in_split[-1].transcript_file.segments)
 
         new_corpus = Corpus(
-            {"location": self.location, "exemplars": exemplars_in_split,}
+            {
+                "location": self.location,
+                "exemplars": exemplars_in_split,
+            }
         )
 
         remaining_corpus = self - new_corpus
