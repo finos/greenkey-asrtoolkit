@@ -6,7 +6,7 @@ include = '\.py(x|i)?$'
 
 [tool.poetry]
 name = "asrtoolkit"
-version = "0.2.6"
+version = "0.2.7"
 description = "ASRToolkit provides tools for automatic speech recognition (ASR) file conversion and corpora organization"
 authors = ["Matthew Goldey <https://github.com/mgoldey>","Tejas Shastry <https://github.com/tshastry>","Amy Geojo <https://github.com/ageojo>","Svyat Vergun <https://github.com/sv-github>","Ashley Shultz <https://github.com/AGiantSquid>","Colin Brochtrup <https://github.com/cbrochtrup>"]
 
