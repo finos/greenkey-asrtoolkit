@@ -9,7 +9,7 @@ import editdistance
 from fire import Fire
 
 from asrtoolkit.clean_formatting import clean_up
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
+from asrtoolkit.data_structures import Transcript
 from asrtoolkit.file_utils.script_input_validation import assign_if_valid
 
 # defines global regex for tagged noises and silence
@@ -67,7 +67,7 @@ def get_wer_components(ref_string, hyp_string):
 
 def standardize_transcript(input_transcript, remove_nsns=False):
     """
-    Given an input transcript or time_aligned_text object,
+    Given an input Transcript object or string,
     remove non-speech events
     [optionally] remove non-silence noises
 
@@ -79,10 +79,10 @@ def standardize_transcript(input_transcript, remove_nsns=False):
     'this is a test'
     """
 
-    # accept time_aligned_text objects but use their output text
+    # accept Transcript objects but use their output text
     input_transcript = (
         input_transcript.text()
-        if isinstance(input_transcript, time_aligned_text)
+        if isinstance(input_transcript, Transcript)
         else input_transcript
     )
 
@@ -100,7 +100,7 @@ def standardize_transcript(input_transcript, remove_nsns=False):
 
 def wer(ref, hyp, remove_nsns=False):
     """
-    Calculate word error rate between two string or time_aligned_text objects
+    Calculate word error rate between two string or Transcript objects
     >>> wer("this is a cat", "this is a dog")
     25.0
     """
@@ -116,7 +116,7 @@ def wer(ref, hyp, remove_nsns=False):
 
 def cer(ref, hyp, remove_nsns=False):
     """
-    Calculate character error rate between two strings or time_aligned_text objects
+    Calculate character error rate between two strings or Transcript objects
     >>> cer("this cat", "this bad")
     25.0
     """

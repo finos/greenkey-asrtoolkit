@@ -9,7 +9,7 @@ import logging
 
 from fire import Fire
 
-from asrtoolkit.data_structures.corpus import corpus
+from asrtoolkit.data_structures import Corpus
 from asrtoolkit.file_utils.common_file_operations import make_list_of_dirs
 
 LOGGER = logging.getLogger()
@@ -72,7 +72,7 @@ def auto_split_corpora(corpora, min_size=50):
 
 def get_corpus(loc):
     """returns corpus for input location"""
-    return corpus({"location": loc})
+    return Corpus({"location": loc})
 
 
 def prep_all_for_training(corpora, target_dir, nested, sample_rate=16000):
@@ -98,7 +98,7 @@ def gather_all_corpora(corpora_dirs):
         for data_dir in data_dirs
     }
 
-    corpora["unsorted"] = corpus()
+    corpora["unsorted"] = Corpus()
     for unsorted_corpus in list(map(get_corpus, corpora_dirs)):
         corpora["unsorted"] += unsorted_corpus
     return corpora

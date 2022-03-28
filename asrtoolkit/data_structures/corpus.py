@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Module for organizing SPH/MP3/WAV & STM files from a corpus
+Module for organizing SPH/MP3/WAV & STM files from a Corpus
 """
 
 import glob
@@ -11,10 +11,11 @@ from functools import partial
 
 from tqdm import tqdm
 
-from asrtoolkit.data_structures.audio_file import audio_file
-from asrtoolkit.data_structures.exemplar import exemplar
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
 from asrtoolkit.file_utils.name_cleaners import basename, strip_extension
+
+from .audio_file import AudioFile
+from .exemplar import Exemplar
+from .time_aligned_text import Transcript
 
 
 def get_files(data_dir, extension):
@@ -27,10 +28,10 @@ def get_files(data_dir, extension):
     return files
 
 
-class corpus(object):
+class Corpus:
     """
-    Create a corpus object for storing information about
-    the location and count of files in a corpus
+    Create a Corpus object for storing information about
+    the location and count of files in a Corpus
     """
 
     location = None
@@ -45,10 +46,10 @@ class corpus(object):
         """
         for dictionary in args:
             if isinstance(dictionary, dict):
-                for key in dictionary:
-                    setattr(self, key, dictionary[key])
-        for key in kwargs:
-            setattr(self, key, kwargs[key])
+                for key, value in dictionary.items():
+                    setattr(self, key, value)
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
         # only if not defined above should we search for exemplars
         # based on location
@@ -59,12 +60,10 @@ class corpus(object):
 
             audio_extensions_to_try = ["sph", "wav", "mp3"][::-1]
             self.exemplars += [
-                exemplar(
+                Exemplar(
                     {
-                        "audio_file": audio_file(fl),
-                        "transcript_file": time_aligned_text(
-                            strip_extension(fl) + ".stm"
-                        ),
+                        "audio_file": AudioFile(fl),
+                        "transcript_file": Transcript(strip_extension(fl) + ".stm"),
                     }
                 )
                 for audio_extension in audio_extensions_to_try
@@ -76,10 +75,10 @@ class corpus(object):
 
             # gather all exemplars from /stm and /sph subdirectories if present
             self.exemplars += [
-                exemplar(
+                Exemplar(
                     {
-                        "audio_file": audio_file(fl),
-                        "transcript_file": time_aligned_text(
+                        "audio_file": AudioFile(fl),
+                        "transcript_file": Transcript(
                             self.location
                             + "/stm/"
                             + basename(strip_extension(fl))
@@ -111,7 +110,7 @@ class corpus(object):
 
     def count_exemplar_words(self):
         """
-        Count the number of words in valid corpus exemplars
+        Count the number of words in valid Corpus exemplars
         adds attribute n_words to exemplars
         """
         valid_exemplars = [_ for _ in self.exemplars if _.validate()]
@@ -132,7 +131,7 @@ class corpus(object):
         # Raise error if we inputs are invalid to avoid infinite loop
         if split_words < 0 or split_words > total_words:
             raise ValueError(
-                "cannot split corpus with {} words into split with {} words".format(
+                "cannot split Corpus with {} words into split with {} words".format(
                     total_words, split_words
                 )
             )
@@ -146,11 +145,8 @@ class corpus(object):
             word_counter += exemplars_in_split[-1].n_words
             seg_counter += len(exemplars_in_split[-1].transcript_file.segments)
 
-        new_corpus = corpus(
-            {
-                "location": self.location,
-                "exemplars": exemplars_in_split,
-            }
+        new_corpus = Corpus(
+            {"location": self.location, "exemplars": exemplars_in_split,}
         )
 
         remaining_corpus = self - new_corpus
@@ -174,7 +170,7 @@ class corpus(object):
 
     def calculate_number_of_segments(self):
         """
-        Calculate how many segments are in this corpus
+        Calculate how many segments are in this Corpus
         """
         return sum(len(eg.transcript_file.segments) for eg in self.exemplars)
 
@@ -183,7 +179,7 @@ class corpus(object):
         Run validation and audio file preparation steps
         """
 
-        # write corpus back in place if no target
+        # write Corpus back in place if no target
         target = self.location if target is None else target
 
         executor = ThreadPoolExecutor()
@@ -204,7 +200,7 @@ class corpus(object):
         # trigger conversion and gather results
         new_exemplars = [future.result() for future in tqdm(futures)]
 
-        new_corpus = corpus(
+        new_corpus = Corpus(
             {
                 "location": target,
                 "exemplars": [eg for eg in new_exemplars if eg is not None],
@@ -215,7 +211,7 @@ class corpus(object):
 
     def __add__(self, other):
         """Allow addition of corpora via + operator"""
-        return corpus({"location": None, "exemplars": self.exemplars + other.exemplars})
+        return Corpus({"location": None, "exemplars": self.exemplars + other.exemplars})
 
     def __iadd__(self, other):
         """Allow addition of corpora via += operator"""
@@ -224,7 +220,7 @@ class corpus(object):
 
     def __sub__(self, other):
         """Allow addition of corpora via - operator"""
-        return corpus(
+        return Corpus(
             {
                 "location": None,
                 "exemplars": [_ for _ in self.exemplars if _ not in other.exemplars],
@@ -234,11 +230,10 @@ class corpus(object):
     def __isub__(self, other):
         """Allow subtraction of corpora via -= operator"""
         self.exemplars = [_ for _ in self.exemplars if _ not in other.exemplars]
-        return self
 
     def __getitem__(self, given):
         """Allow slicing of corpora via []"""
-        return corpus(
+        return Corpus(
             {
                 "location": self.location,
                 "exemplars": [self.exemplars[given]]

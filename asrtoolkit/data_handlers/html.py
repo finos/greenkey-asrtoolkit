@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 # do not delete - needed in time_aligned_text
 from asrtoolkit.data_handlers.data_handlers_common import separator
-from asrtoolkit.data_structures.segment import segment
+from asrtoolkit.data_structures import Segment
 
 
 def table_header(text, width):
@@ -72,7 +72,7 @@ def parse_line(line):
     if cols:
         start_stop, speaker, text = [[val for val in col.children][0] for col in cols]
         start, stop = start_stop[1:-1].split(" - ")
-        seg = segment({"speaker": speaker, "start": start, "stop": stop, "text": text})
+        seg = Segment({"speaker": speaker, "start": start, "stop": stop, "text": text})
         seg = seg if seg.validate() else None
     return seg
 

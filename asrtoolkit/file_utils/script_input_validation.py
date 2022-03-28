@@ -26,11 +26,7 @@ def valid_input_file(file_name, valid_extensions=[]):
 
 
 def assign_if_valid(file_name, file_format=None):
-    from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
+    from asrtoolkit.data_structures import Transcript
 
-    " returns a time_aligned_text object if valid else None"
-    return (
-        time_aligned_text(file_name, file_format)
-        if valid_input_file(file_name)
-        else None
-    )
+    "returns a time_aligned_text object if valid else None"
+    return Transcript(file_name, file_format) if valid_input_file(file_name) else None

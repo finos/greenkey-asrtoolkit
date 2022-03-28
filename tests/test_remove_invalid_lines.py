@@ -6,7 +6,7 @@ Test invalid line removal
 from utils import get_sample_dir, get_test_dir
 
 from asrtoolkit.convert_transcript import convert
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
+from asrtoolkit.data_structures import Transcript
 
 test_dir = get_test_dir(__file__)
 sample_dir = get_sample_dir(__file__)
@@ -28,7 +28,7 @@ EXPECTED_FORMATTED_TRANSCRIPTS = (
 def validate_sample(ext, expected_transcripts, out_segments):
     base_output = f"{test_dir}/good"
     convert(f"{sample_dir}/invalid.stm", base_output + ext)
-    validated_transcript = time_aligned_text(base_output + ext)
+    validated_transcript = Transcript(base_output + ext)
     assert len(validated_transcript.segments) == out_segments
     for seg, expected_text in zip(validated_transcript.segments, expected_transcripts):
         assert seg.text == expected_text

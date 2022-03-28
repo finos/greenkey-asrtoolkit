@@ -7,7 +7,7 @@ This expects a segment from class derived in convert_text
 
 # do not delete - needed in time_aligned_text
 from asrtoolkit.data_handlers.data_handlers_common import footer, header, separator
-from asrtoolkit.data_structures.segment import segment
+from asrtoolkit.data_structures import Segment
 
 
 def format_segment(seg):
@@ -23,7 +23,7 @@ def read_in_memory(input_data):
     """
     segments = []
     for line in input_data.splitlines():
-        segments.append(segment({"text": line.strip()}))
+        segments.append(Segment({"text": line.strip()}))
     return segments
 
 

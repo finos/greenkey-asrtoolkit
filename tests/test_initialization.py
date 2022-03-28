@@ -7,7 +7,7 @@ import json
 
 from utils import get_sample_dir, get_test_dir
 
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
+from asrtoolkit.data_structures import Transcript
 
 test_dir = get_test_dir(__file__)
 sample_dir = get_sample_dir(__file__)
@@ -17,7 +17,7 @@ def test_json_initialization():
     "execute single test"
 
     input_dict = json.load(open(f"{sample_dir}/BillGatesTEDTalk.json"))
-    text_object = time_aligned_text(input_dict, file_format="greenkey")
+    text_object = Transcript(input_dict, file_format="greenkey")
 
     ref = (
         open(f"{sample_dir}/BillGatesTEDTalk_transcribed.stm", "r", encoding="utf8")
@@ -37,10 +37,10 @@ def test_txt_initialization():
     "execute single test"
 
     input_dict = json.load(open(f"{sample_dir}/BillGatesTEDTalk.json"))
-    text = time_aligned_text(input_dict, file_format="greenkey")
+    text = Transcript(input_dict, file_format="greenkey")
     text.file_extension = "txt"
 
-    text_object = time_aligned_text(text.__str__())
+    text_object = Transcript(text.__str__())
 
     ref = (
         open(f"{sample_dir}/BillGatesTEDTalk_transcribed.txt", "r", encoding="utf8")

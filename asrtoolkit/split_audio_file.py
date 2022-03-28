@@ -8,8 +8,7 @@ import sys
 
 from fire import Fire
 
-from asrtoolkit.data_structures.audio_file import audio_file
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
+from asrtoolkit.data_structures import AudioFile, Transcript
 from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
 LOGGER = logging.getLogger(__name__)
@@ -21,8 +20,8 @@ def split_audio_file(source_audio_file, source_transcript, target_directory="spl
     into target_directory
     Results in stm and sph files in target directory
     """
-    source_audio = audio_file(source_audio_file)
-    transcript = time_aligned_text(source_transcript)
+    source_audio = AudioFile(source_audio_file)
+    transcript = Transcript(source_transcript)
     source_audio.split(transcript, target_directory)
 
 

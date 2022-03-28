@@ -4,36 +4,37 @@ import logging
 from num2words import base
 from pkg_resources import get_distribution
 
-from asrtoolkit.clean_formatting import clean_up
-from asrtoolkit.convert_transcript import convert
-from asrtoolkit.data_structures.audio_file import audio_file, combine_audio
-from asrtoolkit.data_structures.corpus import corpus
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
-from asrtoolkit.file_utils.name_cleaners import (
-    basename,
-    get_extension,
-    sanitize,
-    strip_extension,
+from .clean_formatting import clean_up
+from .convert_transcript import convert
+from .data_structures import (
+    AudioFile,
+    Corpus,
+    Exemplar,
+    Segment,
+    Transcript,
+    combine_audio,
 )
-from asrtoolkit.wder import wder
-from asrtoolkit.wer import cer, wer
+from .file_utils.name_cleaners import basename, get_extension, sanitize, strip_extension
+from .metrics import cer, get_words_and_index_mapping, wder, wer, tswde
 
 LOGGER = logging.getLogger(__name__)
 
 __version__ = get_distribution("asrtoolkit").version
 __all__ = [
-    audio_file,
+    AudioFile,
     base,
     basename,
     cer,
     clean_up,
     combine_audio,
     convert,
-    corpus,
+    Corpus,
+    Exemplar,
     get_extension,
     sanitize,
     strip_extension,
-    time_aligned_text,
+    Transcript,
     wder,
     wer,
+    tswde,
 ]

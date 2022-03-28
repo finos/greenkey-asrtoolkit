@@ -8,7 +8,7 @@ import logging
 import string
 from collections import OrderedDict
 
-import regex as re
+import regex
 from fire import Fire
 
 from asrtoolkit.deformatting_utils import (
@@ -23,28 +23,28 @@ from asrtoolkit.file_utils.script_input_validation import valid_input_file
 LOGGER = logging.getLogger(__name__)
 
 # preserve any unicode letters
-invalid_chars = re.compile(r"[^\p{L}<\[\]> \']", re.IGNORECASE)
+invalid_chars = regex.compile(r"[^\p{L}<\[\]> \']", regex.IGNORECASE)
 
-spaces = re.compile(r"\s+")
+spaces = regex.compile(r"\s+")
 
 KNOWN_REPLACEMENTS = OrderedDict(
     [
-        ("millions", (re.compile(r"\b(mln|mio|mlns)\b"), lambda m: "million")),
-        ("pleases", (re.compile(r"\b(plz|pls)\b"), lambda m: "please")),
-        ("thanks", (re.compile(r"\b(thks|thx)\b"), lambda m: "thanks")),
-        ("otc", (re.compile(r"\b(otc)\b"), lambda m: "o t c")),
-        ("ellipses", (re.compile(r"\.{2,}"), lambda m: " ")),
+        ("millions", (regex.compile(r"\b(mln|mio|mlns)\b"), lambda m: "million")),
+        ("pleases", (regex.compile(r"\b(plz|pls)\b"), lambda m: "please")),
+        ("thanks", (regex.compile(r"\b(thks|thx)\b"), lambda m: "thanks")),
+        ("otc", (regex.compile(r"\b(otc)\b"), lambda m: "o t c")),
+        ("ellipses", (regex.compile(r"\.{2,}"), lambda m: " ")),
         (
             "websites",
             (
-                re.compile(r"[.](net|org|com|gov)\b"),
+                regex.compile(r"[.](net|org|com|gov)\b"),
                 lambda m: " dot " + m.group().lower().replace(".", ""),
             ),
         ),
         (
             "phone_numbers",
             (
-                re.compile(
+                regex.compile(
                     r"\b((1|44)[ -.]?)?([\(]?([0-9]{1,}[\)]?[ -.]?){2,5})[0-9]{4}\b"
                 ),
                 lambda m: " ".join(
@@ -55,24 +55,24 @@ KNOWN_REPLACEMENTS = OrderedDict(
         (
             "acronyms",
             (
-                re.compile(r"\b(([A-Z]){1,}[.]?){2,}\b"),
+                regex.compile(r"\b(([A-Z]){1,}[.]?){2,}\b"),
                 lambda m: " ".join(m.group().lower().replace(".", "")),
             ),
         ),
-        ("dashes", (re.compile(r"\-[0-9]\b"), lambda m: "negative " + m.group()[1:])),
-        ("negatives", (re.compile(r" \- "), lambda m: "")),
-        ("positives", (re.compile(r"\+"), lambda m: " plus ")),
+        ("dashes", (regex.compile(r"\-[0-9]\b"), lambda m: "negative " + m.group()[1:])),
+        ("negatives", (regex.compile(r" \- "), lambda m: "")),
+        ("positives", (regex.compile(r"\+"), lambda m: " plus ")),
         (
             "ordinals",
             (
-                re.compile(r"[0-9]{1,}(st|nd|rd|th)"),
+                regex.compile(r"[0-9]{1,}(st|nd|rd|th)"),
                 lambda m: ordinal_to_string(m.group()),
             ),
         ),
         (
             "many_dollars",
             (
-                re.compile(r"\$([0-9]{1,}\.?[0-9]{0,})\s(billion|million|trillion)"),
+                regex.compile(r"\$([0-9]{1,}\.?[0-9]{0,})\s(billion|million|trillion)"),
                 lambda m: " ".join(
                     [digits_to_string(m.groups()[0]), m.groups()[1], "dollars"]
                 ),
@@ -81,33 +81,33 @@ KNOWN_REPLACEMENTS = OrderedDict(
         (
             "dollars",
             (
-                re.compile(r"\$[0-9]{1,}\.?[0-9]{0,}[mbkMBK]?"),
+                regex.compile(r"\$[0-9]{1,}\.?[0-9]{0,}[mbkMBK]?"),
                 lambda m: dollars_to_string(m.group()),
             ),
         ),
-        ("percent", (re.compile(r"\%"), lambda m: " percent")),
+        ("percent", (regex.compile(r"\%"), lambda m: " percent")),
         (
             "fractions",
             (
-                re.compile(r"\b[0-9]\s?\/\s?[0-9]\b"),
+                regex.compile(r"\b[0-9]\s?\/\s?[0-9]\b"),
                 lambda m: fraction_to_string(m.group()),
             ),
         ),
         (
             "plural_numbers",
             (
-                re.compile(r"\b[0-9]{1,}s\b"),
+                regex.compile(r"\b[0-9]{1,}s\b"),
                 lambda m: plural_numbers_to_string(m.group()),
             ),
         ),
         (
             "numbers",
             (
-                re.compile(r"[0-9\.]{1,}"),
+                regex.compile(r"[0-9\.]{1,}"),
                 lambda m: " " + digits_to_string(m.group()) + " ",
             ),
         ),
-        ("apostrophes", (re.compile(r"\'"), lambda m: " '")),
+        ("apostrophes", (regex.compile(r"\'"), lambda m: " '")),
     ]
 )
 
@@ -142,7 +142,7 @@ def apply_all_regex_and_replacements(input_line):
 
     for pat in KNOWN_REPLACEMENTS:
         try:
-            input_line = re.sub(
+            input_line = regex.sub(
                 KNOWN_REPLACEMENTS[pat][0], KNOWN_REPLACEMENTS[pat][1], input_line
             )
         except Exception as exc:

@@ -8,7 +8,7 @@ from os.path import join as pjoin
 
 from utils import get_sample_dir, get_test_dir
 
-from asrtoolkit.data_structures.corpus import corpus
+from asrtoolkit.data_structures import Corpus
 from asrtoolkit.split_corpus import split_corpus
 
 test_dir = get_test_dir(__file__)
@@ -49,7 +49,7 @@ def test_split_corpus():
     dev_dir = pjoin(split_dir, "dev")
 
     setup_test_corpus(orig_dir, trn_dir, dev_dir, n_exemplars)
-    orig_corpus = corpus({"location": orig_dir})
+    orig_corpus = Corpus({"location": orig_dir})
     split_corpus(
         orig_dir,
         split_dir=split_dir,
@@ -61,7 +61,7 @@ def test_split_corpus():
     )
 
     # Make sure we didn't destroy input data
-    final_corpus = corpus({"location": orig_dir})
+    final_corpus = Corpus({"location": orig_dir})
     assert orig_corpus.validate() == 1
     assert final_corpus.validate() == 1
     orig_hashes = [_.hash() for _ in orig_corpus.exemplars]
@@ -69,7 +69,7 @@ def test_split_corpus():
     assert all(h in final_hashes for h in orig_hashes)
 
     # Make sure correct number of words present in data split
-    dev_corpus = corpus({"location": dev_dir})
+    dev_corpus = Corpus({"location": dev_dir})
     assert sum(e.count_words() for e in dev_corpus.exemplars) == 20
     assert dev_corpus.validate()
 

@@ -11,7 +11,7 @@ from random import seed
 
 from fire import Fire
 
-from asrtoolkit.data_structures.corpus import corpus
+from asrtoolkit.data_structures import Corpus
 
 LOGGER = logging.getLogger(__name__)
 
@@ -19,8 +19,9 @@ LOGGER = logging.getLogger(__name__)
 def log_corpus_creation(corp, name):
     """had to make this function to satisfy code climate"""
     LOGGER.info(
-        "Created %s split with %d words using %d files with %d segments",
+        "Created %s split %s with %d words using %d files with %d segments",
         corp.location,
+        name,
         sum(map(lambda x: x.n_words, corp.exemplars)),
         len(corp.exemplars),
         corp.calculate_number_of_segments(),
@@ -64,7 +65,7 @@ def split_corpus(
     """
     seed(rand_seed)
 
-    c = corpus({"location": in_dir})
+    c = Corpus({"location": in_dir})
     LOGGER.debug("%d exemplars before validating them", len(c.exemplars))
     valid_exemplars, total_words = c.count_exemplar_words()
     c.exemplars = valid_exemplars

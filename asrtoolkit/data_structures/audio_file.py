@@ -94,9 +94,9 @@ def combine_audio(audio_files, output_file, gain=False):
     )
 
 
-class audio_file(object):
+class AudioFile:
     """
-    Create a audio_file object for
+    Create an AudioFile object for
     - storing location
     - retrieving a unique hash
     - resampling for training
@@ -126,7 +126,7 @@ class audio_file(object):
         """
         Converts to single channel (from channel 1) audio file
         in SPH file format
-        Returns audio_file object on success, else None
+        Returns AudioFile object on success, else None
         """
         if file_name.split(".")[-1] != "sph":
             LOGGER.warning(
@@ -138,7 +138,7 @@ class audio_file(object):
 
         # return None if error code given, otherwise return audio_file object
         output_file = (
-            audio_file(file_name)
+            AudioFile(file_name)
             if not subprocess.call(
                 "sox -V1 {} {} rate {} remix -".format(
                     self.location, file_name, sample_rate

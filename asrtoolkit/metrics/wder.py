@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Python function for computing the word diarizatino error rate for Automatic Speech Recognition files
+Python function for computing the word diarization error rate for Automatic Speech Recognition files
 following https://arxiv.org/pdf/1907.05337.pdf
 """
 

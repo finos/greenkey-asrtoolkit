@@ -11,7 +11,7 @@ from asrtoolkit.data_structures.formatting import clean_float
 LOGGER = logging.getLogger(__name__)
 
 
-class segment(object):
+class Segment:
     """
     Class for holding segment-specific information
     Segment objects corresponds to dict under the key 'segment'
@@ -54,7 +54,7 @@ class segment(object):
         Note: `channel` (as currently defined) applies only to audio input
           - all chat data will retain default value of '1'
 
-        >>> seg = segment({"text":"this is a test"})
+        >>> seg = Segment({"text":"this is a test"})
 
         """
         for dictionary in [_ for _ in args if isinstance(_, dict)]:
@@ -66,7 +66,7 @@ class segment(object):
     def __str__(self, data_handler=None):
         """
         Returns the string corresponding to TXT format by default
-        >>> seg = segment({"text":"this is a test"})
+        >>> seg = Segment({"text":"this is a test"})
         >>> print(seg)
         this is a test
         """

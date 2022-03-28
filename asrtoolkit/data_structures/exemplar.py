@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Stores exemplar class for corpus management
+Stores Exemplar class for corpus management
 """
 import os
 
@@ -9,9 +9,9 @@ from asrtoolkit.clean_formatting import clean_up
 from asrtoolkit.file_utils.name_cleaners import basename, strip_extension
 
 
-class exemplar(object):
+class Exemplar:
     """
-    Create an exemplar class to pair one audio file with one transcript file
+    Create an Exemplar class to pair one audio file with one transcript file
     """
 
     audio_file = None
@@ -21,14 +21,14 @@ class exemplar(object):
         "Instantiate using input args and kwargs"
         for dictionary in args:
             if isinstance(dictionary, dict):
-                for key in dictionary:
-                    setattr(self, key, dictionary[key])
-        for key in kwargs:
-            setattr(self, key, kwargs[key])
+                for key, value in dictionary.items():
+                    setattr(self, key, value)
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def validate(self):
         """
-        Validates exemplar object by constraining that the filenames before the
+        Validates Exemplar object by constraining that the filenames before the
         extension are the same
         """
 
@@ -49,7 +49,7 @@ class exemplar(object):
         return bool(valid)
 
     def count_words(self, clean_func=clean_up):
-        """Count words in a exemplar after cleaning it"""
+        """Count words in a Exemplar after cleaning it"""
         return (
             len(clean_func(self.transcript_file.text()).split())
             if self.validate()
@@ -58,8 +58,8 @@ class exemplar(object):
 
     def prepare_for_training(self, target, sample_rate=16000, nested=False):
         """
-        Prepare one exemplar for training
-        Returning a new exemplar object with updated file locations
+        Prepare one Exemplar for training
+        Returning a new Exemplar object with updated file locations
         and a resampled audio_file
         """
         if nested:
@@ -76,14 +76,13 @@ class exemplar(object):
             )
 
         af = self.audio_file.prepare_for_training(
-            af_target_file,
-            sample_rate=sample_rate,
+            af_target_file, sample_rate=sample_rate,
         )
 
         tf = self.transcript_file.write(tf_target_file)
 
         return (
-            exemplar({"audio_file": af, "transcript_file": tf})
+            Exemplar({"audio_file": af, "transcript_file": tf})
             if all([af, tf])
             else None
         )

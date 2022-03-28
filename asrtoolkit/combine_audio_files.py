@@ -9,8 +9,7 @@ import os
 import sys
 from functools import reduce
 
-from asrtoolkit.data_structures.audio_file import audio_file, combine_audio
-from asrtoolkit.data_structures.time_aligned_text import time_aligned_text
+from asrtoolkit.data_structures import AudioFile, Transcript, combine_audio
 from asrtoolkit.file_utils.name_cleaners import strip_extension
 from asrtoolkit.file_utils.script_input_validation import valid_input_file
 
@@ -19,7 +18,7 @@ LOGGER = logging.getLogger(__name__)
 
 def check_transcript(transcript):
     if valid_input_file(transcript):
-        return time_aligned_text(input_data=transcript)
+        return Transcript(input_data=transcript)
     else:
         LOGGER.error("Invalid transcript file {}".format(transcript))
         sys.exit(1)
@@ -27,7 +26,7 @@ def check_transcript(transcript):
 
 def check_audio_file(audio_file_name):
     if valid_input_file(audio_file_name, ["mp3", "sph", "wav", "au", "raw"]):
-        return audio_file(audio_file_name)
+        return AudioFile(audio_file_name)
     else:
         LOGGER.error("Invalid audio file {}".format(audio_file_name))
         sys.exit(1)

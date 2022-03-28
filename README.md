@@ -2,11 +2,20 @@
 
 ---
 
-## ASRToolkit provides tools for file conversion and ASR corpora organization. These are intended to simplify the workflow for building, customizing, and analyzing ASR models, useful for scientists, engineers, and other technologists in speech recognition.
+## Overview
+
+ASRToolkit provides tools for file conversion and ASR corpora organization.
+These are intended to simplify the workflow for building, customizing, and analyzing ASR models, useful for scientists, engineers, and other technologists in speech recognition.
 
 ### File formats supported
 
-File formats have format-specific handlers in asrtoolkit/data_handlers. The scripts `convert_transcript` and `wer` support [`stm`](http://www1.icsi.berkeley.edu/Speech/docs/sctk-1.2/infmts.htm), [`srt`](http://zuggy.wz.cz/), [`vtt`](https://w3c.github.io/webvtt/), `txt`, [GreenKey `json`](https://greenkeytech.com/) formatted transcripts, and [Truleo `json`](https://www.truleo.co/) transcripts. 
+File formats have format-specific handlers in asrtoolkit/data_handlers.
+The scripts `convert_transcript` and `wer` support [`stm`](http://www1.icsi.berkeley.edu/Speech/docs/sctk-1.2/infmts.htm), 
+[`srt`](http://zuggy.wz.cz/), 
+[`vtt`](https://w3c.github.io/webvtt/), 
+`txt`, 
+[GreenKey `json`](https://greenkeytech.com/) formatted transcripts, 
+and [Truleo `json`](https://www.truleo.co/) transcripts.
 
 A custom `html` format is also available, though this should not be considered a stable format for long term storage as it is subject to change without notice.
 
@@ -25,11 +34,10 @@ optional arguments:
 ```
 This tool allows for easy conversion among file formats listed above.
 
-Note: Attributes of a segment object not present in a parsed file retain their default values
+Note: Attributes of a `Segment` object not present in a parsed file retain their default values
 
-- For example, a `segment` object is created for each line of an STM line
+- For example, a `Segment` object is created for each line of an STM line
 - each is initialized with the following default values which are not encoded in STM files: `formatted_text=''`;  `confidence=1.0` 
-
 
 
 ### wer
@@ -65,13 +73,15 @@ optional arguments:
   -h, --help  show this help message and exit
 
 ```
-This script standardizes how abbreviations, numbers, and other formatted text is expressed so that ASR engines can easily use these files as training or testing data. Standardizing the formatting of output is essential for reproducible measurements of ASR accuracy.
+This script standardizes how abbreviations, numbers, and other formatted text is expressed so that ASR engines can easily use these files as training or testing data.
+Standardizing the formatting of output is essential for reproducible measurements of ASR accuracy.
 
 ### split_audio_file 
 ```text
 usage: split_audio_file [-h] [--target-dir TARGET_DIR] audio_file transcript
 
-Split an audio file using valid segments from a transcript file. For this
+Split an audio file using valid segments from a transcript file.
+or this
 utility, transcript files must contain start/stop times.
 
 positional arguments:
@@ -89,8 +99,8 @@ optional arguments:
 usage: prepare_audio_corpora [-h] [--target-dir TARGET_DIR]
                              corpora [corpora ...]
 
-Copy and organize specified corpora into a target directory. Training,
-testing, and development sets will be created automatically if not already
+Copy and organize specified corpora into a target directory.
+Training, testing, and development sets will be created automatically if not already
 defined.
 
 positional arguments:
@@ -102,7 +112,11 @@ optional arguments:
   --target-dir TARGET_DIR
                         Path to target directory
 ```
-This script scrapes a list of directories for paired STM and SPH files. If `train`, `test`, and `dev` folders are present, these labels are used for the output folder. By default, a target directory of 'input-data' will be created. Note that filenames with hyphens will be sanitized to underscores and that audio files will be forced to single channel, 16 kHz, signed PCM format. If two channels are present, only the first will be used.
+This script scrapes a list of directories for paired STM and SPH files.
+If `train`, `test`, and `dev` folders are present, these labels are used for the output folder.
+By default, a target directory of 'input-data' will be created.
+Note that filenames with hyphens will be sanitized to underscores and that audio files will be forced to single channel, 16 kHz, signed PCM format.
+If two channels are present, only the first will be used.
 
 ### degrade_audio_file 
 ```text
@@ -130,7 +144,9 @@ Please make sure you read and observe our [Code of Conduct](https://raw.githubus
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
 
-_NOTE:_ Commits and pull requests to FINOS repositories will only be accepted from those contributors with an active, executed Individual Contributor License Agreement (ICLA) with FINOS OR who are covered under an existing and active Corporate Contribution License Agreement (CCLA) executed with FINOS. Commits from individuals not covered under an ICLA or CCLA will be flagged and blocked by the FINOS Clabot tool. Please note that some CCLAs require individuals/employees to be explicitly named on the CCLA.
+_NOTE:_ Commits and pull requests to FINOS repositories will only be accepted from those contributors with an active, executed Individual Contributor License Agreement (ICLA) with FINOS OR who are covered under an existing and active Corporate Contribution License Agreement (CCLA) executed with FINOS.
+Commits from individuals not covered under an ICLA or CCLA will be flagged and blocked by the FINOS Clabot tool.
+Please note that some CCLAs require individuals/employees to be explicitly named on the CCLA.
 
 *Need an ICLA? Unsure if you are covered under an existing CCLA? Email [help@finos.org](mailto:help@finos.org)*
 

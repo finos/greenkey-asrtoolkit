@@ -6,7 +6,7 @@ Module for reading/writing gk JSON files
 import json
 import logging
 
-from asrtoolkit.data_structures.segment import segment
+from asrtoolkit.data_structures import Segment
 from asrtoolkit.file_utils.name_cleaners import sanitize
 
 LOGGER = logging.getLogger(__name__)
@@ -25,10 +25,10 @@ def footer():
 
 def format_segment(seg):
     """
-    Formats a segment assuming it's an instance of class segment with elements
+    Formats a Segment assuming it's an instance of class Segment with elements
     filename, channel, speaker, start and stop times, label, and text
 
-    :param: seg: segment object
+    :param: seg: Segment object
     :return: dict: key/val pairs contain 'segment'-level information
     """
     output_dict = {}
@@ -47,10 +47,10 @@ def format_segment(seg):
 
 def parse_segment(input_seg):
     """
-    Creates an asrtoolkit segment object from an input gk segment
+    Creates an asrtoolkit Segment object from an input gk Segment
     :param: input_seg: dict (segment-level dict: input_data['segments'][i]
       -> dict with keys 'channel', 'startTimeSec' etc mapping to attributes
-    :return: asrtoolkit segment object
+    :return: asrtoolkit Segment object
     """
     extracted_dict = {}
 
@@ -58,12 +58,12 @@ def parse_segment(input_seg):
         value, dict_key=None, interior_key=None, proc_val=lambda val: val
     ):
         """
-        This transforms gk segment data into a dictionary for input
-        into the asrtoolkit segment object
+        This transforms gk Segment data into a dictionary for input
+        into the asrtoolkit Segment object
 
         Assigns value to extracted_dict object if present in input_seg
 
-        :param value:         key from the inside of gk segment
+        :param value:         key from the inside of gk Segment
         :param dict_key:      key to which value should be assigned
         :param interior_key:  sometimes values are nested under this
         :param proc_val:      function formatting the value
@@ -94,7 +94,7 @@ def parse_segment(input_seg):
         )
         assign_if_present("confidence", "confidence")
 
-        seg = segment(extracted_dict)
+        seg = Segment(extracted_dict)
 
     except Exception as exc:
         LOGGER.exception(exc)
@@ -108,11 +108,11 @@ def read_in_memory(input_data):
 
     :param: input_data: dict with key 'segments'
       input_data['segments']: List[Dict];
-      - segment_dicts contain key/val pairs that map to `segment` attributes
+      - Segment_dicts contain key/val pairs that map to `segment` attributes
         NB that labels of mapped key-attribute pairs may differ
-          for example, segment['startTimeSec'] -> segment.start
+          for example, Segment['startTimeSec'] -> Segment.start
 
-    :return: list of segment objects
+    :return: list of Segment objects
       applies `parse_segment` function to each dict in input_data['segments']
 
     """
@@ -122,7 +122,7 @@ def read_in_memory(input_data):
 
 def read_file(file_name):
     """
-    Reads a JSON file, skipping any bad segments
+    Reads a JSON file, skipping any bad Segments
     """
     with open(file_name, encoding="utf-8") as f:
         input_json = json.load(f)

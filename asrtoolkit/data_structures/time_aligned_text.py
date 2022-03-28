@@ -13,7 +13,7 @@ from asrtoolkit.file_utils.name_cleaners import (
 )
 
 
-class time_aligned_text(object):
+class Transcript:
     """
     Class for storing time-aligned text and converting between formats
     """
@@ -27,7 +27,7 @@ class time_aligned_text(object):
         Instantiates a time_aligned text object
         If 'input_data' is a string, it tries to find the appropriate file.
 
-        >>> transcript = time_aligned_text()
+        >>> transcript = Transcript()
         """
         if (
             input_data is not None
@@ -58,7 +58,7 @@ class time_aligned_text(object):
         """
         Returns string representation of formatted segments as corresponding
         By default, use the extension of the file you loaded
-        >>> transcript = time_aligned_text()
+        >>> transcript = Transcript()
         >>> print(transcript.__str__()=="")
         True
         """
@@ -79,7 +79,7 @@ class time_aligned_text(object):
         # Sort the segments by their start time then stop time
         new_segments.sort(key=lambda s: (float(s.start), float(s.stop)))
 
-        out_transcript = time_aligned_text()
+        out_transcript = Transcript()
         out_transcript.file_extension = self.file_extension
         out_transcript.segments = new_segments
         return out_transcript
@@ -127,7 +127,7 @@ class time_aligned_text(object):
             f.write(data_handler.footer())
 
         # return back new object in case we are updating a list in place
-        return time_aligned_text(file_name)
+        return Transcript(file_name)
 
     def split(self, target_dir):
         """
@@ -135,7 +135,7 @@ class time_aligned_text(object):
         """
         os.makedirs(target_dir, exist_ok=True)
         for iseg, seg in enumerate(self.segments):
-            new_seg = time_aligned_text()
+            new_seg = Transcript()
             new_seg.file_extension = self.file_extension
             new_seg.location = generate_segmented_file_name(
                 target_dir, self.location, iseg
