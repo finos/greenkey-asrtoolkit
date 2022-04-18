@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Module for reading/writing truleo JSON files
+Module for reading/writing gong.io gecko JSON files
 """
 
 import json
@@ -15,7 +15,7 @@ separator = ",\n"
 
 def header():
     "Returns empty header"
-    return '{\n"segments":['
+    return '{\n"schemaVersion": "2.0","monologues":['
 
 
 def footer():
@@ -32,28 +32,25 @@ def format_segment(seg):
     :return: dict: key/val pairs contain 'segment'-level information
     """
     output_dict = {}
-    output_dict["speaker"] = {"label": seg.speaker, "confidence": 0.0}
-    output_dict["start"] = float(seg.start) * 1e3
-    output_dict["stop"] = float(seg.stop) * 1e3
-    output_dict["tokens"] = [
-        {
-            "token": word,
-            "asr_confidence": 0.0,
-            "label_confidence": 0.0,
-            "start": 0,
-            "stop": 0.0,
-            "label": "O",
-        }
-        for word in seg.text.split()
-    ]
-    output_dict["asr_confidence"] = seg.confidence
+    output_dict["speaker"] = {"id": seg.speaker, "name": ""}
+    output_dict["start"] = float(seg.start)
+    output_dict["stop"] = float(seg.stop)
 
+    # don't approximate word start and stop times, just shove them all in one term for now
+    output_dict["terms"] = [
+        {
+            "start": float(seg.start),
+            "end": float(seg.stop),
+            "text": seg.text,
+            "type": "WORD",
+        }
+    ]
     return json.dumps(output_dict, ensure_ascii=True)
 
 
 def parse_segment(input_seg):
     """
-    Creates an asrtoolkit Segment object from an input truleo Segment
+    Creates an asrtoolkit Segment object from an input gecko segment
     :param: input_seg: dict (segment-level dict: input_data['segments'][i]
       -> dict with keys 'channel', 'startTimeSec' etc mapping to attributes
     :return: asrtoolkit Segment object
@@ -64,12 +61,12 @@ def parse_segment(input_seg):
         value, dict_key=None, interior_key=None, proc_val=lambda val: val
     ):
         """
-        This transforms truleo Segment data into a dictionary for input
+        This transforms gecko segment data into a dictionary for input
         into the asrtoolkit Segment object
 
         Assigns value to extracted_dict object if present in input_seg
 
-        :param value:         key from the inside of gk Segment
+        :param value:         key from the inside of the Segment
         :param dict_key:      key to which value should be assigned
         :param interior_key:  sometimes values are nested under this
         :param proc_val:      function formatting the value
@@ -86,18 +83,16 @@ def parse_segment(input_seg):
 
     seg = None
     try:
-        assign_if_present("channel")
-        assign_if_present("start", "start", proc_val=lambda val: float(val) / 1e3)
-        assign_if_present("stop", "stop", proc_val=lambda val: float(val) / 1e3)
+        assign_if_present("start", "start")
+        assign_if_present("end", "stop")
         assign_if_present(
-            "tokens",
+            "terms",
             "text",
-            proc_val=lambda token_list: " ".join(
-                token["token"] for token in token_list
-            ),
+            proc_val=lambda term_list: " ".join(term["text"] for term in term_list),
         )
-        assign_if_present("speaker", "speaker", "label", proc_val=sanitize)
-        assign_if_present("asr_confidence", "confidence")
+        assign_if_present(
+            "speaker", "speaker", "id", proc_val=sanitize,
+        )
 
         seg = Segment(extracted_dict)
 
@@ -121,7 +116,9 @@ def read_in_memory(input_data):
       applies `parse_segment` function to each dict in input_data['segments']
 
     """
-    segments = [_ for _ in map(parse_segment, input_data["segments"]) if _ is not None]
+    segments = [
+        _ for _ in map(parse_segment, input_data["monologues"]) if _ is not None
+    ]
     return segments
 
 
