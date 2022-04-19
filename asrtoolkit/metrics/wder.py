@@ -115,7 +115,8 @@ def wder(ref, hyp, verbose=False, drop_crosstalk=False):
                 ]
                 hyp_speaker = hyp.segments[hyp_word_idx_dict[hyp_idx]].speaker
                 if drop_crosstalk and (
-                    "crosstalk" in ref_speaker or "crosstalk" in hyp_speaker
+                    "crosstalk" in ref.segments[ref_word_idx_dict[ref_idx]].speaker
+                    or "crosstalk" in hyp.segments[hyp_word_idx_dict[hyp_idx]].speaker
                 ):
                     continue
                 if ref_speaker == hyp_speaker:
@@ -132,7 +133,8 @@ def wder(ref, hyp, verbose=False, drop_crosstalk=False):
                 ]
                 hyp_speaker = hyp.segments[hyp_word_idx_dict[hyp_idx]].speaker
                 if drop_crosstalk and (
-                    "crosstalk" in ref_speaker or "crosstalk" in hyp_speaker
+                    "crosstalk" in ref.segments[ref_word_idx_dict[ref_idx]].speaker
+                    or "crosstalk" in hyp.segments[hyp_word_idx_dict[hyp_idx]].speaker
                 ):
                     continue
                 if ref_speaker == hyp_speaker:
