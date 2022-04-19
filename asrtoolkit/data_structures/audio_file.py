@@ -34,11 +34,7 @@ def cut_utterance(
     """
     subprocess.call(
         "sox -V1 {} -r {} -b 16 -c 1 {} trim {} ={}".format(
-            source_audio_file,
-            sample_rate,
-            target_audio_file,
-            start_time,
-            end_time,
+            source_audio_file, sample_rate, target_audio_file, start_time, end_time,
         ),
         shell=True,
     )
@@ -59,15 +55,13 @@ def degrade_audio(source_audio_file, target_audio_file=None):
     # degrade to 8k
     tmp1 = ".".join(source_audio_file.split(".")[:-1]) + "_tmp1.wav"
     subprocess.call(
-        "sox -V1 {} -r 8000 -e a-law {}".format(source_audio_file, tmp1),
-        shell=True,
+        "sox -V1 {} -r 8000 -e a-law {}".format(source_audio_file, tmp1), shell=True,
     )
 
     # convert to u-law
     tmp2 = ".".join(source_audio_file.split(".")[:-1]) + "_tmp2.wav"
     subprocess.call(
-        "sox -V1 {} --rate 8000 -e u-law {}".format(tmp1, tmp2),
-        shell=True,
+        "sox -V1 {} --rate 8000 -e u-law {}".format(tmp1, tmp2), shell=True,
     )
 
     # upgrade to 16k a-law signed

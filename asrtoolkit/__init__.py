@@ -15,7 +15,7 @@ from .data_structures import (
     combine_audio,
 )
 from .file_utils.name_cleaners import basename, get_extension, sanitize, strip_extension
-from .metrics import cer, get_words_and_index_mapping, wder, wer, tswde
+from .metrics import cer, get_words_and_index_mapping, tswde, wder, wer
 
 LOGGER = logging.getLogger(__name__)
 

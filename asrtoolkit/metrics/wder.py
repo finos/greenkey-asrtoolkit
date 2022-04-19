@@ -41,9 +41,9 @@ def calculate_speaker_duration(transcript):
     }
 
 
-def segments_overlap(seg1, seg2):
+def segments_crosstalk(seg1, seg2):
     """
-    Returns time of overlap between two segments
+    Returns time of crosstalk between two segments
     """
     return max(
         0,
@@ -52,10 +52,10 @@ def segments_overlap(seg1, seg2):
     )
 
 
-def find_speaker_with_most_overlap(ref, hyp, target_ref_speaker):
+def find_speaker_with_most_crosstalk(ref, hyp, target_ref_speaker):
     """
     For reference and hypothesis transcripts and a target speaker,
-    return a dict of what speakers' in the hypothesis overlap the
+    return a dict of what speakers' in the hypothesis crosstalk the
     most with the target speaker
     """
     overlapping_speaker_duration = defaultdict(lambda: 0.0)
@@ -66,7 +66,7 @@ def find_speaker_with_most_overlap(ref, hyp, target_ref_speaker):
 
     for seg in hyp.segments:
         overlapping_speaker_duration[seg.speaker] += sum(
-            segments_overlap(seg, ref_seg) for ref_seg in target_speaker_segments
+            segments_crosstalk(seg, ref_seg) for ref_seg in target_speaker_segments
         )
 
     return dict(overlapping_speaker_duration)
@@ -82,7 +82,7 @@ def align_speaker_labels(ref, hyp):
     for speaker, _ in sorted(
         ref_speakers_with_time.items(), key=lambda r: r[1], reverse=True
     ):
-        overlapping_speakers = find_speaker_with_most_overlap(ref, hyp, speaker)
+        overlapping_speakers = find_speaker_with_most_crosstalk(ref, hyp, speaker)
         speaker_mapping[speaker] = max(
             filter(lambda s: s not in speaker_mapping.values(), overlapping_speakers),
             default=None,
@@ -90,7 +90,7 @@ def align_speaker_labels(ref, hyp):
     return speaker_mapping
 
 
-def wder(ref, hyp, verbose=False):
+def wder(ref, hyp, verbose=False, drop_crosstalk=False):
     """
     Computes the word diarization error rate for two files
     See https://arxiv.org/pdf/1907.05337.pdf
@@ -114,6 +114,10 @@ def wder(ref, hyp, verbose=False):
                     ref.segments[ref_word_idx_dict[ref_idx]].speaker
                 ]
                 hyp_speaker = hyp.segments[hyp_word_idx_dict[hyp_idx]].speaker
+                if drop_crosstalk and (
+                    "crosstalk" in ref_speaker or "crosstalk" in hyp_speaker
+                ):
+                    continue
                 if ref_speaker == hyp_speaker:
                     c += 1
                 else:
@@ -127,6 +131,10 @@ def wder(ref, hyp, verbose=False):
                     ref.segments[ref_word_idx_dict[ref_idx]].speaker
                 ]
                 hyp_speaker = hyp.segments[hyp_word_idx_dict[hyp_idx]].speaker
+                if drop_crosstalk and (
+                    "crosstalk" in ref_speaker or "crosstalk" in hyp_speaker
+                ):
+                    continue
                 if ref_speaker == hyp_speaker:
                     s += 1
                 else:
@@ -139,7 +147,13 @@ def wder(ref, hyp, verbose=False):
     )
 
 
-def compute_wder(reference_file, transcript_file, json_format=None, verbose=False):
+def compute_wder(
+    reference_file,
+    transcript_file,
+    json_format=None,
+    verbose=False,
+    drop_crosstalk=False,
+):
     """
     Compares a reference and transcript file and the calculates word diarization error rate (WER) between these two files
     """
@@ -163,7 +177,7 @@ def compute_wder(reference_file, transcript_file, json_format=None, verbose=Fals
             "Error with an input file. Please check all files exist and are accepted by ASRToolkit"
         )
     else:
-        return wder(ref, hyp, verbose)
+        return wder(ref, hyp, verbose, drop_crosstalk=drop_crosstalk)
 
 
 def cli():
