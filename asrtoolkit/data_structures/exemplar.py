@@ -76,8 +76,7 @@ class Exemplar:
             )
 
         af = self.audio_file.prepare_for_training(
-            af_target_file,
-            sample_rate=sample_rate,
+            af_target_file, sample_rate=sample_rate,
         )
 
         tf = self.transcript_file.write(tf_target_file)
