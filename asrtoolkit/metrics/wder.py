@@ -135,7 +135,7 @@ def wder(ref, hyp, verbose=False):
     return (
         {"c_is": c_is, "s_is": s_is, "s": s, "c": c}
         if verbose
-        else 100 * (s_is + c_is) / (s + c)
+        else 100 * (s_is + c_is) / max(1, (s + c))
     )
 
 
