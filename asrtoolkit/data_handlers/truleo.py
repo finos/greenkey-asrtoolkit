@@ -121,7 +121,7 @@ def read_in_memory(input_data):
       applies `parse_segment` function to each dict in input_data['segments']
 
     """
-    segments = [_ for _ in map(parse_segment, input_data["segments"]) if _ is not None]
+    segments = [_ for _ in map(parse_segment, input_data.get("segments", []))]
     return segments
 
 
