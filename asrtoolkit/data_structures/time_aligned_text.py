@@ -42,7 +42,7 @@ class Transcript:
                     file_format if file_format is not None else self.file_extension
                 )
             )
-            self.segments = data_handler.read_in_memory(input_data)
+            self.segments = list(filter(lambda seg: seg is not None, data_handler.read_in_memory(input_data)))
 
     def hash(self):
         """
@@ -102,7 +102,7 @@ class Transcript:
                 file_format if file_format is not None else self.file_extension
             )
         )
-        self.segments = data_handler.read_file(file_name)
+        self.segments = list(filter(lambda seg: seg is not None, data_handler.read_file(file_name)))
 
     def write(self, file_name, file_format=None):
         """
