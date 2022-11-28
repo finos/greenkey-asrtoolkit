@@ -1,5 +1,8 @@
 [![FINOS - Archived](https://cdn.jsdelivr.net/gh/finos/contrib-toolbox@master/images/badge-archived.svg)](https://community.finos.org/docs/governance/Software-Projects/stages/archived)
 
+
+NOTE! This project is archived due to lack of activity; you can still consume this software, although not advised, as it is not actively maintained. If you're interested to restore activity on this repository, please email help@finos.org
+
 ---
 
 ## The GreenKey ASRToolkit provides tools for file conversion and ASR corpora organization. These are intended to simplify the workflow for building, customizing, and analyzing ASR models, useful for scientists, engineers, and other technologists in speech recognition.
